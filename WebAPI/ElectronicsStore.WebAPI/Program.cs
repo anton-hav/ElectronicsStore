@@ -4,6 +4,13 @@ using Serilog.Events;
 using System.Reflection;
 using System.Text;
 using ElectronicsStore.DataBase;
+using ElectronicsStore.Data.Abstractions;
+using ElectronicsStore.Data.Repositories;
+using ElectronicsStore.Business.ServiceImplementations;
+using ElectronicsStore.Core.Abstractions;
+using ElectronicsStore.Data.Abstractions.Repositories;
+using ElectronicsStore.Data.Repositories.Repositories;
+using ElectronicsStore.DataBase.Entities;
 
 namespace ElectronicsStore.WebAPI
 {
@@ -46,8 +53,15 @@ namespace ElectronicsStore.WebAPI
             });
 
             // Add business services
+            builder.Services.AddScoped<IUserService, UserService>();
+            builder.Services.AddScoped<IRoleService, RoleService>();
 
             // Add repositories
+            builder.Services.AddScoped<IRepository<User>, Repository<User>>();
+            builder.Services.AddScoped<IRepository<Role>, Repository<Role>>();
+            builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+
+            builder.Configuration.AddJsonFile("secrets.json");
 
             var app = builder.Build();
 
