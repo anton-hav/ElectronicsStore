@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>ElectronicsStore.WebAPI</name>
+    </assembly>
+    <members>
+        <member name="M:ElectronicsStore.WebAPI.Program.GetPathToLogFile">
+            <summary>
+                Returns the path for log file recording.
+            </summary>
+            <returns>A string whose value contains a path to the log file</returns>
+        </member>
+    </members>
+</doc>
