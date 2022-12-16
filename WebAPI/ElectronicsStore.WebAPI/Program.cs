@@ -11,6 +11,9 @@ using ElectronicsStore.Core.Abstractions;
 using ElectronicsStore.Data.Abstractions.Repositories;
 using ElectronicsStore.Data.Repositories.Repositories;
 using ElectronicsStore.DataBase.Entities;
+using ElectronicsStore.WebAPI.Utils;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
 
 namespace ElectronicsStore.WebAPI
 {
@@ -52,27 +55,50 @@ namespace ElectronicsStore.WebAPI
                 options.IncludeXmlComments(builder.Configuration["APIXmlDocumentation"]);
             });
 
+            builder.Services
+                .AddAuthentication(options =>
+                {
+                    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                    options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+                    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                }).AddJwtBearer(options =>
+                    {
+                        // Only for develop environment.
+                        options.RequireHttpsMetadata = false;
+                        options.SaveToken = true;
+                        options.TokenValidationParameters = new TokenValidationParameters()
+                        {
+                            ValidIssuer = builder.Configuration["Token:Issuer"],
+                            ValidAudience = builder.Configuration["Token:Issuer"],
+                            IssuerSigningKey =
+                                new SymmetricSecurityKey(
+                                    Encoding.UTF8.GetBytes(builder.Configuration["Token:JwtSecret"])),
+                            ClockSkew = TimeSpan.Zero
+                        };
+                    }
+                );
+
             // Add business services
             builder.Services.AddScoped<IUserService, UserService>();
             builder.Services.AddScoped<IRoleService, RoleService>();
+            builder.Services.AddScoped<IRefreshTokenService, RefreshTokenService>();
+            builder.Services.AddScoped<IJwtUtil, JwtUtilSha256>();
 
             // Add repositories
             builder.Services.AddScoped<IRepository<User>, Repository<User>>();
             builder.Services.AddScoped<IRepository<Role>, Repository<Role>>();
+            builder.Services.AddScoped<IRepository<RefreshToken>, Repository<RefreshToken>>();
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
-            builder.Configuration.AddJsonFile("secrets.json");
-
             var app = builder.Build();
-
-            // Configure the HTTP request pipeline.
-            if (app.Environment.IsDevelopment())
-            {
-                app.UseSwagger();
-                app.UseSwaggerUI();
-            }
-
+            app.UseRouting();
             app.UseHttpsRedirection();
+            app.UseStaticFiles();
+
+            app.UseSwagger();
+            app.UseSwaggerUI();
+            
+            app.UseAuthentication();
             app.UseCors(myCorsPolicyName);
             app.UseAuthorization();
 

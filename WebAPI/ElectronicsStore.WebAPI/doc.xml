@@ -4,6 +4,57 @@
         <name>ElectronicsStore.WebAPI</name>
     </assembly>
     <members>
+        <member name="M:ElectronicsStore.WebAPI.Controllers.TokenController.CreateJwtToken(ElectronicsStore.WebAPI.Models.Requests.LoginUserRequestModel)">
+            <summary>
+            Create new access token for the login data model
+            </summary>
+            <param name="request">login model</param>
+            <returns>An access token for an authorized user.</returns>
+            <response code="200">Returns the access token for the authorized user</response>
+            <response code="400">Request contains null object or invalid object type</response>
+            <response code="500">Unexpected error on the server side.</response>
+        </member>
+        <member name="M:ElectronicsStore.WebAPI.Controllers.TokenController.RefreshToken(ElectronicsStore.WebAPI.Models.Requests.RefreshTokenRequestModel)">
+            <summary>
+            Create new token by refresh token.
+            </summary>
+            <param name="request">a refresh token value</param>
+            <returns>new access token for authorized user</returns>
+            <response code="200">Returns the access token for the authorized user</response>
+            <response code="400">Request contains null object or invalid object type</response>
+            <response code="500">Unexpected error on the server side.</response>
+        </member>
+        <member name="M:ElectronicsStore.WebAPI.Controllers.TokenController.RevokeToken(ElectronicsStore.WebAPI.Models.Requests.RefreshTokenRequestModel)">
+            <summary>
+            Revoke access token by the refresh token value
+            </summary>
+            <param name="request">a refresh token value</param>
+            <returns>The Ok status</returns>
+            <response code="200">an empty</response>
+            <response code="400">Request contains null object or invalid object type</response>
+            <response code="500">Unexpected error on the server side.</response>
+        </member>
+        <member name="M:ElectronicsStore.WebAPI.Controllers.UserController.Create(ElectronicsStore.WebAPI.Models.Requests.RegisterUserRequestModel)">
+            <summary>
+                Register new user
+            </summary>
+            <param name="request">new user model</param>
+            <returns>Access token for newly user</returns>
+            <response code="200">Returns access token for the newly created user</response>
+            <response code="400">Request contains null object or invalid object type</response>
+            <response code="409">The same entry already exists in the storage.</response>
+            <response code="500">Unexpected error on the server side.</response>
+        </member>
+        <member name="T:ElectronicsStore.WebAPI.Models.Responses.ErrorModel">
+            <summary>
+            Model for returning errors from api
+            </summary>
+        </member>
+        <member name="P:ElectronicsStore.WebAPI.Models.Responses.ErrorModel.Message">
+            <summary>
+            Error message
+            </summary>
+        </member>
         <member name="M:ElectronicsStore.WebAPI.Program.GetPathToLogFile">
             <summary>
                 Returns the path for log file recording.

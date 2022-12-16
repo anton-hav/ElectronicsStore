@@ -28,11 +28,14 @@ public class UserService : IUserService
         _roleService = roleService;
     }
 
-    /// <summary>
-    ///     Gets user by email as a string
-    /// </summary>
-    /// <param name="email">user email as a string</param>
-    /// <returns>The Task&lt;Result&gt; where Result is UserDto</returns>
+
+    public async Task<IEnumerable<UserDto>> GetAllUsersAsync()
+    {
+        return (await _unitOfWork.Users.Get().ToListAsync())
+            .Select(user => _mapper.Map<UserDto>(user)).ToArray();
+    }
+
+    /// <inheritdoc />
     /// <exception cref="ArgumentException"></exception>
     public async Task<UserDto> GetUserByEmailAsync(string email)
     {
@@ -44,26 +47,33 @@ public class UserService : IUserService
             .FirstOrDefaultAsync();
         if (user != null) return user;
 
-        throw new ArgumentException(nameof(email));
+        throw new ArgumentException("User with specified email doesn't exist. ", nameof(email));
     }
 
-    /// <summary>
-    ///     Checks if the user exists in the data source.
-    /// </summary>
-    /// <param name="email">user email as a string</param>
-    /// <returns>The Task&lt;Result&gt; where Result is the Boolean</returns>
+    /// <inheritdoc />
+    /// <exception cref="ArgumentException"></exception>
+    public async Task<UserDto> GetUserByRefreshTokenAsync(Guid refreshToken)
+    {
+        var token = await _unitOfWork.RefreshToken
+            .Get()
+            .Include(token => token.User)
+            .ThenInclude(user => user.Role)
+            .AsNoTracking()
+            .FirstOrDefaultAsync(token => token.Token.Equals(refreshToken));
+
+        if (token != null) return _mapper.Map<UserDto>(token.User);
+
+        throw new ArgumentException("Could not find a token with the specified parameters . ", nameof(refreshToken));
+    }
+
+    /// <inheritdoc />
     public async Task<bool> IsUserExistsAsync(string email)
     {
         return await _unitOfWork.Users.Get()
             .AnyAsync(user => user.Email.Equals(email));
     }
 
-    /// <summary>
-    ///     Checks if the user password corrects
-    /// </summary>
-    /// <param name="email">user email as a string</param>
-    /// <param name="password">user password as a string</param>
-    /// <returns>The Task&lt;Result&gt; where Result is the Boolean</returns>
+    /// <inheritdoc />
     public async Task<bool> CheckUserPasswordAsync(string email, string password)
     {
         var dbPasswordHash = (await _unitOfWork.Users
@@ -75,10 +85,7 @@ public class UserService : IUserService
             && CreateMd5Hash(password).Equals(dbPasswordHash);
     }
 
-    /// <summary>
-    ///     Checks if the user is the first record in the data source.
-    /// </summary>
-    /// <returns>The Boolean</returns>
+    /// <inheritdoc />
     public bool IsUserTheFirst()
     {
         var entity = _unitOfWork.Users
@@ -89,14 +96,7 @@ public class UserService : IUserService
         return entity == null;
     }
 
-    /// <summary>
-    ///     Creates a new user record in the data source.
-    /// </summary>
-    /// <remarks>
-    ///     Creates the user record as an Admin if this is the first record, otherwise, it registers as a User.
-    /// </remarks>
-    /// <param name="dto"></param>
-    /// <returns>The Task&lt;Result&gt; where Result is the number of successfully created records.</returns>
+    /// <inheritdoc />
     public async Task<int> RegisterUserAsync(UserDto dto)
     {
         var roleId = IsUserTheFirst()
@@ -120,7 +120,7 @@ public class UserService : IUserService
     /// <returns>The hash as a string</returns>
     private string CreateMd5Hash(string password)
     {
-        var passwordSalt = _configuration["UserSecrets:PasswordSalt"];
+        var passwordSalt = _configuration["Secrets:PasswordSalt"];
 
         using (var md5 = MD5.Create())
         {
