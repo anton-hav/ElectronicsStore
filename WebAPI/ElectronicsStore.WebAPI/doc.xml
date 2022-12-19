@@ -4,6 +4,24 @@
         <name>ElectronicsStore.WebAPI</name>
     </assembly>
     <members>
+        <member name="M:ElectronicsStore.WebAPI.Controllers.GoodsController.GetItemById(System.Guid)">
+            <summary>
+            Get goods note from storage with specified id.
+            </summary>
+            <param name="id">a goods unique identifier as a <see cref="T:System.Guid"/></param>
+            <returns>An item with specified Id</returns>
+            <response code="200">Returns an item corresponding to the specified identifier.</response>
+            <response code="404">Failed to find record in the database that match the specified id.</response>
+            <response code="500">Unexpected error on the server side.</response>
+        </member>
+        <member name="M:ElectronicsStore.WebAPI.Controllers.GoodsController.GetGoods">
+            <summary>
+            Get goods from storage.
+            </summary>
+            <returns>all goods</returns>
+            <response code="200">Returns all goods.</response>
+            <response code="500">Unexpected error on the server side.</response>
+        </member>
         <member name="M:ElectronicsStore.WebAPI.Controllers.TokenController.CreateJwtToken(ElectronicsStore.WebAPI.Models.Requests.LoginUserRequestModel)">
             <summary>
             Create new access token for the login data model
@@ -45,6 +63,51 @@
             <response code="409">The same entry already exists in the storage.</response>
             <response code="500">Unexpected error on the server side.</response>
         </member>
+        <member name="T:ElectronicsStore.WebAPI.Models.Requests.LoginUserRequestModel">
+            <summary>
+            Login model
+            </summary>
+        </member>
+        <member name="P:ElectronicsStore.WebAPI.Models.Requests.LoginUserRequestModel.Email">
+            <summary>
+            User email
+            </summary>
+        </member>
+        <member name="P:ElectronicsStore.WebAPI.Models.Requests.LoginUserRequestModel.Password">
+            <summary>
+            User password
+            </summary>
+        </member>
+        <member name="T:ElectronicsStore.WebAPI.Models.Requests.RefreshTokenRequestModel">
+            <summary>
+            Model for request new access token by the refresh token value
+            </summary>
+        </member>
+        <member name="P:ElectronicsStore.WebAPI.Models.Requests.RefreshTokenRequestModel.RefreshToken">
+            <summary>
+            Refresh token value
+            </summary>
+        </member>
+        <member name="T:ElectronicsStore.WebAPI.Models.Requests.RegisterUserRequestModel">
+            <summary>
+            Register model
+            </summary>
+        </member>
+        <member name="P:ElectronicsStore.WebAPI.Models.Requests.RegisterUserRequestModel.Email">
+            <summary>
+            User email
+            </summary>
+        </member>
+        <member name="P:ElectronicsStore.WebAPI.Models.Requests.RegisterUserRequestModel.Password">
+            <summary>
+            User password
+            </summary>
+        </member>
+        <member name="P:ElectronicsStore.WebAPI.Models.Requests.RegisterUserRequestModel.PasswordConfirmation">
+            <summary>
+            Confirmation of the user password
+            </summary>
+        </member>
         <member name="T:ElectronicsStore.WebAPI.Models.Responses.ErrorModel">
             <summary>
             Model for returning errors from api
@@ -53,6 +116,71 @@
         <member name="P:ElectronicsStore.WebAPI.Models.Responses.ErrorModel.Message">
             <summary>
             Error message
+            </summary>
+        </member>
+        <member name="T:ElectronicsStore.WebAPI.Models.Responses.GetItemResponseModel">
+            <summary>
+            Response model for one of goods
+            </summary>
+        </member>
+        <member name="P:ElectronicsStore.WebAPI.Models.Responses.GetItemResponseModel.Id">
+            <summary>
+            An item unique identifier
+            </summary>
+        </member>
+        <member name="P:ElectronicsStore.WebAPI.Models.Responses.GetItemResponseModel.Name">
+            <summary>
+            Product name
+            </summary>
+        </member>
+        <member name="P:ElectronicsStore.WebAPI.Models.Responses.GetItemResponseModel.Summary">
+            <summary>
+            Short summary
+            </summary>
+        </member>
+        <member name="P:ElectronicsStore.WebAPI.Models.Responses.GetItemResponseModel.Description">
+            <summary>
+            Descriptions
+            </summary>
+        </member>
+        <member name="P:ElectronicsStore.WebAPI.Models.Responses.GetItemResponseModel.Cost">
+            <summary>
+            Cost of the product
+            </summary>
+        </member>
+        <member name="P:ElectronicsStore.WebAPI.Models.Responses.GetItemResponseModel.Brand">
+            <summary>
+            Brand name
+            </summary>
+        </member>
+        <member name="T:ElectronicsStore.WebAPI.Models.Responses.TokenResponse">
+            <summary>
+            Model for returning access token from API
+            </summary>
+        </member>
+        <member name="P:ElectronicsStore.WebAPI.Models.Responses.TokenResponse.AccessToken">
+            <summary>
+            An access token as a string.
+            </summary>
+        </member>
+        <member name="P:ElectronicsStore.WebAPI.Models.Responses.TokenResponse.Role">
+            <summary>
+            Role name for current user
+            </summary>
+        </member>
+        <member name="P:ElectronicsStore.WebAPI.Models.Responses.TokenResponse.UserId">
+            <summary>
+            Unique identifier of the user for which the access token was created
+            </summary>
+        </member>
+        <member name="P:ElectronicsStore.WebAPI.Models.Responses.TokenResponse.TokenExpiration">
+            <summary>
+            Token expiration
+            </summary>
+        </member>
+        <member name="P:ElectronicsStore.WebAPI.Models.Responses.TokenResponse.RefreshToken">
+            <summary>
+            Refresh token value
             </summary>
         </member>
         <member name="M:ElectronicsStore.WebAPI.Program.GetPathToLogFile">

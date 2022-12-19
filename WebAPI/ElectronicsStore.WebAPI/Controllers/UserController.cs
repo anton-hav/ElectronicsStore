@@ -33,7 +33,7 @@ public class UserController : ControllerBase
     // TEST ENDPOINT
     // todo: DELETE THIS CODE
     [HttpGet]
-    [Authorize]
+    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> Get()
     {
         var users = await _userService.GetAllUsersAsync();
@@ -67,7 +67,7 @@ public class UserController : ControllerBase
                 throw new ArgumentException("The same entry already exists in the storage.", nameof(request));
 
             if (userDto != null
-                && Guid.Empty.Equals(userRoleId)
+                && !Guid.Empty.Equals(userRoleId)
                 && request.Password.Equals(request.PasswordConfirmation))
             {
                 userDto.RoleId = userRoleId;

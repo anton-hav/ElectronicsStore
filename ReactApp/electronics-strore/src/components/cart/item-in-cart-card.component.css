@@ -1,0 +1,14 @@
+.item-container {
+    margin-bottom: 10px;
+    width: 750px;
+}
+
+.item-card {
+    display: flex;
+    padding: 5px;
+}
+
+.item-card__link {
+    text-decoration: none;
+    color: inherit;
+}

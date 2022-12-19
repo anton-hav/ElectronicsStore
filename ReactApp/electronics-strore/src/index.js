@@ -1,17 +1,67 @@
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import './index.css';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
+import React from "react";
+import ReactDOM from "react-dom/client";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { Provider } from "react-redux";
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
+import "./index.css";
+// Import pages
+import App from "./App";
+import ErrorPage from "./pages/error.page";
+import Home, { loader as homeLoader } from "./pages/home.page";
+import About from "./pages/about.page";
+import Details, { loader as detailsLoader } from "./pages/details.page";
+import Cart from "./pages/cart.page";
+import Login from "./pages/login.page";
+// Import utils
+import store from "./storage/store";
+
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <App />,
+    errorElement: <ErrorPage />,
+    children: [
+      {
+        errorElement: <div>Something goes wrong.</div>,
+        children: [
+          {
+            index: true,
+            loader: homeLoader,
+            element: <Home />,
+          },
+          {
+            path: "/home",
+            loader: homeLoader,
+            element: <Home />,
+          },
+          {
+            path: "/about",
+            element: <About />,
+          },
+          {
+            path: "details/:id",
+            loader: detailsLoader,
+            element: <Details />,
+          },
+          {
+            path: "/cart",            
+            element: <Cart />,
+          },
+          {
+            path: "/login",            
+            element: <Login />,
+          },
+        ],
+      },
+    ],
+  },
+]);
+
+const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
-    <App />
+    <Provider store={store}>
+      <RouterProvider router={router} />
+    </Provider>
   </React.StrictMode>
 );
-
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-reportWebVitals();

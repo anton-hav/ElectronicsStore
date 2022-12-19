@@ -1,0 +1,20 @@
+.goods-summary {
+    display: flex;
+    flex-direction: row;
+    align-items: left;
+    justify-content: left;
+}
+
+.goods-summary-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: start,
+}
+
+.goods-summary-content__header {
+    display: flex;
+    width: 100%;
+    flex-direction: row;    
+    justify-content: space-between;
+}
