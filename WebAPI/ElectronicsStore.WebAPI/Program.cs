@@ -14,6 +14,7 @@ using ElectronicsStore.DataBase.Entities;
 using ElectronicsStore.WebAPI.Utils;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 
 namespace ElectronicsStore.WebAPI
 {
@@ -53,6 +54,29 @@ namespace ElectronicsStore.WebAPI
             builder.Services.AddSwaggerGen(options =>
             {
                 options.IncludeXmlComments(builder.Configuration["APIXmlDocumentation"]);
+                options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme()
+                {
+                    In = ParameterLocation.Header,
+                    Description = "Please enter a valid token",
+                    Name = "Authorization",
+                    Type = SecuritySchemeType.Http,
+                    BearerFormat = "JWT",
+                    Scheme = "Bearer"
+                });
+                options.AddSecurityRequirement(new OpenApiSecurityRequirement
+                {
+                    {
+                        new OpenApiSecurityScheme
+                        {
+                            Reference = new OpenApiReference
+                            {
+                                Type=ReferenceType.SecurityScheme,
+                                Id="Bearer"
+                            }
+                        },
+                        new string[]{"User",}
+                    }
+                });
             });
 
             builder.Services

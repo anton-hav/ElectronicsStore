@@ -139,9 +139,6 @@ namespace ElectronicsStore.WebAPI.Controllers
                 Log.Error(ex.Message);
                 return StatusCode(500);
             }
-
-
-
         }
     }
 }
