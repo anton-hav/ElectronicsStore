@@ -8,7 +8,7 @@ import { environment } from "../environment/environment";
 export default class UserService {
   constructor() {
     this._userEndpoint = environment.userEndpoint;
-    this._tokenEndpoint = environment.tokenEndpoint;
+    this._tokenEndpoints = environment.tokenEndpoints;
     this._apiService = new ApiService();
   }
 
@@ -19,7 +19,7 @@ export default class UserService {
    * @returns access token or null if authentication failed
    */
   async login(email, password) {
-    let response = await this._apiService.post(this._tokenEndpoint, {
+    let response = await this._apiService.post(this._tokenEndpoints.createToken, {
       email,
       password,
     });
@@ -35,5 +35,11 @@ export default class UserService {
     }
 
     throw new Error("Failed to authenticate");
+  }
+
+  async getTokenByRefreshToken(refreshToken){
+    let response = await this._apiService.post(this._tokenEndpoints.refreshToken, {refreshToken: refreshToken});
+    let token = TokenDto.fromResponse(response);
+    return token;
   }
 }

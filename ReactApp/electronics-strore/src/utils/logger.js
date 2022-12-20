@@ -1,16 +1,16 @@
 // It is fake for logger. Should be removed in future release.
 export default class Logger {
 
-    info(message) {
-        console.info(message);
+    info(error) {
+        console.info(error.message);
     }
 
-    warn(message) {
-        console.warn(message);
+    warn(error) {
+        console.warn(error.message);
     }
 
-    error(message) {
-        console.error(message);
+    error(error) {
+        console.error(error.message);
     }
 
     static getInstance() {

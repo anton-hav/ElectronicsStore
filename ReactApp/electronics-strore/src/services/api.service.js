@@ -1,6 +1,8 @@
-// Import data transfer objects and utils
+// Import custom types and utils
 import { environment } from "../environment/environment";
 import Logger from "../utils/logger";
+import UnauthorizedError from "../types/errors/unauthorized.error"
+import BadRequestError from "../types/errors/bad-request.error"
 
 export default class ApiService {
   constructor() {
@@ -28,25 +30,31 @@ export default class ApiService {
     return response.json();
   }
 
-  async post(url, data) {
-    try {
+  async post(url, data, token) {
+    
       let fullUrl = new URL(`${this._getFullUrl(url)}`);
+
+      const requestHeaders = new Headers();
+      requestHeaders.append("Content-Type", "application/json");
+
+      if (token) {
+        requestHeaders.append("Authorization", `Bearer ${token}`);
+      }
 
       let response = await fetch(fullUrl, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: requestHeaders,
         body: JSON.stringify(data),
       });
-      if (response.status === 200 || response.status === 201){
-        return response.json();
+      if (response.status === 400){
+        throw new BadRequestError();
+      } else if (response.status === 401){
+        throw new UnauthorizedError();
       }
-      
-      return null;
-    } catch (error) {
-      this._logger.error(error.message);
-    }
+      if (response.status === 200 
+        || response.status === 201){
+        return response.json();
+      }      
   }
 
   put() {

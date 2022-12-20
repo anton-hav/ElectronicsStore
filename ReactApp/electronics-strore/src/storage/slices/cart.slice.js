@@ -13,7 +13,7 @@ export const cartSlice = createSlice({
     },
     addItems: (state, value) => {
       let items = value.payload;
-      let newItems = items.map(item => !state.items.includes(item));
+      let newItems = items.filter(item => !state.items.includes(item));
       state.items.push(...newItems);
     },
     setItems: (state, value) => {
@@ -27,12 +27,14 @@ export const cartSlice = createSlice({
       }
     },
     removeItems: (state, value) => {
-      let itemsToRemove = value.payload;
-      //let itemsToRemove = state.items.filters(item => !items.includes(item));
-      let indexes = itemsToRemove.map(item => state.items.indexOf(item));
-      indexes.forEach(index => state.items.splice(index, 1));
+      let itemsToRemove = value.payload;      
+      let newItems = state.items.slice();
+      itemsToRemove.forEach(item => newItems.splice(newItems.indexOf(item), 1));
+      state.items = newItems;
     },
-    clearCart: (state) => {},
+    clearCart: (state) => {
+      throw new Error("Not implemented");
+    },
   },
 });
 

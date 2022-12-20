@@ -22,3 +22,7 @@
 .cart-paper__summary-button {
     flex-grow: 0;
 }
+
+.cart__message-box {
+    margin-top: 100px;
+}
