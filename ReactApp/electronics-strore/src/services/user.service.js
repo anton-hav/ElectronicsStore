@@ -1,7 +1,6 @@
 // Import services
 import ApiService from "./api.service";
 // Import data transfer objects and utils
-import UserDto from "../types/dto/user.dto";
 import TokenDto from "../types/dto/token.dto";
 import { environment } from "../environment/environment";
 
@@ -31,6 +30,7 @@ export default class UserService {
       return token;
     }
 
+    // Todo: rework this code with throw exception instead
     // Null will be returned only if the API is available,
     // but the necessary data could not be found.
     if (response === null) {
@@ -40,6 +40,13 @@ export default class UserService {
     throw new Error("Failed to authenticate");
   }
 
+  /**
+   * Create new user with specified email and password.
+   * @param {*} email - user email address
+   * @param {*} password - user password
+   * @param {*} passwordConfirmation - user password confirmation
+   * @returns access token for new user.
+   */
   async register(email, password, passwordConfirmation) {
     let response = await this._apiService.post(this._userEndpoint, {
       email,
@@ -57,5 +64,11 @@ export default class UserService {
     );
     let token = TokenDto.fromResponse(response);
     return token;
+  }
+
+  async revokeRefreshToken(refreshToken) {
+    await this._apiService.post(this._tokenEndpoints.revokeToken, {
+      refreshToken: refreshToken,
+    });
   }
 }

@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 
 import { Box } from "@mui/material";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
@@ -9,39 +9,47 @@ import IconButton from "@mui/material/IconButton";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import Typography from "@mui/material/Typography";
-import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
+// Import services
+import UserService from "../../services/user.service";
 // Import custom types and utils
 import useToken from "../../utils/hooks/useToken";
 import TokenDto from "../../types/dto/token.dto";
 
 import "./account-tools.component.css";
 
+const _userService = new UserService();
+
 const authorizedSettings = ["Logout"]; // Account.. Dashboard
 const nonAuthorizedSettings = ["Login", "Register"];
 
-export default function AccountTools() {  
-  const {token, setToken} = useToken();
+export default function AccountTools() {
+  const { token, setToken } = useToken();
   const [anchorElUser, setAnchorElUser] = React.useState(null);
 
   const navigate = useNavigate();
 
   const handleOpenUserMenu = (event) => {
-    setAnchorElUser(event.currentTarget);    
+    setAnchorElUser(event.currentTarget);
+  };
+
+  const revokeToken = () => {
+    console.log(token);
+    _userService.revokeRefreshToken(token.refreshToken);
   };
 
   const handleCloseUserMenu = (event) => {
     setAnchorElUser(null);
     let menu = event.target.textContent;
     if (menu === "Logout") {
-      const token = new TokenDto();
-      setToken(token);
-    } else {
+      //await logout();
+      revokeToken();
+      const newToken = new TokenDto();
+      setToken(newToken);
+    } else if (menu !== "") {
       navigate(`${menu}/`);
     }
-
   };
-  console.log(token.accessToken);
 
   return (
     <Box>
@@ -67,14 +75,13 @@ export default function AccountTools() {
         open={Boolean(anchorElUser)}
         onClose={handleCloseUserMenu}
       >
-        {(token.accessToken !== null 
-        ? authorizedSettings 
-        : nonAuthorizedSettings).map((setting) => (
-          
-            <MenuItem key={setting} onClick={handleCloseUserMenu}>
-              <Typography textAlign="center">{setting}</Typography>
-            </MenuItem>
-          
+        {(token.accessToken !== null
+          ? authorizedSettings
+          : nonAuthorizedSettings
+        ).map((setting) => (
+          <MenuItem key={setting} onClick={handleCloseUserMenu}>
+            <Typography textAlign="center">{setting}</Typography>
+          </MenuItem>
         ))}
       </Menu>
     </Box>

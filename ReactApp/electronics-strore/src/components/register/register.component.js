@@ -4,7 +4,6 @@ import * as yup from "yup";
 import { useFormik } from "formik";
 
 import "./register.component.css";
-import { ConstructionOutlined } from "@mui/icons-material";
 
 export default function Register(props) {
   const { existingEmails, handleSubmit } = props;
@@ -14,7 +13,7 @@ export default function Register(props) {
       .string("Enter your email")
       .email("Enter a valid email")
       .required("Email is required")
-      .test("existing", "Email is already exist.", function (value) {        
+      .test("existing", "Email is already exist.", function (value) {
         return !existingEmails.includes(value);
       }),
     password: yup

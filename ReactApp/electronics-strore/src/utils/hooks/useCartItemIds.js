@@ -13,19 +13,19 @@ export default function useCartItemIds() {
   const dispatch = useDispatch();
 
   const saveItemIds = (itemsIds) => {
-    const newItems = itemsIds.filter(id => !ids.includes(id))
-    const itemsForRemove = ids.filter(id => !itemsIds.includes(id));
+    const newItems = itemsIds.filter((id) => !ids.includes(id));
+    const itemsForRemove = ids.filter((id) => !itemsIds.includes(id));
     if (newItems.length > 0) {
-        dispatch(addItems(newItems));
-    }    
+      dispatch(addItems(newItems));
+    }
     if (itemsForRemove.length > 0) {
-        dispatch(removeItems(itemsForRemove));
+      dispatch(removeItems(itemsForRemove));
     }
     setIds(itemsIds);
   };
 
   return {
     setIds: saveItemIds,
-    ids
+    ids,
   };
 }

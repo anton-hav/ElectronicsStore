@@ -13,10 +13,7 @@ const _userService = new UserService();
 
 export default function Register() {
   const { setToken } = useToken();
-  const [ existingEmails, setExistingEmails ] = useState([]);
-  //   const [email, setEmail] = useState();
-  //   const [password, setPassword] = useState();
-  //   const [passwordConfirmation, setPasswordConfirmation] = useState();
+  const [existingEmails, setExistingEmails] = useState([]);
 
   const navigate = useNavigate();
 
@@ -33,19 +30,17 @@ export default function Register() {
         navigate("/");
       }
     } catch (error) {
-        if (error instanceof ConflictError){
-            let existing = existingEmails.slice();
-            existing.push(values.email);
-            setExistingEmails(existing);
-        }
+      if (error instanceof ConflictError) {
+        let existing = existingEmails.slice();
+        existing.push(values.email);
+        setExistingEmails(existing);
+      }
     }
   };
 
   return (
     <div>
       <RegisterComponent
-        // setEmail={setEmail}
-        // setPassword={setPassword}
         existingEmails={existingEmails}
         handleSubmit={handleSubmit}
       />

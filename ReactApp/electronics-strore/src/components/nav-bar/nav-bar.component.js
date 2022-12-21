@@ -135,7 +135,7 @@ export default function NavBar(props) {
           </Box>
 
           <Box sx={{ flexGrow: 0 }}>
-            <AccountTools/>
+            <AccountTools />
           </Box>
         </Toolbar>
       </Container>

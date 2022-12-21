@@ -1,10 +1,9 @@
 // Import custom types and utils
 import { environment } from "../environment/environment";
 import Logger from "../utils/logger";
-import UnauthorizedError from "../types/errors/unauthorized.error"
-import BadRequestError from "../types/errors/bad-request.error"
-import ConflictError from "../types/errors/conflict.error"
-import { RepeatOneSharp } from "@mui/icons-material";
+import UnauthorizedError from "../types/errors/unauthorized.error";
+import BadRequestError from "../types/errors/bad-request.error";
+import ConflictError from "../types/errors/conflict.error";
 
 export default class ApiService {
   constructor() {
@@ -12,7 +11,7 @@ export default class ApiService {
   }
 
   _getFullUrl(url) {
-    return environment.apiUrl + url;    
+    return environment.apiUrl + url;
   }
 
   async get(url, data = {}) {
@@ -33,32 +32,30 @@ export default class ApiService {
   }
 
   async post(url, data, token) {
-    
-      let fullUrl = new URL(`${this._getFullUrl(url)}`);
+    let fullUrl = new URL(`${this._getFullUrl(url)}`);
 
-      const requestHeaders = new Headers();
-      requestHeaders.append("Content-Type", "application/json");
+    const requestHeaders = new Headers();
+    requestHeaders.append("Content-Type", "application/json");
 
-      if (token) {
-        requestHeaders.append("Authorization", `Bearer ${token}`);
-      }
+    if (token) {
+      requestHeaders.append("Authorization", `Bearer ${token}`);
+    }
 
-      let response = await fetch(fullUrl, {
-        method: "POST",
-        headers: requestHeaders,
-        body: JSON.stringify(data),
-      });
-      if (response.status === 400){
-        throw new BadRequestError();
-      } else if (response.status === 401){
-        throw new UnauthorizedError();
-      } else if (response.status === 409) {
-        throw new ConflictError();
-      }
-      if (response.status === 200 
-        || response.status === 201){
-        return response.json();
-      }      
+    let response = await fetch(fullUrl, {
+      method: "POST",
+      headers: requestHeaders,
+      body: JSON.stringify(data),
+    });
+    if (response.status === 400) {
+      throw new BadRequestError();
+    } else if (response.status === 401) {
+      throw new UnauthorizedError();
+    } else if (response.status === 409) {
+      throw new ConflictError();
+    }
+    if (response.status === 200 || response.status === 201) {
+      return response.json();
+    }
   }
 
   put() {
