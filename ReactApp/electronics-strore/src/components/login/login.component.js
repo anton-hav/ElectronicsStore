@@ -1,49 +1,49 @@
-import React, { useState } from "react";
-import { Box, Typography } from "@mui/material";
-// Import services
-import UserService from "../../services/user.service";
-// Import data transfer objects and utils
-import TokenDto from "../../types/dto/token.dto";
-import useToken from "../../utils/hooks/useToken";
+import React from "react";
+import { Box, Typography, TextField, Button, Paper } from "@mui/material";
 
 import "./login.component.css";
 
-const _userService = new UserService();
-
-export default function Login() {
-  const {setToken} = useToken();
-  const [email, setEmail] = useState();
-  const [password, setPassword] = useState();
-
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-    const accessToken = await _userService.login(email, password);
-    if (accessToken instanceof TokenDto) {
-      setToken(accessToken);
-    }
-  };
+export default function Login(props) {
+  const { setEmail, setPassword, handleSubmit } = props;
 
   return (
     <Box className="login-wrapper">
-      <Typography varian="h2" component="div">
-        Please Log In
-      </Typography>
-      <form onSubmit={handleSubmit}>
-        <label>
-          <p>Username</p>
-          <input type="text" onChange={(e) => setEmail(e.target.value)} />
-        </label>
-        <label>
-          <p>Password</p>
-          <input
-            type="password"
-            onChange={(e) => setPassword(e.target.value)}
-          />
-        </label>
-        <div>
-          <button type="submit">Submit</button>
-        </div>
-      </form>
+      <Paper>
+        <Box className="login-paper">
+          <Typography variant="h5">Please Log In</Typography>
+          <form onSubmit={handleSubmit}>
+            <Box className="login-form">
+              <Box className="login-form__email">
+                <TextField
+                  sx={{ width: 450, maxWidth: "100%" }}
+                  required
+                  id="standard-required"
+                  label="Email"
+                  defaultValue=""
+                  variant="standard"
+                  onChange={(e) => setEmail(e.target.value)}
+                />
+              </Box>
+
+              <Box className="login-form__password">
+                <TextField
+                  sx={{ width: 450, maxWidth: "100%" }}
+                  required
+                  id="password-input"
+                  label="Password"
+                  type="password"
+                  autoComplete="current-password"
+                  variant="standard"
+                  onChange={(e) => setPassword(e.target.value)}
+                />
+              </Box>
+              <Box className="login-form__button">
+                <Button type="submit">Login</Button>
+              </Box>
+            </Box>
+          </form>
+        </Box>
+      </Paper>
     </Box>
   );
 }

@@ -2,6 +2,7 @@ import LinearProgress from "@mui/material/LinearProgress";
 import Box from "@mui/material/Box";
 import { Outlet, useNavigation } from "react-router-dom";
 import { useSelector } from "react-redux";
+// Import custom components
 import NavBar from "../components/nav-bar/nav-bar.component";
 
 export default function Layout() {
