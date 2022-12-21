@@ -1,0 +1,29 @@
+.register-wrapper {
+    min-height: 300px;
+    margin-top: 15px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.register-paper {
+    width: 500px;
+    margin: 50px;    
+}
+
+.register-form {
+    
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.register-form__field {
+    width: 100%;
+    margin-top: 20px;
+}
+
+.register-form__button {
+    margin-top: 20px;
+}

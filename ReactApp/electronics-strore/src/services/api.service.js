@@ -3,6 +3,8 @@ import { environment } from "../environment/environment";
 import Logger from "../utils/logger";
 import UnauthorizedError from "../types/errors/unauthorized.error"
 import BadRequestError from "../types/errors/bad-request.error"
+import ConflictError from "../types/errors/conflict.error"
+import { RepeatOneSharp } from "@mui/icons-material";
 
 export default class ApiService {
   constructor() {
@@ -50,6 +52,8 @@ export default class ApiService {
         throw new BadRequestError();
       } else if (response.status === 401){
         throw new UnauthorizedError();
+      } else if (response.status === 409) {
+        throw new ConflictError();
       }
       if (response.status === 200 
         || response.status === 201){

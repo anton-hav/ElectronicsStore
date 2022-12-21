@@ -19,26 +19,42 @@ export default class UserService {
    * @returns access token or null if authentication failed
    */
   async login(email, password) {
-    let response = await this._apiService.post(this._tokenEndpoints.createToken, {
-      email,
-      password,
-    });
+    let response = await this._apiService.post(
+      this._tokenEndpoints.createToken,
+      {
+        email,
+        password,
+      }
+    );
     if (response !== null && response !== undefined) {
       let token = TokenDto.fromResponse(response);
       return token;
     }
 
-    // Null will be returned only if the API is available, 
+    // Null will be returned only if the API is available,
     // but the necessary data could not be found.
     if (response === null) {
-        return null;
+      return null;
     }
 
     throw new Error("Failed to authenticate");
   }
 
-  async getTokenByRefreshToken(refreshToken){
-    let response = await this._apiService.post(this._tokenEndpoints.refreshToken, {refreshToken: refreshToken});
+  async register(email, password, passwordConfirmation) {
+    let response = await this._apiService.post(this._userEndpoint, {
+      email,
+      password,
+      passwordConfirmation,
+    });
+    let token = TokenDto.fromResponse(response);
+    return token;
+  }
+
+  async getTokenByRefreshToken(refreshToken) {
+    let response = await this._apiService.post(
+      this._tokenEndpoints.refreshToken,
+      { refreshToken: refreshToken }
+    );
     let token = TokenDto.fromResponse(response);
     return token;
   }

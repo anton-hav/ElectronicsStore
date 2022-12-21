@@ -14,6 +14,7 @@ import Cart from "./pages/cart.page";
 import Login from "./pages/login.page";
 // Import utils
 import store from "./storage/store";
+import Register from "./pages/register.page";
 
 const router = createBrowserRouter([
   {
@@ -50,6 +51,10 @@ const router = createBrowserRouter([
           {
             path: "/login",            
             element: <Login />,
+          },
+          {
+            path: "/register",            
+            element: <Register />,
           },
         ],
       },
