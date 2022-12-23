@@ -10,12 +10,58 @@ This project implements an online store using ASP.NET Core WebAPI for the back-e
 - view detailed product information,
 - add items to cart,
 - remove products from the cart,
+- global pending,
+- global error handling,
+- client side and server side (with feedback to client) validation for register form.
 
 #### 1.1.2. Functionality available only to authorized users
 - purchase of goods added to cart,
 
 ### 1.2. Application preview
 This part will be added soon.
+
+
+<details>
+  <summary>Products list page preview</summary>
+
+  ![image](https://drive.google.com/uc?export=view&id=1S09iYs7amGg365RgZggbEDn3GHr6jRsb)
+</details>
+
+<details>
+  <summary>Product details page preview</summary>
+
+  ![image](https://drive.google.com/uc?export=view&id=1l2aLPr-VMFRavRVyfjHNbuBGZJXg2z1F)
+</details>
+
+<details>
+  <summary>Login page preview</summary>
+
+  ![image](https://drive.google.com/uc?export=view&id=1dX7pd0MdvBV5BYLoGSkvlT6-9jBnpzU_)
+</details>
+
+<details>
+  <summary>Register page preview</summary>
+
+  ![image](https://drive.google.com/uc?export=view&id=1VKAvsuc6vE9_5TSzp67N6g3xzE7Y_f49)
+</details>
+
+<details>
+  <summary>Cart page preview</summary>
+
+  ![image](https://drive.google.com/uc?export=view&id=1mfJOSQWPVt_HgNxslFe8dn65abFBZV8p)
+</details>
+
+<details>
+  <summary>Global pending preview</summary>
+
+  ![image](https://drive.google.com/uc?export=view&id=1a0TkHcZZLV4ToGOiKD1ElBj1ZN5EGBhf)
+</details>
+
+<details>
+  <summary>Global error handle preview</summary>
+
+  ![image](https://drive.google.com/uc?export=view&id=1OgTfvObU9tiX_SIsQmK3srrswtbssdGr)
+</details>
 
 ## 2. How to configure
 ### 2.1. Configure WebAPI application
