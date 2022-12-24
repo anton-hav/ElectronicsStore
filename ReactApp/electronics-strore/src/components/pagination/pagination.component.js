@@ -59,6 +59,7 @@ export default function RouteBasedPagination(props) {
   });
 
   const navigate = useNavigate();
+  console.log(itemsCount);
 
   /**
    * Get the relative path to the current webpage
@@ -77,7 +78,7 @@ export default function RouteBasedPagination(props) {
   };
 
   const handleChangePage = (event, newPage) => {
-    let relativePath = generateUrlPath((newPage = newPage));
+    let relativePath = generateUrlPath((newPage));
     setPage(newPage);
     navigate(relativePath);
   };
@@ -99,6 +100,7 @@ export default function RouteBasedPagination(props) {
       onPageChange={handleChangePage}
       rowsPerPage={itemsPerPage}
       onRowsPerPageChange={handleChangeitemsPerPage}
+      labelRowsPerPage="Items per page"
     />
   );
 }
