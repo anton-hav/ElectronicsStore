@@ -7,6 +7,7 @@ import { environment } from "../environment/environment";
 export default class GoodsService {
   constructor() {
     this._endpoint = environment.goodsEndpoint;
+    this._goodsCountEndpoint = environment.goodsCountEndpoint;
     this._apiService = new ApiService();
   }
 
@@ -17,10 +18,16 @@ export default class GoodsService {
     return item;
   }
 
-  async getGoodsFromApi() {
-    let response = await this._apiService.get(this._endpoint, {});
+  async getGoodsFromApi(parameters) {
+    
+    let response = await this._apiService.get(this._endpoint, parameters);
     let goods = response.map((resp) => GoodsDto.fromResponse(resp));
     return goods;
+  }
+
+  async getGoodsCountFromApi() {
+    let response = await this._apiService.get(this._goodsCountEndpoint);
+    return response;
   }
 
   // CREATE

@@ -85,13 +85,16 @@ export default function Cart() {
     setIds(newIds);
   };
 
-  return (ids.length || message !== undefined) ? (
-    <CartView
-      items={items}
-      message={message}
-      handlePurchaseClick={handlePurchaseClick}
-      handleRemoveItemClick={handleRemoveItemClick}
-    />
+  return ids.length || message !== undefined ? (
+    <div>
+      <CartView
+        items={items}
+        message={message}
+        handlePurchaseClick={handlePurchaseClick}
+        handleRemoveItemClick={handleRemoveItemClick}
+      />
+      
+    </div>
   ) : (
     <p>No items in your cart</p>
   );

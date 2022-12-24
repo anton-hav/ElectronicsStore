@@ -8,5 +8,6 @@ export const environment = {
     revokeToken: "Token/Revoke",
   },
   goodsEndpoint: "Goods",
+  goodsCountEndpoint: "GoodsCount",
   orderSheetEndpoint: "OrderSheet",
 };

@@ -4,6 +4,7 @@ import Logger from "../utils/logger";
 import UnauthorizedError from "../types/errors/unauthorized.error";
 import BadRequestError from "../types/errors/bad-request.error";
 import ConflictError from "../types/errors/conflict.error";
+import UrlSearchParameters from "../types/url-parameters/url-parameters.parameters";
 
 export default class ApiService {
   constructor() {
@@ -14,10 +15,11 @@ export default class ApiService {
     return environment.apiUrl + url;
   }
 
-  async get(url, data = {}) {
+  async get(url, parameters = {}) {
     let fullUrl = new URL(`${this._getFullUrl(url)}`);
-    if (Object.keys(data).length > 0) {
-      fullUrl.search = new URLSearchParams(Object.entries(data)).toString();
+    if (parameters instanceof UrlSearchParameters){
+      let searchParams = parameters.toURLSearchParams();      
+      fullUrl.search = searchParams.toString();
     }
 
     let response = await fetch(fullUrl);

@@ -6,21 +6,28 @@
     <members>
         <member name="M:ElectronicsStore.WebAPI.Controllers.GoodsController.GetItemById(System.Guid)">
             <summary>
-            Get goods note from storage with specified id.
+                Get goods note from storage with specified id.
             </summary>
-            <param name="id">a goods unique identifier as a <see cref="T:System.Guid"/></param>
+            <param name="id">a goods unique identifier as a <see cref="T:System.Guid" /></param>
             <returns>An item with specified Id</returns>
             <response code="200">Returns an item corresponding to the specified identifier.</response>
             <response code="404">Failed to find record in the database that match the specified id.</response>
             <response code="500">Unexpected error on the server side.</response>
         </member>
-        <member name="M:ElectronicsStore.WebAPI.Controllers.GoodsController.GetGoods">
+        <member name="M:ElectronicsStore.WebAPI.Controllers.GoodsController.GetGoods(ElectronicsStore.WebAPI.Models.Requests.GetGoodsRequestModel)">
             <summary>
-            Get goods from storage.
+                Get goods from storage.
             </summary>
             <returns>all goods</returns>
             <response code="200">Returns all goods.</response>
             <response code="500">Unexpected error on the server side.</response>
+        </member>
+        <member name="M:ElectronicsStore.WebAPI.Controllers.GoodsCountController.GetGoodsCount(ElectronicsStore.WebAPI.Models.Requests.GetGoodsCountRequestModel)">
+            <summary>
+            Get item count specified search parameters from storage.
+            </summary>
+            <param name="model"></param>
+            <returns>number of items</returns>
         </member>
         <member name="T:ElectronicsStore.WebAPI.Controllers.OrderSheetController">
             <summary>
@@ -81,6 +88,28 @@
             <response code="400">Request contains null object or invalid object type</response>
             <response code="409">The same entry already exists in the storage.</response>
             <response code="500">Unexpected error on the server side.</response>
+        </member>
+        <member name="T:ElectronicsStore.WebAPI.Models.Requests.GetGoodsCountRequestModel">
+            <summary>
+            Request model to get items count.
+            </summary>
+        </member>
+        <member name="T:ElectronicsStore.WebAPI.Models.Requests.GetGoodsRequestModel">
+            <summary>
+            Request model to get goods
+            </summary>
+        </member>
+        <member name="P:ElectronicsStore.WebAPI.Models.Requests.GetGoodsRequestModel.PageNumber">
+            <summary>
+            Search parameter that represents the page number.
+            The default value is 1.
+            </summary>
+        </member>
+        <member name="P:ElectronicsStore.WebAPI.Models.Requests.GetGoodsRequestModel.PageSize">
+            <summary>
+            Search parameter that represents the number of goods on the page.
+            The default value is 10.
+            </summary>
         </member>
         <member name="T:ElectronicsStore.WebAPI.Models.Requests.LoginUserRequestModel">
             <summary>

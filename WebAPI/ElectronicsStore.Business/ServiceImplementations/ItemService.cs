@@ -11,7 +11,7 @@ public class ItemService : IItemService
     private readonly IMapper _mapper;
     private readonly IUnitOfWork _unitOfWork;
 
-    public ItemService(IMapper mapper, 
+    public ItemService(IMapper mapper,
         IUnitOfWork unitOfWork)
     {
         _mapper = mapper;
@@ -49,5 +49,32 @@ public class ItemService : IItemService
             .ToArrayAsync();
 
         return goods;
+    }
+
+    /// <inheritdoc />
+    public async Task<IEnumerable<ItemDto>> GetItemsBySearchParametersAsync(int pageNumber, int pageSize)
+    {
+        var entities = _unitOfWork.Items.Get();
+
+        var result = (await entities
+                .Skip(pageSize * (pageNumber - 1))
+                .Take(pageSize)
+                .Include(item => item.Product)
+                .ThenInclude(product => product.Brand)
+                .AsNoTracking()
+                .ToListAsync())
+            .Select(entity => _mapper.Map<ItemDto>(entity))
+            .ToArray();
+
+        return result;
+    }
+
+    /// <inheritdoc />
+    public async Task<int> GetItemsCountBySearchParametersAsync()
+    {
+        var entities = _unitOfWork.Items.Get();
+
+        var result = await entities.AsNoTracking().CountAsync();
+        return result;
     }
 }
