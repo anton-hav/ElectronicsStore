@@ -74,7 +74,7 @@ namespace ElectronicsStore.WebAPI
                                 Id="Bearer"
                             }
                         },
-                        new string[]{"User",}
+                        new string[]{}
                     }
                 });
             });
@@ -108,6 +108,7 @@ namespace ElectronicsStore.WebAPI
             builder.Services.AddScoped<IItemService, ItemService>();
             builder.Services.AddScoped<IRefreshTokenService, RefreshTokenService>();
             builder.Services.AddScoped<IJwtUtil, JwtUtilSha256>();
+            builder.Services.AddScoped<ICategoryService, CategoryService>();
 
             // Add repositories
             builder.Services.AddScoped<IRepository<User>, Repository<User>>();
@@ -116,6 +117,7 @@ namespace ElectronicsStore.WebAPI
             builder.Services.AddScoped<IRepository<Product>, Repository<Product>>();
             builder.Services.AddScoped<IRepository<Item>, Repository<Item>>();
             builder.Services.AddScoped<IRepository<RefreshToken>, Repository<RefreshToken>>();
+            builder.Services.AddScoped<IRepository<Category>, Repository<Category>>();
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             var app = builder.Build();
