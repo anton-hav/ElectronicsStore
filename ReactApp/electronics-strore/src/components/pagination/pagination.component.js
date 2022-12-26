@@ -6,6 +6,10 @@ import PaginationParameters from "../../types/url-parameters/pagination.paramete
 
 
 const defaultPageSize = PaginationParameters.defaultPageSize;
+
+/**
+ * Scale page size settings
+ */
 const rowsPerPageOptions = [
   defaultPageSize,
   defaultPageSize * 3,
@@ -59,7 +63,6 @@ export default function RouteBasedPagination(props) {
   });
 
   const navigate = useNavigate();
-  console.log(itemsCount);
 
   /**
    * Get the relative path to the current webpage

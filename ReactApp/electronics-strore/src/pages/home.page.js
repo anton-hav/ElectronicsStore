@@ -1,14 +1,17 @@
 import React from "react";
-import { useLoaderData } from "react-router-dom";
-import { Paper, Box, Typography } from "@mui/material";
+import { Outlet, useLoaderData } from "react-router-dom";
+import { Paper, Box, Typography, Grid } from "@mui/material";
 
 // Import custom components
 import ItemsList from "../components/items-list/items-list.component";
 import Pagination from "../components/pagination/pagination.component";
+import AsideMenu from "../components/aside-menu/aside-menu.component";
 // Import services
 import GoodsService from "../services/goods.service";
 // Import custom object types and utils
 import PaginationParameters from "../types/url-parameters/pagination.parameters";
+
+import "./home.page.css";
 
 const _goodsService = new GoodsService();
 
@@ -25,12 +28,29 @@ export default function Home() {
   const { items, itemsCount, pagination } = useLoaderData();
 
   return items.length ? (
-    <Box>
-      <Paper>
-        <ItemsList items={items} />
-        <Pagination itemsCount={itemsCount} pagination={pagination} />
-      </Paper>
-    </Box>
+    // <Box className="page-wrapper">
+    //   <Box className="aside-menu">
+    //     <AsideMenu />
+    //   </Box>
+    //   <Box className="product-list">
+    //     <Paper>
+    //       <ItemsList items={items} />
+    //       <Pagination itemsCount={itemsCount} pagination={pagination} />
+    //     </Paper>
+    //   </Box>
+    // </Box>
+
+    <Grid container>
+      <Grid item xs={3} md={3}>
+        <AsideMenu />
+      </Grid>
+      <Grid item xs={9} md={9}>
+        <Paper>
+          <ItemsList items={items} />
+          <Pagination itemsCount={itemsCount} pagination={pagination} />
+        </Paper>
+      </Grid>
+    </Grid>
   ) : (
     <p>No items for sale</p>
   );
