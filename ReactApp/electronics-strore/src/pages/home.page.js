@@ -10,6 +10,7 @@ import AsideMenu from "../components/aside-menu/aside-menu.component";
 import GoodsService from "../services/goods.service";
 // Import custom object types and utils
 import PaginationParameters from "../types/url-parameters/pagination.parameters";
+import CategoryParameters from "../types/url-parameters/category-filter.parameters";
 
 import "./home.page.css";
 
@@ -19,13 +20,14 @@ export async function loader({ request }) {
   const url = new URL(request.url);
   const search = new URLSearchParams(url.search);
   const pagination = PaginationParameters.fromUrlSearchParams(search);
+  const category = CategoryParameters.fromUrlSearchParams(search);
   const items = await _goodsService.getGoodsFromApi(pagination);
   const itemsCount = await _goodsService.getGoodsCountFromApi();
-  return { items, itemsCount, pagination };
+  return { items, itemsCount, pagination, category };
 }
 
 export default function Home() {
-  const { items, itemsCount, pagination } = useLoaderData();
+  const { items, itemsCount, pagination, category } = useLoaderData();
 
   return items.length ? (
     // <Box className="page-wrapper">
@@ -42,7 +44,7 @@ export default function Home() {
 
     <Grid container>
       <Grid item xs={3} md={3}>
-        <AsideMenu />
+        <AsideMenu category={category}/>
       </Grid>
       <Grid item xs={9} md={9}>
         <Paper>

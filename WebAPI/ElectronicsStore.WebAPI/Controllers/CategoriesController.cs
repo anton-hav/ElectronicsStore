@@ -60,7 +60,7 @@ public class CategoriesController : ControllerBase
     ///     Get categories from storage.
     /// </summary>
     /// <param name="model">category request model</param>
-    /// <returns>all categories</returns>
+    /// <returns>child categories for the requested category id</returns>
     /// <response code="200">Returns all categories.</response>
     /// <response code="500">Unexpected error on the server side.</response>
     [HttpGet]

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Box } from "@mui/material";
 import TreeView from "@mui/lab/TreeView";
 import TreeItem from "@mui/lab/TreeItem";
@@ -9,86 +9,171 @@ import { useNavigate } from "react-router-dom";
 import "./categories-bar.component.css";
 import CategoryParameters from "../../types/url-parameters/category-filter.parameters";
 import CustomTreeItem from "./custom-tree-item.component";
+// Import services
+import CategoryService from "../../services/category.service";
+// Import custom types and utils
+import CategoryDto from "../../types/dto/category.dto";
 
-const data = {
-  id: "100000",
-  name: "All categories",
-  children: [
-    {
-      id: "100100",
-      name: "Electronics",
-      children: [
-        {
-          id: "100101",
-          name: "Headphones",
-        },
-        {
-          id: "100102",
-          name: "Camera & Photo",
-        },
-        {
-          id: "100103",
-          name: "Home Audio",
-        },
-      ],
-    },
-    {
-      id: "100200",
-      name: "Computers",
-      children: [
-        {
-          id: "100201",
-          name: "Computer Accessories & Peripherals",
-        },
-        {
-          id: "100202",
-          name: "Computer Components",
-        },
-        {
-          id: "100203",
-          name: "Data Storage",
-        },
-        {
-          id: "100204",
-          name: "Monitors",
-        },
-      ],
-    },
-    {
-      id: "100300",
-      name: "Smart Home",
-    },
-  ],
-};
+const _categoryService = new CategoryService();
 
 export default function CategoriesBar(props) {
   const { category } = props;
+  const [categoriesTree, setcategoriesTree] = useState();
+  const [expandedNodes, setExpandedNodes] = useState([]);
 
   const [selected, setSelected] = useState(() => {
-    if (category === undefined || category === null) {
-      return "100000";
+    if (category.categoryId === undefined || category.categoryId === null) {
+      return categoriesTree ? categoriesTree.id : null;
     }
-    return category;
+    return category.categoryId;
   });
 
+  useEffect(() => {
+    async function setRootCategory() {
+      let rootCategory = await _categoryService.getRootCategoryFromApi();
+      const children = await _categoryService.getCategoriesByParentIdFromApi(
+        rootCategory.id
+      );
+      rootCategory.children = children;
+      setcategoriesTree(rootCategory);
+      if (selected !== null) {
+        setSelected(rootCategory.id);
+      }
+    }
+
+    async function setTreeForPropCategory() {
+      let testCategory = await _categoryService.getCategoryByIdFromApi(
+        category.categoryId
+      );
+
+      const value = await getNodesFromCurrentToRootNodes(testCategory);
+      let tree = value.tree;
+      let expanded = value.expanded;
+      console.log(tree);
+      console.log(expanded);
+      setcategoriesTree(tree);
+      setExpandedNodes(expanded);
+      if (selected !== null) {
+        setSelected(category.categoryId);
+      }
+    }
+
+    if (categoriesTree === undefined) {
+      if (category !== undefined && category.categoryId !== null) {
+        setTreeForPropCategory();
+      } else {
+        setRootCategory();
+      }
+    }
+  });
+
+
+
   const navigate = useNavigate();
+
+  const getNodesFromCurrentToRootNodes = async (category) => {
+    let tree = null;
+    let expanded = [];
+    if (category.parentId === null) {
+      tree = category;
+    } else {
+      let parent = await _categoryService.getCategoryByIdFromApi(
+        category.parentId
+      );
+
+      parent = await loadChildren(parent);
+      parent.children = await Promise.all(
+        parent.children.map(async (child) => await loadChildren(child))
+      );
+      let index = parent.children.findIndex((c) => c.id === category.id);
+      parent.children[index] = category;
+      expanded.push(parent.id);
+      const value = await getNodesFromCurrentToRootNodes(parent);
+      tree = value.tree;
+      expanded.push(...value.expanded);
+    }
+    return { tree: tree, expanded: expanded };
+  };
 
   const generateUrlPath = (category) => {
     let url = new URL(window.location.href);
     let search = new URLSearchParams(url.search);
-    const params = new CategoryParameters(selected);
+    const params = new CategoryParameters(category);
     url.search = params.setParametersToUrl(search);
     let relativePath = url.pathname + url.search;
     return relativePath;
   };
 
+  /**
+   * Handles category selection events
+   * @param {*} event - React select event
+   * @param {*} nodeId - id of the selected category
+   */
   const handleSelect = (event, nodeId) => {
     let relativePath = generateUrlPath(nodeId);
     setSelected(nodeId);
-    console.log("selected", nodeId);
     navigate(relativePath);
   };
 
+  /**
+   * Finds child node in categories with specified unique identifier.
+   * @param {*} nodeId - child node unique identifier.
+   * @param {*} node - root node
+   * @returns a link to the child node matching the given identifier
+   */
+  const findNodeById = (nodeId, node) => {
+    // The search is recursive. The search method should be optimized
+    // if there are a large number of categories. Breaking recursion
+    // when a node is found successfully will increase performance.
+    let result = undefined;
+    if (node.id === nodeId) {
+      result = node;
+    } else if (node.children.length > 0) {
+      let childResult = node.children.map((child) =>
+        findNodeById(nodeId, child)
+      );
+      result = childResult.find((r) => r !== undefined);
+    }
+    return result;
+  };
+
+  /**
+   * Uploads child categories for current node of the categories tree.
+   * @param {*} node - current node of the categories tree.
+   * @returns - node with the child categories (if thay exist).
+   */
+  const loadChildren = async (node) => {
+    if (node.children.length === 0) {
+      const children = await _categoryService.getCategoriesByParentIdFromApi(
+        node.id
+      );
+      node.children = children;
+    }
+    return node;
+  };
+
+  /**
+   * Handles expand and collapse categories tree nodes.
+   * Uploads child categories for all children of the last expanded tree node.
+   * @param {*} event - React event
+   * @param {*} nodeIds - array of expanded node ids.
+   */
+  const handleToggle = async (event, nodeIds) => {
+    setExpandedNodes(nodeIds);
+    let lastExpandedNodeId = nodeIds[0];
+    let rootCategory = categoriesTree.clone();
+    let node = findNodeById(lastExpandedNodeId, rootCategory);
+    node.children = await Promise.all(
+      node.children.map(async (child) => await loadChildren(child))
+    );
+    setcategoriesTree(rootCategory);
+  };
+
+  /**
+   * Render the categories tree.
+   * @param {*} nodes
+   * @returns React Tree component represent categories tree.
+   */
   const renderTree = (nodes) => (
     <CustomTreeItem
       className="categories-item"
@@ -107,12 +192,13 @@ export default function CategoriesBar(props) {
       <TreeView
         className="categories-box"
         defaultCollapseIcon={<ExpandMoreIcon />}
-        defaultExpanded={["100000"]}
+        expanded={expandedNodes}
         defaultExpandIcon={<ChevronRightIcon />}
         selected={selected}
         onNodeSelect={handleSelect}
+        onNodeToggle={handleToggle}
       >
-        {renderTree(data)}
+        {categoriesTree !== undefined ? renderTree(categoriesTree) : null}
       </TreeView>
     </Box>
   );

@@ -11,7 +11,9 @@ export default class CategoryParameters extends UrlSearchParameters {
 
   constructor(categoryId) {
     super();
-    this.categoryId = categoryId;
+    if (categoryId !== undefined) {
+      this.categoryId = categoryId;
+    }
   }
 
   /**
@@ -20,10 +22,10 @@ export default class CategoryParameters extends UrlSearchParameters {
    * @returns new instance of CategoryParameters
    */
   static fromUrlSearchParams(params) {
-    let categoryId = 100000;
+    let categoryId;
     if (params instanceof URLSearchParams) {
       if (params.has("node")) {
-        let categoryId = Number(params.get("node"));
+        categoryId = params.get("node");
       }
     }
     return new CategoryParameters(categoryId);
