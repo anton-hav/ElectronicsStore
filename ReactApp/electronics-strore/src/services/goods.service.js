@@ -19,7 +19,6 @@ export default class GoodsService {
   }
 
   async getGoodsFromApi(parameters) {
-    
     let response = await this._apiService.get(this._endpoint, parameters);
     let goods = response.map((resp) => GoodsDto.fromResponse(resp));
     return goods;

@@ -1,7 +1,7 @@
 import UrlSearchParameters from "./url-parameters.parameters";
 
 /**
- * Represents a category filter parameters for requesting to the storage.
+ * Represents a category filter parameters for requesting goods from the storage.
  */
 export default class CategoryParameters extends UrlSearchParameters {
   /**

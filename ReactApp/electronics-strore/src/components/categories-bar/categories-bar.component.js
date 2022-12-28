@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Box } from "@mui/material";
 import TreeView from "@mui/lab/TreeView";
-import TreeItem from "@mui/lab/TreeItem";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import { useNavigate } from "react-router-dom";
@@ -29,6 +28,10 @@ export default function CategoriesBar(props) {
   });
 
   useEffect(() => {
+    /**
+     * Generates a category tree by default.
+     * Loads the root category and its childrens.
+     */
     async function setRootCategory() {
       let rootCategory = await _categoryService.getRootCategoryFromApi();
       const children = await _categoryService.getCategoriesByParentIdFromApi(
@@ -41,16 +44,19 @@ export default function CategoriesBar(props) {
       }
     }
 
+    /**
+     * Generates a category tree for the selected category.
+     * This function is only used when passing a category identifier through a URL (props).
+     */
     async function setTreeForPropCategory() {
-      let testCategory = await _categoryService.getCategoryByIdFromApi(
+      // Builds the category tree based on the received category Id (category props).
+      // Generates an array of expanded node values.
+      let cat = await _categoryService.getCategoryByIdFromApi(
         category.categoryId
       );
-
-      const value = await getNodesFromCurrentToRootNodes(testCategory);
+      const value = await generateCategoryTreeByCategory(cat);
       let tree = value.tree;
       let expanded = value.expanded;
-      console.log(tree);
-      console.log(expanded);
       setcategoriesTree(tree);
       setExpandedNodes(expanded);
       if (selected !== null) {
@@ -67,11 +73,15 @@ export default function CategoriesBar(props) {
     }
   });
 
-
-
   const navigate = useNavigate();
 
-  const getNodesFromCurrentToRootNodes = async (category) => {
+  /**
+   * Generates a category tree and an array of extended nodes.
+   * Performs recursion from the current category to the root category.
+   * @param {CategoryDto} category - current category node of the tree.
+   * @returns object with a category tree and an array of extended categories as properties.
+   */
+  const generateCategoryTreeByCategory = async (category) => {
     let tree = null;
     let expanded = [];
     if (category.parentId === null) {
@@ -88,7 +98,7 @@ export default function CategoriesBar(props) {
       let index = parent.children.findIndex((c) => c.id === category.id);
       parent.children[index] = category;
       expanded.push(parent.id);
-      const value = await getNodesFromCurrentToRootNodes(parent);
+      const value = await generateCategoryTreeByCategory(parent);
       tree = value.tree;
       expanded.push(...value.expanded);
     }
@@ -97,7 +107,10 @@ export default function CategoriesBar(props) {
 
   const generateUrlPath = (category) => {
     let url = new URL(window.location.href);
-    let search = new URLSearchParams(url.search);
+    // Changing a category resets the pagination and other filters.
+    // If you want to leave the whole query string unchanged,
+    // pass "url.search" to the constructor of the URLSearchParams object.
+    let search = new URLSearchParams();
     const params = new CategoryParameters(category);
     url.search = params.setParametersToUrl(search);
     let relativePath = url.pathname + url.search;
