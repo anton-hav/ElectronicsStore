@@ -27,6 +27,14 @@ public interface ICategoryService
     Task<IEnumerable<CategoryDto>> GetCategoriesBySearchParametersAsync(Guid? parentId);
 
     /// <summary>
+    /// Get unique identifiers of all inner categories from the storage by current category unique identifier.
+    /// The result includes the current category identifier.
+    /// </summary>
+    /// <param name="categoryId">a current category unique identifier</param>
+    /// <returns>a unique identifiers of all inner categories</returns>
+    Task<IEnumerable<Guid>> GetInnerCategoriesByCurrentCategoryIdAsync(Guid categoryId);
+
+    /// <summary>
     /// Checks if the record with the same name and parent id exists in the storage.
     /// </summary>
     /// <param name="name">name of category as a <see cref="string"/></param>
@@ -46,6 +54,13 @@ public interface ICategoryService
     /// </summary>
     /// <returns>A boolean</returns>
     Task<bool> IsRootCategoryExistAsync();
+
+    /// <summary>
+    /// Checks if the category with the specified id is the root category.
+    /// </summary>
+    /// <param name="id">unique identifier as a <see cref="Guid"/></param>
+    /// <returns>A boolean</returns>
+    Task<bool> IsCategoryRootByIdAsync(Guid id);
 
     // CREATE
 

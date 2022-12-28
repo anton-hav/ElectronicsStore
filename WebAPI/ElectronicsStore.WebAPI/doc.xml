@@ -216,7 +216,13 @@
         <member name="P:ElectronicsStore.WebAPI.Models.Requests.GetGoodsRequestModel.PageSize">
             <summary>
             Search parameter that represents the number of goods on the page.
-            The default value is 10.
+            The default value is 10. The maximum value is 100. 
+            </summary>
+        </member>
+        <member name="P:ElectronicsStore.WebAPI.Models.Requests.GetGoodsRequestModel.CategoryId">
+            <summary>
+            Search parameter that represents the goods category unique identifier.
+            To ignore the search parameter, the value must be empty.
             </summary>
         </member>
         <member name="T:ElectronicsStore.WebAPI.Models.Requests.LoginUserRequestModel">

@@ -38,4 +38,11 @@ public class CategoryDto
     ///     Navigation property
     /// </remarks>
     public List<CategoryDto> Children { get; set; }
+    /// <summary>
+    ///     List of items in the current category
+    /// </summary>
+    /// <remarks>
+    ///     Navigation property
+    /// </remarks>
+    public List<ItemDto> Items { get; set; }
 }

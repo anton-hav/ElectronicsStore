@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using ElectronicsStore.Business.ServiceImplementations;
 using ElectronicsStore.Core.Abstractions;
 using ElectronicsStore.WebAPI.Models.Requests;
 using ElectronicsStore.WebAPI.Models.Responses;
@@ -65,7 +66,8 @@ public class GoodsController : ControllerBase
     {
         try
         {
-            var goods = await _itemService.GetItemsBySearchParametersAsync(model.PageNumber, model.PageSize);
+            var searchParams = _mapper.Map<GoodsSearchParameters>(model);
+            var goods = await _itemService.GetItemsBySearchParametersAsync(searchParams);
             var response = _mapper.Map<IEnumerable<GetItemResponseModel>>(goods);
             return Ok(response);
         }

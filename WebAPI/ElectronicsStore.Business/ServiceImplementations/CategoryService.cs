@@ -12,7 +12,7 @@ public class CategoryService : ICategoryService
     private readonly IMapper _mapper;
     private readonly IUnitOfWork _unitOfWork;
 
-    public CategoryService(IMapper mapper, 
+    public CategoryService(IMapper mapper,
         IUnitOfWork unitOfWork)
     {
         _mapper = mapper;
@@ -25,7 +25,8 @@ public class CategoryService : ICategoryService
     {
         var entity = await _unitOfWork.Categories.GetByIdAsync(id);
         if (entity == null)
-            throw new ArgumentException("Failed to find record in the database that match the specified id. ", nameof(id));
+            throw new ArgumentException("Failed to find record in the database that match the specified id. ",
+                nameof(id));
         var dto = _mapper.Map<CategoryDto>(entity);
         return dto;
     }
@@ -51,6 +52,23 @@ public class CategoryService : ICategoryService
             .ToArrayAsync();
 
         return entities;
+    }
+
+    /// <inheritdoc />
+    public async Task<IEnumerable<Guid>> GetInnerCategoriesByCurrentCategoryIdAsync(Guid categoryId)
+    {
+        var result = new List<Guid> { categoryId };
+
+        var children = await _unitOfWork.Categories.Get()
+            .AsNoTracking()
+            .Where(entity => entity.ParentCategoryId.Equals(categoryId))
+            .Select(entity => entity.Id)
+            .ToListAsync();
+
+        if (children.Any())
+            foreach (var child in children)
+                result.AddRange(await GetInnerCategoriesByCurrentCategoryIdAsync(child));
+        return result;
     }
 
     /// <inheritdoc />
@@ -85,6 +103,17 @@ public class CategoryService : ICategoryService
             .FirstOrDefaultAsync(entity => entity.ParentCategoryId.Equals(null));
 
         return entity != null;
+    }
+
+    /// <inheritdoc />
+    /// <exception cref="ArgumentException"></exception>
+    public async Task<bool> IsCategoryRootByIdAsync(Guid id)
+    {
+        var entity = await _unitOfWork.Categories.GetByIdAsync(id);
+
+        if (entity == null) throw new ArgumentException("The category specified by the identifier does not exist.");
+
+        return entity.ParentCategoryId == null;
     }
 
     /// <inheritdoc />

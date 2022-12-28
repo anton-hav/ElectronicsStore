@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using ElectronicsStore.Core;
 using ElectronicsStore.Core.Abstractions;
 using ElectronicsStore.Core.DataTransferObjects;
 using ElectronicsStore.Data.Abstractions;
@@ -10,12 +11,15 @@ public class ItemService : IItemService
 {
     private readonly IMapper _mapper;
     private readonly IUnitOfWork _unitOfWork;
+    private readonly ICategoryService _categoryService;
 
     public ItemService(IMapper mapper,
-        IUnitOfWork unitOfWork)
+        IUnitOfWork unitOfWork, 
+        ICategoryService categoryService)
     {
         _mapper = mapper;
         _unitOfWork = unitOfWork;
+        _categoryService = categoryService;
     }
 
     /// <inheritdoc />
@@ -52,13 +56,25 @@ public class ItemService : IItemService
     }
 
     /// <inheritdoc />
-    public async Task<IEnumerable<ItemDto>> GetItemsBySearchParametersAsync(int pageNumber, int pageSize)
+    public async Task<IEnumerable<ItemDto>> GetItemsBySearchParametersAsync(IGoodsSearchParameters parameters)
     {
         var entities = _unitOfWork.Items.Get();
 
+        // Category filter
+        if (parameters.Category.CategoryId != null)
+        {
+            var categoryId = (Guid)parameters.Category.CategoryId;
+            var isRoot = await _categoryService.IsCategoryRootByIdAsync(categoryId);
+            if (!isRoot)
+            {
+                var innerCategoryIds = await _categoryService.GetInnerCategoriesByCurrentCategoryIdAsync(categoryId);
+                entities = entities.Where(entity => innerCategoryIds.Any(id => entity.CategoryId.Equals(id)));
+            }
+        }
+
         var result = (await entities
-                .Skip(pageSize * (pageNumber - 1))
-                .Take(pageSize)
+                .Skip(parameters.Pagination.PageSize * (parameters.Pagination.PageNumber - 1))
+                .Take(parameters.Pagination.PageSize)
                 .Include(item => item.Product)
                 .ThenInclude(product => product.Brand)
                 .AsNoTracking()

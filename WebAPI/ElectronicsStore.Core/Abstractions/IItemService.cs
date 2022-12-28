@@ -18,14 +18,13 @@ public interface IItemService
     /// </summary>
     /// <returns>all goods</returns>
     Task<IEnumerable<ItemDto>> GetAllItemsWithPropertiesAsync();
-
+    
     /// <summary>
     /// Get items from storage by search parameters including navigation properties.
     /// </summary>
-    /// <param name="pageNumber">search parameter that represents the page number</param>
-    /// <param name="pageSize">search parameter that represents the number of items on the page</param>
+    /// <param name="parameters">search parameter as a <see cref="IGoodsSearchParameters"/></param>
     /// <returns>items matching the search parameters</returns>
-    Task<IEnumerable<ItemDto>> GetItemsBySearchParametersAsync(int pageNumber, int pageSize);
+    Task<IEnumerable<ItemDto>> GetItemsBySearchParametersAsync(IGoodsSearchParameters parameters);
 
     /// <summary>
     /// Get items count from storage by search parameters.
