@@ -38,4 +38,12 @@ public class Category : IBaseEntity
     ///     Navigation property
     /// </remarks>
     public List<Category> Children { get; set; }
+
+    /// <summary>
+    ///     List of items in the current category
+    /// </summary>
+    /// <remarks>
+    ///     Navigation property
+    /// </remarks>
+    public List<Item> Items { get; set; }
 }
