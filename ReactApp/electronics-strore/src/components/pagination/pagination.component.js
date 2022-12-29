@@ -1,9 +1,8 @@
-import * as React from "react";
-import PropTypes from 'prop-types';
+import React, { useState, useEffect } from "react";
+import PropTypes from "prop-types";
 import TablePagination from "@mui/material/TablePagination";
 import { useNavigate } from "react-router-dom";
 import PaginationParameters from "../../types/url-parameters/pagination.parameters";
-
 
 const defaultPageSize = PaginationParameters.defaultPageSize;
 
@@ -18,7 +17,7 @@ const rowsPerPageOptions = [
 
 /**
  * Paginator based on URL routing.
- * @param {Object} props - props object that contains total count of items and PaginatorParameters 
+ * @param {Object} props - props object that contains total count of items and PaginatorParameters
  * @returns React Component
  */
 export default function RouteBasedPagination(props) {
@@ -53,13 +52,19 @@ export default function RouteBasedPagination(props) {
   };
 
   const { itemsCount, pagination } = props;
-  const [page, setPage] = React.useState(() => {
+  const [page, setPage] = useState(() => {
     const initialState = pageNumberGuard();
     return initialState;
   });
-  const [itemsPerPage, setItemsPerPage] = React.useState(() => {
+  const [itemsPerPage, setItemsPerPage] = useState(() => {
     const initialState = pageSizeGuard();
     return initialState;
+  });
+
+  useEffect(() => {
+    if (pagination.pageNumber !== page + 1) {
+      setPage(pagination.pageNumber - 1);
+    }
   });
 
   const navigate = useNavigate();
@@ -81,7 +86,7 @@ export default function RouteBasedPagination(props) {
   };
 
   const handleChangePage = (event, newPage) => {
-    let relativePath = generateUrlPath((newPage));
+    let relativePath = generateUrlPath(newPage);
     setPage(newPage);
     navigate(relativePath);
   };
@@ -99,6 +104,9 @@ export default function RouteBasedPagination(props) {
       rowsPerPageOptions={rowsPerPageOptions}
       component="div"
       count={itemsCount}
+      labelDisplayedRows={(from = page) =>
+        `${from.from}-${from.to === -1 ? from.count : from.to} of ${from.count}`
+      }
       page={page}
       onPageChange={handleChangePage}
       rowsPerPage={itemsPerPage}
@@ -108,8 +116,7 @@ export default function RouteBasedPagination(props) {
   );
 }
 
-
 RouteBasedPagination.propTypes = {
   itemsCount: PropTypes.number.isRequired,
-  pagination: PropTypes.instanceOf(PaginationParameters).isRequired
+  pagination: PropTypes.instanceOf(PaginationParameters).isRequired,
 };
