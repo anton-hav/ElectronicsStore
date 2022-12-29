@@ -29,8 +29,9 @@ public interface IItemService
     /// <summary>
     /// Get items count from storage by search parameters.
     /// </summary>
+    /// <param name="parameters">search parameter as a <see cref="IGoodsCountSearchParameters"/></param>
     /// <returns>number of items matching the search parameters.</returns>
-    Task<int> GetItemsCountBySearchParametersAsync();
+    Task<int> GetItemsCountBySearchParametersAsync(IGoodsCountSearchParameters parameters);
 
     // CREATE
 

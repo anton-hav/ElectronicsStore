@@ -117,6 +117,7 @@
             </summary>
             <returns>all goods</returns>
             <response code="200">Returns all goods.</response>
+            <response code="400">Request contains null object or invalid object type.</response>
             <response code="500">Unexpected error on the server side.</response>
         </member>
         <member name="M:ElectronicsStore.WebAPI.Controllers.GoodsCountController.GetGoodsCount(ElectronicsStore.WebAPI.Models.Requests.GetGoodsCountRequestModel)">
@@ -124,7 +125,10 @@
             Get item count specified search parameters from storage.
             </summary>
             <param name="model"></param>
-            <returns>number of items</returns>
+            <returns>number of items matching search parameters.</returns>
+            <response code="200">Returns a number of items matching search parameters.</response>
+            <response code="400">Request contains null object or invalid object type.</response>
+            <response code="500">Unexpected error on the server side.</response>
         </member>
         <member name="T:ElectronicsStore.WebAPI.Controllers.OrderSheetController">
             <summary>
@@ -200,6 +204,11 @@
         <member name="T:ElectronicsStore.WebAPI.Models.Requests.GetGoodsCountRequestModel">
             <summary>
             Request model to get items count.
+            </summary>
+        </member>
+        <member name="P:ElectronicsStore.WebAPI.Models.Requests.GetGoodsCountRequestModel.CategoryId">
+            <summary>
+            Search parameter that represents the category of goods.
             </summary>
         </member>
         <member name="T:ElectronicsStore.WebAPI.Models.Requests.GetGoodsRequestModel">

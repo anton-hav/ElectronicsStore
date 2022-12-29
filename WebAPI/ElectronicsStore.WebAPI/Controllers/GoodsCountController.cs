@@ -1,45 +1,61 @@
-﻿using ElectronicsStore.Core.Abstractions;
+﻿using AutoMapper;
+using ElectronicsStore.Business.SearchParametersImplementations;
+using ElectronicsStore.Core.Abstractions;
 using ElectronicsStore.WebAPI.Models.Requests;
 using ElectronicsStore.WebAPI.Models.Responses;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Serilog;
 
-namespace ElectronicsStore.WebAPI.Controllers
+namespace ElectronicsStore.WebAPI.Controllers;
+
+/// <summary>
+/// Controller that provides API endpoints for the GoodsCount resource.
+/// </summary>
+[Route("api/[controller]")]
+[ApiController]
+public class GoodsCountController : ControllerBase
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class GoodsCountController : ControllerBase
+    private readonly IItemService _itemService;
+    private readonly IMapper _mapper;
+
+    public GoodsCountController(IItemService itemService,
+        IMapper mapper)
     {
-        private readonly IItemService _itemService;
+        _itemService = itemService;
+        _mapper = mapper;
+    }
 
-        public GoodsCountController(IItemService itemService)
+    /// <summary>
+    ///     Get item count specified search parameters from storage.
+    /// </summary>
+    /// <param name="model"></param>
+    /// <returns>number of items matching search parameters.</returns>
+    /// <response code="200">Returns a number of items matching search parameters.</response>
+    /// <response code="400">Request contains null object or invalid object type.</response>
+    /// <response code="500">Unexpected error on the server side.</response>
+    [HttpGet]
+    [ProducesResponseType(typeof(int), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status500InternalServerError)]
+    public async Task<IActionResult> GetGoodsCount([FromQuery] GetGoodsCountRequestModel model)
+    {
+        try
         {
-            _itemService = itemService;
+            var searchParams = _mapper.Map<GoodsCountSearchParameters>(model);
+            var response = await _itemService
+                .GetItemsCountBySearchParametersAsync(searchParams);
+
+            return Ok(response);
         }
-
-        /// <summary>
-        /// Get item count specified search parameters from storage.
-        /// </summary>
-        /// <param name="model"></param>
-        /// <returns>number of items</returns>
-        [HttpGet]
-        [ProducesResponseType(typeof(int), StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> GetGoodsCount([FromQuery] GetGoodsCountRequestModel model)
+        catch (ArgumentException ex)
         {
-            try
-            {
-                var response = await _itemService
-                    .GetItemsCountBySearchParametersAsync();
-
-                return Ok(response);
-            }
-            catch (Exception ex)
-            {
-                Log.Error($"{ex.Message}. {Environment.NewLine} {ex.StackTrace}");
-                return StatusCode(500, new ErrorModel { Message = "Unexpected error on the server side." });
-            }
+            Log.Warning($"{ex.Message}. {Environment.NewLine} {ex.StackTrace}");
+            return BadRequest(new ErrorModel { Message = ex.Message });
+        }
+        catch (Exception ex)
+        {
+            Log.Error($"{ex.Message}. {Environment.NewLine} {ex.StackTrace}");
+            return StatusCode(500, new ErrorModel { Message = "Unexpected error on the server side." });
         }
     }
 }

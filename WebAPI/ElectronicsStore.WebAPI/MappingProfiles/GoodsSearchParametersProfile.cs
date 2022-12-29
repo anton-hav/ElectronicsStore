@@ -5,8 +5,14 @@ using ElectronicsStore.WebAPI.Models.Requests;
 
 namespace ElectronicsStore.WebAPI.MappingProfiles;
 
+/// <summary>
+/// Mapper profile for GoodsSearchParameters
+/// </summary>
 public class GoodsSearchParametersProfile : Profile
 {
+    /// <summary>
+    /// Mapper profile constructor
+    /// </summary>
     public GoodsSearchParametersProfile()
     {
         CreateMap<GetGoodsRequestModel, GoodsSearchParameters>()
