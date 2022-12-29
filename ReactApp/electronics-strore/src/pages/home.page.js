@@ -12,6 +12,7 @@ import GoodsService from "../services/goods.service";
 import PaginationParameters from "../types/url-parameters/pagination.parameters";
 import CategoryParameters from "../types/url-parameters/category-filter.parameters";
 import GoodsParameters from "../types/url-parameters/goods-filter.parameters";
+import GoodsCountRequestModel from "../types/model/requests/goods-count-request.model";
 
 import "./home.page.css";
 
@@ -20,16 +21,15 @@ const _goodsService = new GoodsService();
 export async function loader({ request }) {
   const url = new URL(request.url);
   const search = new URLSearchParams(url.search);
-  // const pagination = PaginationParameters.fromUrlSearchParams(search);
-  //const category = CategoryParameters.fromUrlSearchParams(search);
-  // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
   const goodsFilter = GoodsParameters.fromUrlSearchParams(search);
   const items = await _goodsService.getGoodsFromApi(goodsFilter);
   const pagination = goodsFilter.pagination;
   const category = goodsFilter.category;
-  // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-  // const items = await _goodsService.getGoodsFromApi(pagination);
-  const itemsCount = await _goodsService.getGoodsCountFromApi();
+  const goodsCountParameters =
+    GoodsCountRequestModel.fromGoodsParameters(goodsFilter);
+  const itemsCount = await _goodsService.getGoodsCountFromApi(
+    goodsCountParameters
+  );
   return { items, itemsCount, pagination, category };
 }
 

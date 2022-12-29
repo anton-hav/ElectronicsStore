@@ -1,11 +1,12 @@
 import UrlSearchParameters from "../url-parameters/url-parameters.parameters";
 
 /**
- * Represents a category parameters for requesting to the storage.
+ * Represents a category parameters for requesting category through API.
+ * Don't use this class for generate url search string for URL.
  */
 export default class CategoryRequestModel extends UrlSearchParameters {
   /**
-   * @property {number} parentCategoryId - .
+   * @property {number} parentCategoryId - an unique identifier of the parent for current category.
    */
   parentCategoryId = "";
 
@@ -14,14 +15,5 @@ export default class CategoryRequestModel extends UrlSearchParameters {
     if (parentCategoryId !== undefined) {
       this.parentCategoryId = parentCategoryId;
     }
-  }
-
-  /**
-   * Mapping from URLSearchParams to CategoryRequestModel object
-   * @param {*} params -
-   * @returns
-   */
-  static fromUrlSearchParams(params) {
-    throw new Error("Not implemented");
   }
 }

@@ -26,28 +26,12 @@ export default class GoodsParameters extends UrlSearchParameters {
   /**
    * Mapping from URLSearchParams to GoodsParameters object
    * @param {*} params - URLSearchParams object
-   * @returns ne instance of GoodsParameters
+   * @returns new instance of GoodsParameters
    */
   static fromUrlSearchParams(params) {
     let pagination = PaginationParameters.fromUrlSearchParams(params);
     let category = CategoryParameters.fromUrlSearchParams(params);
 
     return new GoodsParameters(pagination, category);
-  }
-
-  /**
-   * Convert instance of GoodParameters to URLSearchParams object.
-   * @returns new instance of URLSearchParams object
-   */
-  toURLSearchParams() {
-    let search = new URLSearchParams();
-    Object.keys(this).forEach((property) => {
-      Object.keys(this[property]).forEach((key) => {
-        if (this[property][key] !== null) {
-          search.set(`${key}`, this[property][key]);
-        }
-      });
-    });
-    return search;
   }
 }

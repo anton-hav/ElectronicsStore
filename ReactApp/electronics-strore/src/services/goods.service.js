@@ -24,8 +24,16 @@ export default class GoodsService {
     return goods;
   }
 
-  async getGoodsCountFromApi() {
-    let response = await this._apiService.get(this._goodsCountEndpoint);
+  /**
+   * Get a count of goods matched search parameters.
+   * @param {GoodsCountRequestModel} parameters - search parameters for goods count.
+   * @returns a number of goods matching search parameters.
+   */
+  async getGoodsCountFromApi(parameters) {
+    let response = await this._apiService.get(
+      this._goodsCountEndpoint,
+      parameters
+    );
     return response;
   }
 
