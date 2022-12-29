@@ -11,6 +11,7 @@ public class ElectronicsStoreDbContext : DbContext
     public DbSet<Product> Products { get; set; }
     public DbSet<Item> Items { get; set; }
     public DbSet<RefreshToken> RefreshTokens { get; set; }
+    public DbSet<Category> Categories { get; set; }
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
@@ -31,6 +32,14 @@ public class ElectronicsStoreDbContext : DbContext
             {
                 product.BrandId,
                 product.Name,
+            })
+            .IsUnique();
+
+        builder.Entity<Category>()
+            .HasIndex(category => new
+            {
+                category.Name,
+                category.ParentCategoryId,
             })
             .IsUnique();
     }

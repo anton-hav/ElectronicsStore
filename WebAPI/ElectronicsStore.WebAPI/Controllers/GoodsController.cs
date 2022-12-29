@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using ElectronicsStore.Business.ServiceImplementations;
 using ElectronicsStore.Core.Abstractions;
 using ElectronicsStore.WebAPI.Models.Requests;
 using ElectronicsStore.WebAPI.Models.Responses;
@@ -7,6 +8,9 @@ using Serilog;
 
 namespace ElectronicsStore.WebAPI.Controllers;
 
+/// <summary>
+/// Controller that provides API endpoints for the Item resource.
+/// </summary>
 [Route("api/[controller]")]
 [ApiController]
 public class GoodsController : ControllerBase
@@ -57,17 +61,25 @@ public class GoodsController : ControllerBase
     /// </summary>
     /// <returns>all goods</returns>
     /// <response code="200">Returns all goods.</response>
+    /// <response code="400">Request contains null object or invalid object type.</response>
     /// <response code="500">Unexpected error on the server side.</response>
     [HttpGet]
     [ProducesResponseType(typeof(IEnumerable<GetItemResponseModel>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> GetGoods([FromQuery] GetGoodsRequestModel model)
     {
         try
         {
-            var goods = await _itemService.GetItemsBySearchParametersAsync(model.PageNumber, model.PageSize);
+            var searchParams = _mapper.Map<GoodsSearchParameters>(model);
+            var goods = await _itemService.GetItemsBySearchParametersAsync(searchParams);
             var response = _mapper.Map<IEnumerable<GetItemResponseModel>>(goods);
             return Ok(response);
+        }
+        catch (ArgumentException ex)
+        {
+            Log.Warning($"{ex.Message}. {Environment.NewLine} {ex.StackTrace}");
+            return BadRequest(new ErrorModel { Message = ex.Message });
         }
         catch (Exception ex)
         {

@@ -11,5 +11,6 @@ public interface IUnitOfWork
     IRepository<Product> Products { get; }
     IRepository<Item> Items { get; }
     IRepository<RefreshToken> RefreshToken { get; }
+    IRepository<Category> Categories { get; }
     Task<int> Commit();
 }

@@ -17,8 +17,8 @@ export default class ApiService {
 
   async get(url, parameters = {}) {
     let fullUrl = new URL(`${this._getFullUrl(url)}`);
-    if (parameters instanceof UrlSearchParameters){
-      let searchParams = parameters.toURLSearchParams();      
+    if (parameters instanceof UrlSearchParameters) {
+      let searchParams = parameters.toURLSearchParams();
       fullUrl.search = searchParams.toString();
     }
 

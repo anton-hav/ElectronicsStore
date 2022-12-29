@@ -10,4 +10,5 @@ export const environment = {
   goodsEndpoint: "Goods",
   goodsCountEndpoint: "GoodsCount",
   orderSheetEndpoint: "OrderSheet",
+  categoriesEndpoint: "Categories",
 };

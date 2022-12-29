@@ -4,6 +4,7 @@ using ElectronicsStore.DataBase;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ElectronicsStore.DataBase.Migrations
 {
     [DbContext(typeof(ElectronicsStoreDbContext))]
-    partial class ElectronicsStoreDbContextModelSnapshot : ModelSnapshot
+    [Migration("20221226201345_AddCategoryToDatabase")]
+    partial class AddCategoryToDatabase
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -70,9 +73,6 @@ namespace ElectronicsStore.DataBase.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("CategoryId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<double>("Cost")
                         .HasColumnType("float");
 
@@ -88,8 +88,6 @@ namespace ElectronicsStore.DataBase.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("CategoryId");
 
                     b.HasIndex("ProductId");
 
@@ -192,19 +190,11 @@ namespace ElectronicsStore.DataBase.Migrations
 
             modelBuilder.Entity("ElectronicsStore.DataBase.Entities.Item", b =>
                 {
-                    b.HasOne("ElectronicsStore.DataBase.Entities.Category", "Category")
-                        .WithMany("Items")
-                        .HasForeignKey("CategoryId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("ElectronicsStore.DataBase.Entities.Product", "Product")
                         .WithMany()
                         .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Category");
 
                     b.Navigation("Product");
                 });
@@ -250,8 +240,6 @@ namespace ElectronicsStore.DataBase.Migrations
             modelBuilder.Entity("ElectronicsStore.DataBase.Entities.Category", b =>
                 {
                     b.Navigation("Children");
-
-                    b.Navigation("Items");
                 });
 
             modelBuilder.Entity("ElectronicsStore.DataBase.Entities.Role", b =>

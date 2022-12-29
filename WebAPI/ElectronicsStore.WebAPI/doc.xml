@@ -4,6 +4,103 @@
         <name>ElectronicsStore.WebAPI</name>
     </assembly>
     <members>
+        <member name="M:ElectronicsStore.WebAPI.Controllers.CategoriesController.GetCategoryById(System.Guid)">
+            <summary>
+                Get a category from storage with specified id.
+            </summary>
+            <param name="id">a category unique identifier as a <see cref="T:System.Guid" /></param>
+            <returns>A category with specified Id</returns>
+            <response code="200">Returns a category corresponding to the specified identifier.</response>
+            <response code="404">Failed to find record in the database that match the specified id.</response>
+            <response code="500">Unexpected error on the server side.</response>
+        </member>
+        <member name="M:ElectronicsStore.WebAPI.Controllers.CategoriesController.GetCategories(ElectronicsStore.WebAPI.Models.Requests.GetCategoriesRequestModel)">
+            <summary>
+                Get categories from storage.
+            </summary>
+            <param name="model">category request model</param>
+            <returns>child categories for the requested category id</returns>
+            <response code="200">Returns all categories.</response>
+            <response code="500">Unexpected error on the server side.</response>
+        </member>
+        <member name="M:ElectronicsStore.WebAPI.Controllers.CategoriesController.AddCategory(ReadingList.WebAPI.Models.Requests.AddOrUpdateCategoryRequestModel)">
+            <summary>
+                Add a new category to storage.
+            </summary>
+            <param name="model">a category</param>
+            <returns>A newly created category</returns>
+            <response code="201">Returns the newly created category</response>
+            <response code="400">Request contains null object or invalid object type</response>
+            <response code="409">The same entry already exists in the storage.</response>
+            <response code="500">Unexpected error on the server side.</response>
+        </member>
+        <member name="M:ElectronicsStore.WebAPI.Controllers.CategoriesController.UpdateCategory(System.Guid,ReadingList.WebAPI.Models.Requests.AddOrUpdateCategoryRequestModel)">
+            <summary>
+                Update or replace a category with specified Id in storage.
+            </summary>
+            <param name="id">a category unique identifier as a <see cref="T:System.Guid" /></param>
+            <param name="model">a category used for update</param>
+            <returns>A category with specified Id.</returns>
+            <response code="200">Returns the updated category</response>
+            <response code="400">Request contains null object or invalid object type</response>
+            <response code="409">
+                Fail to find a record with the specified Id in the storage
+                or the entry with the same property already exists in the storage.
+            </response>
+            <response code="500">Unexpected error on the server side.</response>
+        </member>
+        <member name="M:ElectronicsStore.WebAPI.Controllers.CategoriesController.PatchCategory(System.Guid,ReadingList.WebAPI.Models.Requests.AddOrUpdateCategoryRequestModel)">
+            <summary>
+                Patch a category with specified Id in storage.
+            </summary>
+            <param name="id">a category unique identifier as a <see cref="T:System.Guid" /></param>
+            <param name="model">a category used for patching</param>
+            <returns>A category with specified Id.</returns>
+            <response code="200">Returns the updated category</response>
+            <response code="400">Request contains null object or invalid object type</response>
+            <response code="409">
+                Fail to find a record with the specified Id in the storage
+                or the entry with the same property already exists in the storage.
+            </response>
+            <response code="500">Unexpected error on the server side.</response>
+        </member>
+        <member name="M:ElectronicsStore.WebAPI.Controllers.CategoriesController.DeleteCategory(System.Guid)">
+            <summary>
+                Delete a category with specified Id from the storage.
+            </summary>
+            <param name="id">a category unique identifier as a <see cref="T:System.Guid" /></param>
+            <returns></returns>
+            <response code="204">Successful deletion</response>
+            <response code="400">Request contains null object or invalid object type</response>
+            <response code="409">
+                Fail to find a record with the specified Id in the storage
+                or the entry with the same property already exists in the storage.
+            </response>
+            <response code="500">Unexpected error on the server side.</response>
+        </member>
+        <member name="M:ElectronicsStore.WebAPI.Controllers.CategoriesController.CheckCategoryForEditAsync(System.Guid,System.String,System.Nullable{System.Guid})">
+            <summary>
+                Validate a category model for update.
+            </summary>
+            <param name="id">a unique identifier that defines the category to be updated </param>
+            <param name="categoryName">a category name</param>
+            <param name="parentId">an unique identifier of the parent category</param>
+            <returns>A boolean</returns>
+            <exception cref="T:System.ArgumentNullException">If the id is empty.</exception>
+            <exception cref="T:System.ArgumentException">If the same entry already exists in the storage.</exception>
+        </member>
+        <member name="M:ElectronicsStore.WebAPI.Controllers.CategoriesController.IsCategoryTheSameAsync(System.Guid,System.String,System.Nullable{System.Guid})">
+            <summary>
+                Check if the existing category is the same.
+            </summary>
+            <remarks>
+                This check is necessary to ensure idempotent behavior of the PUT method.
+            </remarks>
+            <param name="id">category unique identifier</param>
+            <param name="categoryName">category name</param>
+            <param name="parentId">an unique identifier of the parent category</param>
+            <returns></returns>
+        </member>
         <member name="M:ElectronicsStore.WebAPI.Controllers.GoodsController.GetItemById(System.Guid)">
             <summary>
                 Get goods note from storage with specified id.
@@ -20,6 +117,7 @@
             </summary>
             <returns>all goods</returns>
             <response code="200">Returns all goods.</response>
+            <response code="400">Request contains null object or invalid object type.</response>
             <response code="500">Unexpected error on the server side.</response>
         </member>
         <member name="M:ElectronicsStore.WebAPI.Controllers.GoodsCountController.GetGoodsCount(ElectronicsStore.WebAPI.Models.Requests.GetGoodsCountRequestModel)">
@@ -27,7 +125,10 @@
             Get item count specified search parameters from storage.
             </summary>
             <param name="model"></param>
-            <returns>number of items</returns>
+            <returns>number of items matching search parameters.</returns>
+            <response code="200">Returns a number of items matching search parameters.</response>
+            <response code="400">Request contains null object or invalid object type.</response>
+            <response code="500">Unexpected error on the server side.</response>
         </member>
         <member name="T:ElectronicsStore.WebAPI.Controllers.OrderSheetController">
             <summary>
@@ -89,9 +190,25 @@
             <response code="409">The same entry already exists in the storage.</response>
             <response code="500">Unexpected error on the server side.</response>
         </member>
+        <member name="T:ElectronicsStore.WebAPI.Models.Requests.GetCategoriesRequestModel">
+            <summary>
+                Request model to get categories.
+            </summary>
+        </member>
+        <member name="P:ElectronicsStore.WebAPI.Models.Requests.GetCategoriesRequestModel.ParentCategoryId">
+            <summary>
+                The unique identifier of the parent category for the requested records.
+                (For the root category the value should be empty).
+            </summary>
+        </member>
         <member name="T:ElectronicsStore.WebAPI.Models.Requests.GetGoodsCountRequestModel">
             <summary>
             Request model to get items count.
+            </summary>
+        </member>
+        <member name="P:ElectronicsStore.WebAPI.Models.Requests.GetGoodsCountRequestModel.CategoryId">
+            <summary>
+            Search parameter that represents the category of goods.
             </summary>
         </member>
         <member name="T:ElectronicsStore.WebAPI.Models.Requests.GetGoodsRequestModel">
@@ -108,7 +225,13 @@
         <member name="P:ElectronicsStore.WebAPI.Models.Requests.GetGoodsRequestModel.PageSize">
             <summary>
             Search parameter that represents the number of goods on the page.
-            The default value is 10.
+            The default value is 10. The maximum value is 100. 
+            </summary>
+        </member>
+        <member name="P:ElectronicsStore.WebAPI.Models.Requests.GetGoodsRequestModel.CategoryId">
+            <summary>
+            Search parameter that represents the goods category unique identifier.
+            To ignore the search parameter, the value must be empty.
             </summary>
         </member>
         <member name="T:ElectronicsStore.WebAPI.Models.Requests.LoginUserRequestModel">
@@ -155,6 +278,29 @@
             <summary>
             Confirmation of the user password
             </summary>
+        </member>
+        <member name="T:ElectronicsStore.WebAPI.Models.Responses.CategoryResponseModel">
+            <summary>
+            Response model for the goods category
+            </summary>
+        </member>
+        <member name="P:ElectronicsStore.WebAPI.Models.Responses.CategoryResponseModel.Id">
+            <summary>
+                An unique identifier
+            </summary>
+        </member>
+        <member name="P:ElectronicsStore.WebAPI.Models.Responses.CategoryResponseModel.Name">
+            <summary>
+                Goods category name
+            </summary>
+        </member>
+        <member name="P:ElectronicsStore.WebAPI.Models.Responses.CategoryResponseModel.ParentCategoryId">
+            <summary>
+                The unique identifier of the parent category for the current entry.
+            </summary>
+            <remarks>
+                For the root category the value is null
+            </remarks>
         </member>
         <member name="T:ElectronicsStore.WebAPI.Models.Responses.ErrorModel">
             <summary>
@@ -236,6 +382,24 @@
                 Returns the path for log file recording.
             </summary>
             <returns>A string whose value contains a path to the log file</returns>
+        </member>
+        <member name="T:ReadingList.WebAPI.Models.Requests.AddOrUpdateCategoryRequestModel">
+            <summary>
+            Request model to create or update category
+            </summary>
+        </member>
+        <member name="P:ReadingList.WebAPI.Models.Requests.AddOrUpdateCategoryRequestModel.Name">
+            <summary>
+            Category name
+            </summary>
+        </member>
+        <member name="P:ReadingList.WebAPI.Models.Requests.AddOrUpdateCategoryRequestModel.ParentCategoryId">
+            <summary>
+                The unique identifier of the parent category for the current entry.
+            </summary>
+            <remarks>
+                For the root category the value is null
+            </remarks>
         </member>
     </members>
 </doc>
