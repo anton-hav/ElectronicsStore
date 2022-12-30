@@ -7,13 +7,12 @@ namespace ElectronicsStore.Business.ServiceImplementations;
 /// </summary>
 public class GoodsSearchParameters : IGoodsSearchParameters
 {
-    /// <summary>
-    ///     Pagination parameters.
-    /// </summary>
+    /// <inheritdoc />
     public IPaginationParameters Pagination { get; set; }
 
-    /// <summary>
-    ///     Category parameters.
-    /// </summary>
+    /// <inheritdoc />
     public ICategorySearchParameters Category { get; set; }
+
+    /// <inheritdoc />
+    public IPriceSearchParameters Price { get; set; }
 }

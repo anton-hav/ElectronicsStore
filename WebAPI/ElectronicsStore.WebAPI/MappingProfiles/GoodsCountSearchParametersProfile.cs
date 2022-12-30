@@ -15,6 +15,13 @@ public class GoodsCountSearchParametersProfile : Profile
                     => opt.MapFrom(request => new CategorySearchParameters
                     {
                         CategoryId = request.CategoryId
+                    }))
+            .ForMember(searchParams => searchParams.Price,
+                opt
+                    => opt.MapFrom(request => new PriceSearchParameters
+                    {
+                        From = request.From,
+                        To = request.To
                     }));
     }
 }

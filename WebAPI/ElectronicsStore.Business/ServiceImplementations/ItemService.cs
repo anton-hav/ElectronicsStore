@@ -14,7 +14,7 @@ public class ItemService : IItemService
     private readonly ICategoryService _categoryService;
 
     public ItemService(IMapper mapper,
-        IUnitOfWork unitOfWork, 
+        IUnitOfWork unitOfWork,
         ICategoryService categoryService)
     {
         _mapper = mapper;
@@ -72,6 +72,7 @@ public class ItemService : IItemService
         //    }
         //}
         entities = await GetQueryWithCategoryFilter(entities, parameters.Category);
+        entities = GetQueryWithPriceFilter(entities, parameters.Price);
 
         var result = (await entities
                 .Skip(parameters.Pagination.PageSize * (parameters.Pagination.PageNumber - 1))
@@ -92,25 +93,17 @@ public class ItemService : IItemService
         var entities = _unitOfWork.Items.Get();
 
         entities = await GetQueryWithCategoryFilter(entities, parameters.Category);
+        entities = GetQueryWithPriceFilter(entities, parameters.Price);
 
         var result = await entities.AsNoTracking().CountAsync();
         return result;
     }
 
-    ///// <inheritdoc />
-    //public async Task<int> GetItemsCountBySearchParametersAsync()
-    //{
-    //    var entities = _unitOfWork.Items.Get();
-
-    //    var result = await entities.AsNoTracking().CountAsync();
-    //    return result;
-    //}
-
     /// <summary>
-    /// Get query with category filters specified category search parameters.
+    ///     Get query with category filters specified category search parameters.
     /// </summary>
     /// <param name="query">query</param>
-    /// <param name="category">category search parameters as a <see cref="ICategorySearchParameters"/></param>
+    /// <param name="category">category search parameters as a <see cref="ICategorySearchParameters" /></param>
     /// <returns>a query that includes category filters.</returns>
     private async Task<IQueryable<Item>> GetQueryWithCategoryFilter(IQueryable<Item> query,
         ICategorySearchParameters category)
@@ -125,6 +118,21 @@ public class ItemService : IItemService
                 query = query.Where(entity => innerCategoryIds.Any(id => entity.CategoryId.Equals(id)));
             }
         }
+
+        return query;
+    }
+
+    /// <summary>
+    ///     Get query with price filters parameters.
+    /// </summary>
+    /// <param name="query">query</param>
+    /// <param name="price">price search parameters as a <see cref="IPriceSearchParameters" /></param>
+    /// <returns>a query that includes price filters.</returns>
+    private IQueryable<Item> GetQueryWithPriceFilter(IQueryable<Item> query, IPriceSearchParameters price)
+    {
+        if (price.From != null && price.From != 0) query = query.Where(entity => entity.Cost >= price.From);
+
+        if (price.To != null && price.To != 0) query = query.Where(entity => entity.Cost <= price.To);
 
         return query;
     }

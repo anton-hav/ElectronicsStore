@@ -101,6 +101,11 @@
             <param name="parentId">an unique identifier of the parent category</param>
             <returns></returns>
         </member>
+        <member name="T:ElectronicsStore.WebAPI.Controllers.GoodsController">
+            <summary>
+            Controller that provides API endpoints for the Item resource.
+            </summary>
+        </member>
         <member name="M:ElectronicsStore.WebAPI.Controllers.GoodsController.GetItemById(System.Guid)">
             <summary>
                 Get goods note from storage with specified id.
@@ -120,9 +125,14 @@
             <response code="400">Request contains null object or invalid object type.</response>
             <response code="500">Unexpected error on the server side.</response>
         </member>
+        <member name="T:ElectronicsStore.WebAPI.Controllers.GoodsCountController">
+            <summary>
+            Controller that provides API endpoints for the GoodsCount resource.
+            </summary>
+        </member>
         <member name="M:ElectronicsStore.WebAPI.Controllers.GoodsCountController.GetGoodsCount(ElectronicsStore.WebAPI.Models.Requests.GetGoodsCountRequestModel)">
             <summary>
-            Get item count specified search parameters from storage.
+                Get item count specified search parameters from storage.
             </summary>
             <param name="model"></param>
             <returns>number of items matching search parameters.</returns>
@@ -190,6 +200,16 @@
             <response code="409">The same entry already exists in the storage.</response>
             <response code="500">Unexpected error on the server side.</response>
         </member>
+        <member name="T:ElectronicsStore.WebAPI.MappingProfiles.GoodsSearchParametersProfile">
+            <summary>
+            Mapper profile for GoodsSearchParameters
+            </summary>
+        </member>
+        <member name="M:ElectronicsStore.WebAPI.MappingProfiles.GoodsSearchParametersProfile.#ctor">
+            <summary>
+            Mapper profile constructor
+            </summary>
+        </member>
         <member name="T:ElectronicsStore.WebAPI.Models.Requests.GetCategoriesRequestModel">
             <summary>
                 Request model to get categories.
@@ -209,6 +229,18 @@
         <member name="P:ElectronicsStore.WebAPI.Models.Requests.GetGoodsCountRequestModel.CategoryId">
             <summary>
             Search parameter that represents the category of goods.
+            </summary>
+        </member>
+        <member name="P:ElectronicsStore.WebAPI.Models.Requests.GetGoodsCountRequestModel.From">
+            <summary>
+            Search parameter that represents the "Price From" price filter value.
+            To ignore the search parameter, the value must be empty.
+            </summary>
+        </member>
+        <member name="P:ElectronicsStore.WebAPI.Models.Requests.GetGoodsCountRequestModel.To">
+            <summary>
+            Search parameter that represents the "Price To" price filter value.
+            To ignore the search parameter, the value must be empty.
             </summary>
         </member>
         <member name="T:ElectronicsStore.WebAPI.Models.Requests.GetGoodsRequestModel">
@@ -231,6 +263,18 @@
         <member name="P:ElectronicsStore.WebAPI.Models.Requests.GetGoodsRequestModel.CategoryId">
             <summary>
             Search parameter that represents the goods category unique identifier.
+            To ignore the search parameter, the value must be empty.
+            </summary>
+        </member>
+        <member name="P:ElectronicsStore.WebAPI.Models.Requests.GetGoodsRequestModel.From">
+            <summary>
+            Search parameter that represents the "Price From" price filter value.
+            To ignore the search parameter, the value must be empty.
+            </summary>
+        </member>
+        <member name="P:ElectronicsStore.WebAPI.Models.Requests.GetGoodsRequestModel.To">
+            <summary>
+            Search parameter that represents the "Price To" price filter value.
             To ignore the search parameter, the value must be empty.
             </summary>
         </member>

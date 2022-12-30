@@ -7,8 +7,9 @@ namespace ElectronicsStore.Business.SearchParametersImplementations;
 /// </summary>
 public class GoodsCountSearchParameters : IGoodsCountSearchParameters
 {
-    /// <summary>
-    ///     Category parameters.
-    /// </summary>
+    /// <inheritdoc />
     public ICategorySearchParameters Category { get; set; }
+
+    /// <inheritdoc />
+    public IPriceSearchParameters Price { get; set; }
 }

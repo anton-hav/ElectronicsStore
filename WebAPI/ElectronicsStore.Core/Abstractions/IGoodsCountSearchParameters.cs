@@ -9,4 +9,8 @@ public interface IGoodsCountSearchParameters
     ///     Category parameters.
     /// </summary>
     ICategorySearchParameters Category { get; set; }
+    /// <summary>
+    ///     Price parameters.
+    /// </summary>
+    IPriceSearchParameters Price { get; set; }
 }
