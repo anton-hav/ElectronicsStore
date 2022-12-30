@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Outlet, useLoaderData } from "react-router-dom";
 import { Paper, Box, Typography, Grid } from "@mui/material";
 
@@ -25,16 +25,18 @@ export async function loader({ request }) {
   const items = await _goodsService.getGoodsFromApi(goodsFilter);
   const pagination = goodsFilter.pagination;
   const category = goodsFilter.category;
+  const price = goodsFilter.price;
   const goodsCountParameters =
     GoodsCountRequestModel.fromGoodsParameters(goodsFilter);
   const itemsCount = await _goodsService.getGoodsCountFromApi(
     goodsCountParameters
   );
-  return { items, itemsCount, pagination, category };
+  return { items, itemsCount, pagination, category, price };
 }
 
 export default function Home() {
-  const { items, itemsCount, pagination, category } = useLoaderData();
+  const { items, itemsCount, pagination, category, price } = useLoaderData();
+  const [priceFilter, setPriceFilter] = useState(price);
 
   // return items.length ? (
   //   // <Box className="page-wrapper">
@@ -53,7 +55,7 @@ export default function Home() {
   return (
     <Grid container>
       <Grid item xs={3} md={3}>
-        <AsideMenu category={category} />
+        <AsideMenu category={category} price={price} />
       </Grid>
       <Grid item xs={9} md={9}>
         {items.length ? (

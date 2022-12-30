@@ -1,26 +1,65 @@
 import React, { useState, useEffect } from "react";
 import Box from "@mui/material/Box";
 import Slider from "@mui/material/Slider";
-import TextField from "@mui/material/TextField";
 import InputAdornment from "@mui/material/InputAdornment";
 import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
 import MuiInput from "@mui/material/Input";
+import Divider from "@mui/material/Divider";
+import Typography from "@mui/material/Typography";
 
 import "./price-filter.component.css";
 
+/**
+ * Formater for displaying price values on the slider.
+ * @param {*} value - value of active thumb
+ * @returns formated value
+ */
 function valuetext(value) {
-  return `${value}U`;
+  return `$${value}`;
 }
 
 const minDistance = 10;
 
 export default function PriceFilterBar(props) {
+  /**
+   * Generate "from" and "to" values from price props.
+   * @returns array of values.
+   */
+  const getPriceValuesFromPriceFilter = () => {
+    let minValue = price?.from ? price.from : 0;
+    let maxValue = price?.to ? price.to : maxPrice;
+
+    if (maxValue < minValue + minDistance) {
+      minValue = maxValue - minDistance;
+    }
+
+    return [minValue, maxValue];
+  };
+
+  const { price, onPriceChange } = props;
   const [maxPrice, setMaxPrice] = useState(1000);
-  const [value, setValue] = useState([0, maxPrice]);
+
+  const [value, setValue] = useState(getPriceValuesFromPriceFilter);
   const [textFieldValueTo, setTextFieldValueTo] = useState(
     value[1] ? value[1] : 0
   );
+
+  /**
+   * Handles changes in the price props values.
+   */
+  useEffect(() => {
+    let newValues = getPriceValuesFromPriceFilter();
+    setValue(newValues);
+    setTextFieldValueTo(newValues[1]);
+  }, [price]);
+
+  /**
+   * Calls the parent event handler onPriceChange.
+   */
+  useEffect(() => {
+    onPriceChange(value[0], value[1]);
+  }, [value]);
 
   /**
    *
@@ -29,10 +68,6 @@ export default function PriceFilterBar(props) {
    * @param {*} activeThumb - the number of active thumb (0 for left thumb, 1 for right thumb)
    */
   const handleChange = (event, newValue, activeThumb) => {
-    // if (!Array.isArray(newValue)) {
-    //   return;
-    // }
-
     if (activeThumb === 0) {
       setValue([Math.min(newValue[0], value[1] - minDistance), value[1]]);
     } else {
@@ -71,6 +106,10 @@ export default function PriceFilterBar(props) {
 
   return (
     <Box className="price-filter-wrapper">
+      <Typography variant="h7" component="div">
+        Price
+      </Typography>
+      <Divider variant="middle" />
       <Box
         component="form"
         sx={{
@@ -133,6 +172,7 @@ export default function PriceFilterBar(props) {
           onChange={handleChange}
           valueLabelDisplay="auto"
           getAriaValueText={valuetext}
+          valueLabelFormat={valuetext}
           disableSwap
         />
       </Box>
