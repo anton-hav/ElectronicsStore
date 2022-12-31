@@ -23,6 +23,9 @@ export default class ApiService {
     }
 
     let response = await fetch(fullUrl);
+    if (response.status === 400) {
+      throw new BadRequestError();
+    }
     return response.json();
   }
 

@@ -9,13 +9,15 @@ import { useNavigate } from "react-router-dom";
 import CategoriesBar from "../categories-bar/categories-bar.component";
 import PriceFilterBar from "../price-filter/price-filter.component";
 import AsideMenuSection from "./aside-menu-section.component";
+import BrandFilterBar from "../brand-filter/brand-filter.component";
 // Import custom types and utils
 import PriceParameters from "../../types/url-parameters/price-filter.parameters";
+import CategoryParameters from "../../types/url-parameters/category-filter.parameters";
 
 import "./aside-menu.component.css";
 
 export default function AsideMenu(props) {
-  const { category, price } = props;
+  const { category, price, maxPrice, brands } = props;
   const [priceFilter, setPriceFilter] = useState(price);
 
   const navigate = useNavigate();
@@ -26,9 +28,21 @@ export default function AsideMenu(props) {
    * @returns relative path to the current webpage with pagination parameters.
    */
   const generateUrlPath = () => {
+    // Get current URLSearchParams object
     let url = new URL(window.location.href);
     let search = new URLSearchParams(url.search);
-    url.search = priceFilter.setParametersToUrl(search);
+    // Create filters object from current URLSearchParams
+    let categoryFilter = CategoryParameters.fromUrlSearchParams(search);
+    // Create new empty URLSearchParams object.
+    // It is required to remove unnecessary attributes (e.g. pagination).
+    let newSearchParams = new URLSearchParams();
+    // Set filters parameters to new URLSearchParams object.
+    newSearchParams = priceFilter.setParametersToUrl(newSearchParams);
+    if (categoryFilter.categoryId !== null) {
+      newSearchParams = categoryFilter.setParametersToUrl(newSearchParams);
+    }
+    // Generate new relative path with filters parameters.
+    url.search = newSearchParams;
     let relativePath = url.pathname + url.search;
     return relativePath;
   };
@@ -50,7 +64,7 @@ export default function AsideMenu(props) {
   };
 
   const categoriesSection = <CategoriesBar category={category} />;
-  const priceFilterSection = (
+  const filterSection = (
     <Box>
       <Button
         sx={{ m: 1 }}
@@ -61,7 +75,12 @@ export default function AsideMenu(props) {
         Apply filters
       </Button>
       <Divider />
-      <PriceFilterBar price={price} onPriceChange={handlePriceChange} />
+      <PriceFilterBar
+        price={price}
+        maxPrice={maxPrice}
+        onPriceChange={handlePriceChange}
+      />
+      {brands.length > 0 ? <BrandFilterBar brands={brands} /> : null}
     </Box>
   );
 
@@ -87,7 +106,7 @@ export default function AsideMenu(props) {
         title={"Select category"}
       />
 
-      <AsideMenuSection component={priceFilterSection} title={"Filters"} />
+      <AsideMenuSection component={filterSection} title={"Filters"} />
     </Box>
   );
 }

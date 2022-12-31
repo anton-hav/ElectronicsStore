@@ -26,9 +26,12 @@ export default function PriceFilterBar(props) {
    * Generate "from" and "to" values from price props.
    * @returns array of values.
    */
-  const getPriceValuesFromPriceFilter = () => {
+  const getPriceValuesFromPriceFilter = (actualSliderMaxValue) => {
+    let sliderValue = actualSliderMaxValue
+      ? actualSliderMaxValue
+      : sliderMaxValue;
     let minValue = price?.from ? price.from : 0;
-    let maxValue = price?.to ? price.to : maxPrice;
+    let maxValue = price?.to ? price.to : sliderValue;
 
     if (maxValue < minValue + minDistance) {
       minValue = maxValue - minDistance;
@@ -37,8 +40,19 @@ export default function PriceFilterBar(props) {
     return [minValue, maxValue];
   };
 
-  const { price, onPriceChange } = props;
-  const [maxPrice, setMaxPrice] = useState(1000);
+  /**
+   * Generate maximum value for the slider from max price props.
+   * @returns a number.
+   */
+  const getSliderMaxValueFromMaxPrice = () => {
+    let result = Math.max(minDistance, Math.ceil(maxPrice));
+    return result;
+  };
+
+  const { price, maxPrice, onPriceChange } = props;
+  const [sliderMaxValue, setSliderMaxValue] = useState(
+    getSliderMaxValueFromMaxPrice
+  );
 
   const [value, setValue] = useState(getPriceValuesFromPriceFilter);
   const [textFieldValueTo, setTextFieldValueTo] = useState(
@@ -46,13 +60,16 @@ export default function PriceFilterBar(props) {
   );
 
   /**
-   * Handles changes in the price props values.
+   * Handles changes in the price or the max price props values.
    */
   useEffect(() => {
-    let newValues = getPriceValuesFromPriceFilter();
+    let newSliderMaxValue = getSliderMaxValueFromMaxPrice();
+    setSliderMaxValue(newSliderMaxValue);
+
+    let newValues = getPriceValuesFromPriceFilter(newSliderMaxValue);
     setValue(newValues);
     setTextFieldValueTo(newValues[1]);
-  }, [price]);
+  }, [price, maxPrice]);
 
   /**
    * Calls the parent event handler onPriceChange.
@@ -92,7 +109,10 @@ export default function PriceFilterBar(props) {
    */
   const handleChangeTextFieldTo = (event) => {
     let newValue = event.target.value;
-    setTextFieldValueTo(newValue);
+    if (newValue >= 0) {
+      setTextFieldValueTo(newValue);
+    }
+
     setValue([value[0], Math.max(newValue, value[0] + minDistance)]);
   };
 
@@ -150,7 +170,7 @@ export default function PriceFilterBar(props) {
               inputProps={{
                 step: 1,
                 min: value[0] ? value[0] : null,
-                max: maxPrice,
+                max: sliderMaxValue,
                 type: "number",
               }}
               startAdornment={
@@ -168,7 +188,7 @@ export default function PriceFilterBar(props) {
           getAriaLabel={() => "Minimum distance"}
           value={value}
           min={0}
-          max={maxPrice}
+          max={sliderMaxValue}
           onChange={handleChange}
           valueLabelDisplay="auto"
           getAriaValueText={valuetext}

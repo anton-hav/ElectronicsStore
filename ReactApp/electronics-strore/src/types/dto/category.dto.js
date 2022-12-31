@@ -38,7 +38,6 @@ export default class CategoryDto {
       response.id,
       response.name,
       response.parentCategoryId
-      //response.children.map((child) => CategoryDto.fromResponse(child))
     );
   }
 }

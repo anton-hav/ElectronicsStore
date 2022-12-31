@@ -8,15 +8,19 @@ import Pagination from "../components/pagination/pagination.component";
 import AsideMenu from "../components/aside-menu/aside-menu.component";
 // Import services
 import GoodsService from "../services/goods.service";
+import BrandService from "../services/brand.service";
 // Import custom object types and utils
 import PaginationParameters from "../types/url-parameters/pagination.parameters";
 import CategoryParameters from "../types/url-parameters/category-filter.parameters";
 import GoodsParameters from "../types/url-parameters/goods-filter.parameters";
 import GoodsCountRequestModel from "../types/model/requests/goods-count-request.model";
+import MaxGoodsPriceRequestModel from "../types/model/requests/max-goods-price-request.model";
+import BrandsRequestModel from "../types/model/requests/brands-request.model";
 
 import "./home.page.css";
 
 const _goodsService = new GoodsService();
+const _brandService = new BrandService();
 
 export async function loader({ request }) {
   const url = new URL(request.url);
@@ -31,12 +35,21 @@ export async function loader({ request }) {
   const itemsCount = await _goodsService.getGoodsCountFromApi(
     goodsCountParameters
   );
-  return { items, itemsCount, pagination, category, price };
+  const maxGoodsPriceParameters =
+    MaxGoodsPriceRequestModel.fromGoodsParameters(goodsFilter);
+  const maxPrice = await _goodsService.getMaxGoodsPriceFromApi(
+    maxGoodsPriceParameters
+  );
+
+  const brandsRequestModel =
+    BrandsRequestModel.fromGoodsParameters(goodsFilter);
+  const brands = await _brandService.getBrandsFromApi(brandsRequestModel);
+  return { items, itemsCount, pagination, category, price, maxPrice, brands };
 }
 
 export default function Home() {
-  const { items, itemsCount, pagination, category, price } = useLoaderData();
-  const [priceFilter, setPriceFilter] = useState(price);
+  const { items, itemsCount, pagination, category, price, maxPrice, brands } =
+    useLoaderData();
 
   // return items.length ? (
   //   // <Box className="page-wrapper">
@@ -55,7 +68,12 @@ export default function Home() {
   return (
     <Grid container>
       <Grid item xs={3} md={3}>
-        <AsideMenu category={category} price={price} />
+        <AsideMenu
+          category={category}
+          price={price}
+          maxPrice={maxPrice}
+          brands={brands}
+        />
       </Grid>
       <Grid item xs={9} md={9}>
         {items.length ? (
