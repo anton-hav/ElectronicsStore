@@ -33,6 +33,13 @@ public interface IItemService
     /// <returns>number of items matching the search parameters.</returns>
     Task<int> GetItemsCountBySearchParametersAsync(IGoodsCountSearchParameters parameters);
 
+    /// <summary>
+    /// Get the maximum value of the items by search parameters.
+    /// </summary>
+    /// <param name="parameters">search parameter as a <see cref="IGoodsMaxPriceSearchParameters"/></param>
+    /// <returns>maximum price of items matching the search parameters.</returns>
+    Task<double> GetMaxItemsPriceBySearchParametersAsync(IGoodsMaxPriceSearchParameters parameters);
+
     // CREATE
 
     // UPDATE

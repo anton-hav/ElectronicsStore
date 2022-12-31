@@ -6,8 +6,14 @@ using ReadingList.WebAPI.Models.Requests;
 
 namespace ElectronicsStore.WebAPI.MappingProfiles;
 
+/// <summary>
+/// Mapper profile for Category
+/// </summary>
 public class CategoryProfile : Profile
 {
+    /// <summary>
+    /// Mapper profile constructor
+    /// </summary>
     public CategoryProfile()
     {
         CreateMap<Category, CategoryDto>();

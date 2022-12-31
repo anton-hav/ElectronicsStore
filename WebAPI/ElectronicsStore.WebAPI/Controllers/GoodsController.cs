@@ -57,10 +57,10 @@ public class GoodsController : ControllerBase
     }
 
     /// <summary>
-    ///     Get goods from storage.
+    ///     Get goods from the storage.
     /// </summary>
-    /// <returns>all goods</returns>
-    /// <response code="200">Returns all goods.</response>
+    /// <returns>all goods that match the search parameters</returns>
+    /// <response code="200">Returns all goods that match the search parameters.</response>
     /// <response code="400">Request contains null object or invalid object type.</response>
     /// <response code="500">Unexpected error on the server side.</response>
     [HttpGet]

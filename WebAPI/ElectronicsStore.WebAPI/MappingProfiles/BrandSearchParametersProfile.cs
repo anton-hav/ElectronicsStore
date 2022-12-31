@@ -1,21 +1,22 @@
 ﻿using AutoMapper;
-using ElectronicsStore.Business;
 using ElectronicsStore.Business.SearchParametersImplementations;
+using ElectronicsStore.Business.ServiceImplementations;
+using ElectronicsStore.Business;
 using ElectronicsStore.WebAPI.Models.Requests;
 
 namespace ElectronicsStore.WebAPI.MappingProfiles;
 
 /// <summary>
-/// Mapper profile for GoodsCountSearchParameters
+/// Mapper profile for BrandSearchParameters
 /// </summary>
-public class GoodsCountSearchParametersProfile : Profile
+public class BrandSearchParametersProfile : Profile
 {
     /// <summary>
     /// Mapper profile constructor
     /// </summary>
-    public GoodsCountSearchParametersProfile()
+    public BrandSearchParametersProfile()
     {
-        CreateMap<GetGoodsCountRequestModel, GoodsCountSearchParameters>()
+        CreateMap<GetBrandsRequestModel, BrandSearchParameters>()
             .ForMember(searchParams => searchParams.Category,
                 opt
                     => opt.MapFrom(request => new CategorySearchParameters
@@ -24,10 +25,10 @@ public class GoodsCountSearchParametersProfile : Profile
                     }))
             .ForMember(searchParams => searchParams.Price,
                 opt
-                    => opt.MapFrom(request => new PriceSearchParameters
+                    => opt.MapFrom(request => new PriceSearchParameters()
                     {
                         From = request.From,
-                        To = request.To
+                        To = request.To,
                     }));
     }
 }

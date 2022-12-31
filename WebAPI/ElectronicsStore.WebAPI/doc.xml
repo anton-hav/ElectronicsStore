@@ -4,6 +4,15 @@
         <name>ElectronicsStore.WebAPI</name>
     </assembly>
     <members>
+        <member name="M:ElectronicsStore.WebAPI.Controllers.BrandsController.GetBrands(ElectronicsStore.WebAPI.Models.Requests.GetBrandsRequestModel)">
+            <summary>
+                Get brands from the storage.
+            </summary>
+            <returns>all brands that match the search parameters.</returns>
+            <response code="200">Returns all brands that match the search parameters.</response>
+            <response code="400">Request contains null object or invalid object type.</response>
+            <response code="500">Unexpected error on the server side.</response>
+        </member>
         <member name="M:ElectronicsStore.WebAPI.Controllers.CategoriesController.GetCategoryById(System.Guid)">
             <summary>
                 Get a category from storage with specified id.
@@ -118,10 +127,10 @@
         </member>
         <member name="M:ElectronicsStore.WebAPI.Controllers.GoodsController.GetGoods(ElectronicsStore.WebAPI.Models.Requests.GetGoodsRequestModel)">
             <summary>
-                Get goods from storage.
+                Get goods from the storage.
             </summary>
-            <returns>all goods</returns>
-            <response code="200">Returns all goods.</response>
+            <returns>all goods that match the search parameters</returns>
+            <response code="200">Returns all goods that match the search parameters.</response>
             <response code="400">Request contains null object or invalid object type.</response>
             <response code="500">Unexpected error on the server side.</response>
         </member>
@@ -131,6 +140,21 @@
             </summary>
         </member>
         <member name="M:ElectronicsStore.WebAPI.Controllers.GoodsCountController.GetGoodsCount(ElectronicsStore.WebAPI.Models.Requests.GetGoodsCountRequestModel)">
+            <summary>
+                Get item count specified search parameters from storage.
+            </summary>
+            <param name="model"></param>
+            <returns>number of items matching search parameters.</returns>
+            <response code="200">Returns a number of items matching search parameters.</response>
+            <response code="400">Request contains null object or invalid object type.</response>
+            <response code="500">Unexpected error on the server side.</response>
+        </member>
+        <member name="T:ElectronicsStore.WebAPI.Controllers.MaxGoodsPriceController">
+            <summary>
+            Controller that provides API endpoints for the max price of goods in the storage.
+            </summary>
+        </member>
+        <member name="M:ElectronicsStore.WebAPI.Controllers.MaxGoodsPriceController.GetGoodsCount(ElectronicsStore.WebAPI.Models.Requests.GetMaxGoodsPriceRequestModel)">
             <summary>
                 Get item count specified search parameters from storage.
             </summary>
@@ -200,6 +224,56 @@
             <response code="409">The same entry already exists in the storage.</response>
             <response code="500">Unexpected error on the server side.</response>
         </member>
+        <member name="T:ElectronicsStore.WebAPI.MappingProfiles.BrandProfile">
+            <summary>
+            Mapper profile for Brand
+            </summary>
+        </member>
+        <member name="M:ElectronicsStore.WebAPI.MappingProfiles.BrandProfile.#ctor">
+            <summary>
+            Mapper profile constructor
+            </summary>
+        </member>
+        <member name="T:ElectronicsStore.WebAPI.MappingProfiles.BrandSearchParametersProfile">
+            <summary>
+            Mapper profile for BrandSearchParameters
+            </summary>
+        </member>
+        <member name="M:ElectronicsStore.WebAPI.MappingProfiles.BrandSearchParametersProfile.#ctor">
+            <summary>
+            Mapper profile constructor
+            </summary>
+        </member>
+        <member name="T:ElectronicsStore.WebAPI.MappingProfiles.CategoryProfile">
+            <summary>
+            Mapper profile for Category
+            </summary>
+        </member>
+        <member name="M:ElectronicsStore.WebAPI.MappingProfiles.CategoryProfile.#ctor">
+            <summary>
+            Mapper profile constructor
+            </summary>
+        </member>
+        <member name="T:ElectronicsStore.WebAPI.MappingProfiles.GoodsCountSearchParametersProfile">
+            <summary>
+            Mapper profile for GoodsCountSearchParameters
+            </summary>
+        </member>
+        <member name="M:ElectronicsStore.WebAPI.MappingProfiles.GoodsCountSearchParametersProfile.#ctor">
+            <summary>
+            Mapper profile constructor
+            </summary>
+        </member>
+        <member name="T:ElectronicsStore.WebAPI.MappingProfiles.GoodsMaxPriceSearchParametersProfile">
+            <summary>
+            Mapper profile for GoodsMaxPriceSearchParameters
+            </summary>
+        </member>
+        <member name="M:ElectronicsStore.WebAPI.MappingProfiles.GoodsMaxPriceSearchParametersProfile.#ctor">
+            <summary>
+            Mapper profile constructor
+            </summary>
+        </member>
         <member name="T:ElectronicsStore.WebAPI.MappingProfiles.GoodsSearchParametersProfile">
             <summary>
             Mapper profile for GoodsSearchParameters
@@ -208,6 +282,79 @@
         <member name="M:ElectronicsStore.WebAPI.MappingProfiles.GoodsSearchParametersProfile.#ctor">
             <summary>
             Mapper profile constructor
+            </summary>
+        </member>
+        <member name="T:ElectronicsStore.WebAPI.MappingProfiles.ItemProfile">
+            <summary>
+            Mapper profile for Item
+            </summary>
+        </member>
+        <member name="M:ElectronicsStore.WebAPI.MappingProfiles.ItemProfile.#ctor">
+            <summary>
+            Mapper profile constructor
+            </summary>
+        </member>
+        <member name="T:ElectronicsStore.WebAPI.MappingProfiles.ProductProfile">
+            <summary>
+            Mapper profile for Product
+            </summary>
+        </member>
+        <member name="M:ElectronicsStore.WebAPI.MappingProfiles.ProductProfile.#ctor">
+            <summary>
+            Mapper profile constructor
+            </summary>
+        </member>
+        <member name="T:ElectronicsStore.WebAPI.MappingProfiles.RefreshTokenProfile">
+            <summary>
+            Mapper profile for RefreshToken
+            </summary>
+        </member>
+        <member name="M:ElectronicsStore.WebAPI.MappingProfiles.RefreshTokenProfile.#ctor">
+            <summary>
+            Mapper profile constructor
+            </summary>
+        </member>
+        <member name="T:ElectronicsStore.WebAPI.MappingProfiles.RoleProfile">
+            <summary>
+            Mapper profile for Role
+            </summary>
+        </member>
+        <member name="M:ElectronicsStore.WebAPI.MappingProfiles.RoleProfile.#ctor">
+            <summary>
+            Mapper profile constructor
+            </summary>
+        </member>
+        <member name="T:ElectronicsStore.WebAPI.MappingProfiles.UserProfile">
+            <summary>
+            Mapper profile for User
+            </summary>
+        </member>
+        <member name="M:ElectronicsStore.WebAPI.MappingProfiles.UserProfile.#ctor">
+            <summary>
+            Mapper profile constructor
+            </summary>
+        </member>
+        <member name="T:ElectronicsStore.WebAPI.Models.Requests.GetBrandsRequestModel">
+            <summary>
+            Request model to get brands
+            </summary>
+        </member>
+        <member name="P:ElectronicsStore.WebAPI.Models.Requests.GetBrandsRequestModel.CategoryId">
+            <summary>
+            Search parameter that represents the goods category unique identifier.
+            To ignore the search parameter, the value must be empty.
+            </summary>
+        </member>
+        <member name="P:ElectronicsStore.WebAPI.Models.Requests.GetBrandsRequestModel.From">
+            <summary>
+            Search parameter that represents the "Price From" price filter value.
+            To ignore the search parameter, the value must be empty.
+            </summary>
+        </member>
+        <member name="P:ElectronicsStore.WebAPI.Models.Requests.GetBrandsRequestModel.To">
+            <summary>
+            Search parameter that represents the "Price To" price filter value.
+            To ignore the search parameter, the value must be empty.
             </summary>
         </member>
         <member name="T:ElectronicsStore.WebAPI.Models.Requests.GetCategoriesRequestModel">
@@ -276,6 +423,16 @@
             <summary>
             Search parameter that represents the "Price To" price filter value.
             To ignore the search parameter, the value must be empty.
+            </summary>
+        </member>
+        <member name="T:ElectronicsStore.WebAPI.Models.Requests.GetMaxGoodsPriceRequestModel">
+            <summary>
+            Request model to get max price of goods.
+            </summary>
+        </member>
+        <member name="P:ElectronicsStore.WebAPI.Models.Requests.GetMaxGoodsPriceRequestModel.CategoryId">
+            <summary>
+            Search parameter that represents the category of goods.
             </summary>
         </member>
         <member name="T:ElectronicsStore.WebAPI.Models.Requests.LoginUserRequestModel">
@@ -354,6 +511,21 @@
         <member name="P:ElectronicsStore.WebAPI.Models.Responses.ErrorModel.Message">
             <summary>
             Error message
+            </summary>
+        </member>
+        <member name="T:ElectronicsStore.WebAPI.Models.Responses.GetBrandResponseModel">
+            <summary>
+            Response model for one of brands
+            </summary>
+        </member>
+        <member name="P:ElectronicsStore.WebAPI.Models.Responses.GetBrandResponseModel.Id">
+            <summary>
+            An unique identifier
+            </summary>
+        </member>
+        <member name="P:ElectronicsStore.WebAPI.Models.Responses.GetBrandResponseModel.Name">
+            <summary>
+            Brand name
             </summary>
         </member>
         <member name="T:ElectronicsStore.WebAPI.Models.Responses.GetItemResponseModel">

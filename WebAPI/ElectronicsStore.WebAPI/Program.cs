@@ -109,6 +109,7 @@ namespace ElectronicsStore.WebAPI
             builder.Services.AddScoped<IRefreshTokenService, RefreshTokenService>();
             builder.Services.AddScoped<IJwtUtil, JwtUtilSha256>();
             builder.Services.AddScoped<ICategoryService, CategoryService>();
+            builder.Services.AddScoped<IBrandService, BrandService>();
 
             // Add repositories
             builder.Services.AddScoped<IRepository<User>, Repository<User>>();

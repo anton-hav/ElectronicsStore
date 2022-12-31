@@ -7,13 +7,13 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ElectronicsStore.Business.ServiceImplementations;
 
-public class ItemService : IItemService
+public class BrandService : IBrandService
 {
     private readonly IMapper _mapper;
     private readonly IUnitOfWork _unitOfWork;
     private readonly ICategoryService _categoryService;
 
-    public ItemService(IMapper mapper,
+    public BrandService(IMapper mapper,
         IUnitOfWork unitOfWork,
         ICategoryService categoryService)
     {
@@ -24,82 +24,35 @@ public class ItemService : IItemService
 
     /// <inheritdoc />
     /// <exception cref="ArgumentException"></exception>
-    public async Task<ItemDto> GetItemWithPropertiesByIdAsync(Guid id)
+    public async Task<BrandDto> GetByIdAsync(Guid id)
     {
-        var entity = await _unitOfWork.Items
-            .Get()
-            .Include(item => item.Product)
-            .ThenInclude(product => product.Brand)
-            .AsNoTracking()
-            .FirstOrDefaultAsync(item => item.Id.Equals(id));
+        var entity = await _unitOfWork.Brands.GetByIdAsync(id);
 
         if (entity == null)
             throw new ArgumentException("Failed to find record in the database that match the specified id. ",
                 nameof(id));
 
-        var dto = _mapper.Map<ItemDto>(entity);
+        var dto = _mapper.Map<BrandDto>(entity);
         return dto;
     }
 
-    /// <inheritdoc />
-    public async Task<IEnumerable<ItemDto>> GetAllItemsWithPropertiesAsync()
-    {
-        var goods = await _unitOfWork.Items
-            .Get()
-            .Include(item => item.Product)
-            .ThenInclude(product => product.Brand)
-            .AsNoTracking()
-            .Select(entity => _mapper.Map<ItemDto>(entity))
-            .ToArrayAsync();
-
-        return goods;
-    }
-
-    /// <inheritdoc />
-    public async Task<IEnumerable<ItemDto>> GetItemsBySearchParametersAsync(IGoodsSearchParameters parameters)
+    public async Task<IEnumerable<BrandDto>> GetBrandsBySearchParametersAsync(IBrandSearchParameters parameters)
     {
         var entities = _unitOfWork.Items.Get();
 
         entities = await GetQueryWithCategoryFilter(entities, parameters.Category);
         entities = GetQueryWithPriceFilter(entities, parameters.Price);
 
-        var result = (await entities
-                .Skip(parameters.Pagination.PageSize * (parameters.Pagination.PageNumber - 1))
-                .Take(parameters.Pagination.PageSize)
-                .Include(item => item.Product)
+        var brands = (await entities
+                .Include(entity => entity.Product)
                 .ThenInclude(product => product.Brand)
                 .AsNoTracking()
+                .GroupBy(entity => entity.Product.BrandId)
+                .Select(group => group.First())
                 .ToListAsync())
-            .Select(entity => _mapper.Map<ItemDto>(entity))
-            .ToArray();
+            .Select(entity => _mapper.Map<BrandDto>(entity.Product.Brand)).OrderBy(brand => brand.Name).ToArray();
 
-        return result;
-    }
-
-    /// <inheritdoc />
-    public async Task<int> GetItemsCountBySearchParametersAsync(IGoodsCountSearchParameters parameters)
-    {
-        var entities = _unitOfWork.Items.Get();
-
-        entities = await GetQueryWithCategoryFilter(entities, parameters.Category);
-        entities = GetQueryWithPriceFilter(entities, parameters.Price);
-
-        var result = await entities.AsNoTracking().CountAsync();
-        return result;
-    }
-
-    /// <inheritdoc />
-    public async Task<double> GetMaxItemsPriceBySearchParametersAsync(IGoodsMaxPriceSearchParameters parameters)
-    {
-        var entities = _unitOfWork.Items.Get();
-
-        entities = await GetQueryWithCategoryFilter(entities, parameters.Category);
-
-        var entity = await entities.AsNoTracking().OrderByDescending(entity => entity.Cost).FirstOrDefaultAsync();
-        if (entity == null)
-            throw new ArgumentException("No records matching the search conditions were found");
-
-        return entity.Cost;
+        return brands;
     }
 
     /// <summary>
