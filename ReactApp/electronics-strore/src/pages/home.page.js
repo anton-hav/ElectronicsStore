@@ -16,6 +16,7 @@ import GoodsParameters from "../types/url-parameters/goods-filter.parameters";
 import GoodsCountRequestModel from "../types/model/requests/goods-count-request.model";
 import MaxGoodsPriceRequestModel from "../types/model/requests/max-goods-price-request.model";
 import BrandsRequestModel from "../types/model/requests/brands-request.model";
+import BrandParameters from "../types/url-parameters/brand-filter.parameters";
 
 import "./home.page.css";
 
@@ -23,33 +24,87 @@ const _goodsService = new GoodsService();
 const _brandService = new BrandService();
 
 export async function loader({ request }) {
+  /**
+   * Get a count of goods specified by search parameters.
+   * @param {GoodsParameters} goodsFilter - complex search parameters for retrieving items.
+   * @returns the number of goods that match the search parameters.
+   */
+  const getGoodsCount = async (goodsFilter) => {
+    const goodsCountParameters =
+      GoodsCountRequestModel.fromGoodsParameters(goodsFilter);
+    const itemsCount = await _goodsService.getGoodsCountFromApi(
+      goodsCountParameters
+    );
+    return itemsCount;
+  };
+
+  /**
+   * Get maximum price of goods specified by search parameters.
+   * @param {GoodsParameters} goodsFilter - complex search parameters for retrieving items.
+   * @returns a maximum price of goods that match the search parameters.
+   */
+  const getMaxGoodsPrice = async (goodsFilter) => {
+    const maxGoodsPriceParameters =
+      MaxGoodsPriceRequestModel.fromGoodsParameters(goodsFilter);
+    const maxPrice = await _goodsService.getMaxGoodsPriceFromApi(
+      maxGoodsPriceParameters
+    );
+    return maxPrice;
+  };
+
+  /**
+   * Get a list of brands specified by search parameters.
+   * @param {GoodsParameters} goodsFilter - complex search parameters for retrieving items.
+   * @returns brands that match the search parameters.
+   */
+  const getAvailableBrands = async (goodsFilter) => {
+    const brandsRequestModel =
+      BrandsRequestModel.fromGoodsParameters(goodsFilter);
+    const availableBrands = await _brandService.getBrandsFromApi(
+      brandsRequestModel
+    );
+    return availableBrands;
+  };
+
   const url = new URL(request.url);
   const search = new URLSearchParams(url.search);
+  // Get parameters from query string
   const goodsFilter = GoodsParameters.fromUrlSearchParams(search);
   const items = await _goodsService.getGoodsFromApi(goodsFilter);
   const pagination = goodsFilter.pagination;
   const category = goodsFilter.category;
   const price = goodsFilter.price;
-  const goodsCountParameters =
-    GoodsCountRequestModel.fromGoodsParameters(goodsFilter);
-  const itemsCount = await _goodsService.getGoodsCountFromApi(
-    goodsCountParameters
-  );
-  const maxGoodsPriceParameters =
-    MaxGoodsPriceRequestModel.fromGoodsParameters(goodsFilter);
-  const maxPrice = await _goodsService.getMaxGoodsPriceFromApi(
-    maxGoodsPriceParameters
-  );
+  const brandsFilter = goodsFilter.brands;
+  // Get count of goods for current search parameters.
+  const itemsCount = await getGoodsCount(goodsFilter);
+  // Get maximum price for current search parameters.
+  const maxPrice = await getMaxGoodsPrice(goodsFilter);
+  // Get list of brands for current search parameters.
+  const availableBrands = await getAvailableBrands(goodsFilter);
 
-  const brandsRequestModel =
-    BrandsRequestModel.fromGoodsParameters(goodsFilter);
-  const brands = await _brandService.getBrandsFromApi(brandsRequestModel);
-  return { items, itemsCount, pagination, category, price, maxPrice, brands };
+  return {
+    items,
+    itemsCount,
+    pagination,
+    category,
+    price,
+    maxPrice,
+    availableBrands,
+    brandsFilter,
+  };
 }
 
 export default function Home() {
-  const { items, itemsCount, pagination, category, price, maxPrice, brands } =
-    useLoaderData();
+  const {
+    items,
+    itemsCount,
+    pagination,
+    category,
+    price,
+    maxPrice,
+    availableBrands,
+    brandsFilter,
+  } = useLoaderData();
 
   // return items.length ? (
   //   // <Box className="page-wrapper">
@@ -72,7 +127,8 @@ export default function Home() {
           category={category}
           price={price}
           maxPrice={maxPrice}
-          brands={brands}
+          availableBrands={availableBrands}
+          defaultBrandsFilter={brandsFilter}
         />
       </Grid>
       <Grid item xs={9} md={9}>

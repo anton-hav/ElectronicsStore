@@ -13,12 +13,15 @@ import BrandFilterBar from "../brand-filter/brand-filter.component";
 // Import custom types and utils
 import PriceParameters from "../../types/url-parameters/price-filter.parameters";
 import CategoryParameters from "../../types/url-parameters/category-filter.parameters";
+import BrandParameters from "../../types/url-parameters/brand-filter.parameters";
 
 import "./aside-menu.component.css";
 
 export default function AsideMenu(props) {
-  const { category, price, maxPrice, brands } = props;
+  const { category, price, maxPrice, availableBrands, defaultBrandsFilter } =
+    props;
   const [priceFilter, setPriceFilter] = useState(price);
+  const [brandFilter, setBrandFilter] = useState([]);
 
   const navigate = useNavigate();
 
@@ -38,6 +41,7 @@ export default function AsideMenu(props) {
     let newSearchParams = new URLSearchParams();
     // Set filters parameters to new URLSearchParams object.
     newSearchParams = priceFilter.setParametersToUrl(newSearchParams);
+    newSearchParams = brandFilter.setParametersToUrl(newSearchParams);
     if (categoryFilter.categoryId !== null) {
       newSearchParams = categoryFilter.setParametersToUrl(newSearchParams);
     }
@@ -54,7 +58,6 @@ export default function AsideMenu(props) {
    */
   const handlePriceChange = (from, to) => {
     let filter = new PriceParameters(from, to);
-    console.log("Filter: ", filter);
     setPriceFilter(filter);
   };
 
@@ -63,7 +66,22 @@ export default function AsideMenu(props) {
     navigate(relativePath);
   };
 
+  /**
+   * Handles the changes of the brand filter values.
+   * @param {*} selectedBrands - array that contains brand names.
+   */
+  const handleBrandFilterChange = (selectedBrands) => {
+    let filter = new BrandParameters(selectedBrands);
+    setBrandFilter(filter);
+
+    // brands.forEach((brand) => {
+    //   console.log(`${brand.name}`);
+    //   console.log(selectedItems.includes(brand.name));
+    // });
+  };
+
   const categoriesSection = <CategoriesBar category={category} />;
+
   const filterSection = (
     <Box>
       <Button
@@ -80,7 +98,13 @@ export default function AsideMenu(props) {
         maxPrice={maxPrice}
         onPriceChange={handlePriceChange}
       />
-      {brands.length > 0 ? <BrandFilterBar brands={brands} /> : null}
+      {availableBrands.length > 0 ? (
+        <BrandFilterBar
+          availableBrands={availableBrands}
+          defaultBrandsFilter={defaultBrandsFilter}
+          onBrandFilterChange={handleBrandFilterChange}
+        />
+      ) : null}
     </Box>
   );
 

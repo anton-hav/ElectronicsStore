@@ -3,6 +3,7 @@ import UrlSearchParameters from "./url-parameters.parameters";
 import PaginationParameters from "./pagination.parameters";
 import CategoryParameters from "./category-filter.parameters";
 import PriceParameters from "./price-filter.parameters";
+import BrandParameters from "./brand-filter.parameters";
 
 /**
  * Represents a complex search parameters for requesting goods from the storage.
@@ -23,11 +24,17 @@ export default class GoodsParameters extends UrlSearchParameters {
    */
   price = null;
 
-  constructor(pagination, category, price) {
+  /**
+   * @property {BrandParameters} - Brand parameters.
+   */
+  brands = null;
+
+  constructor(pagination, category, price, brands) {
     super();
     this.pagination = pagination;
     this.category = category;
     this.price = price;
+    this.brands = brands;
   }
 
   /**
@@ -39,7 +46,8 @@ export default class GoodsParameters extends UrlSearchParameters {
     let pagination = PaginationParameters.fromUrlSearchParams(params);
     let category = CategoryParameters.fromUrlSearchParams(params);
     let price = PriceParameters.fromUrlSearchParams(params);
+    let brands = BrandParameters.fromUrlSearchParams(params);
 
-    return new GoodsParameters(pagination, category, price);
+    return new GoodsParameters(pagination, category, price, brands);
   }
 }

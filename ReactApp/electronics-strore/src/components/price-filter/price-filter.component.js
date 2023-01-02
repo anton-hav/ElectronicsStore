@@ -112,6 +112,7 @@ export default function PriceFilterBar(props) {
     if (newValue >= 0) {
       setTextFieldValueTo(newValue);
     }
+    if (newValue > sliderMaxValue) newValue = sliderMaxValue;
 
     setValue([value[0], Math.max(newValue, value[0] + minDistance)]);
   };
