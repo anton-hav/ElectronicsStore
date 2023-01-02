@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { Typography } from "@mui/material";
 import Box from "@mui/material/Box";
 import Divider from "@mui/material/Divider";
 import Button from "@mui/material/Button";
@@ -73,11 +72,6 @@ export default function AsideMenu(props) {
   const handleBrandFilterChange = (selectedBrands) => {
     let filter = new BrandParameters(selectedBrands);
     setBrandFilter(filter);
-
-    // brands.forEach((brand) => {
-    //   console.log(`${brand.name}`);
-    //   console.log(selectedItems.includes(brand.name));
-    // });
   };
 
   const categoriesSection = <CategoriesBar category={category} />;
@@ -107,21 +101,6 @@ export default function AsideMenu(props) {
       ) : null}
     </Box>
   );
-
-  // return (
-  //   <Box>
-  //     <Box className="section">
-  //       <Typography variant="h6" component="div">
-  //         Select category
-  //       </Typography>
-  //       <Divider variant="middle" />
-  //       <CategoriesBar category={category} />
-  //     </Box>
-  //     <Box className="section">
-  //       <PriceFilterBar />
-  //     </Box>
-  //   </Box>
-  // );
 
   return (
     <Box>

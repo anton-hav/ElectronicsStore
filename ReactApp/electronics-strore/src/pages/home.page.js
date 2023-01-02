@@ -6,6 +6,7 @@ import { Paper, Box, Typography, Grid } from "@mui/material";
 import ItemsList from "../components/items-list/items-list.component";
 import Pagination from "../components/pagination/pagination.component";
 import AsideMenu from "../components/aside-menu/aside-menu.component";
+import TopToolsBar from "../components/top-tools-bar/top-tools-bar.component";
 // Import services
 import GoodsService from "../services/goods.service";
 import BrandService from "../services/brand.service";
@@ -17,6 +18,7 @@ import GoodsCountRequestModel from "../types/model/requests/goods-count-request.
 import MaxGoodsPriceRequestModel from "../types/model/requests/max-goods-price-request.model";
 import BrandsRequestModel from "../types/model/requests/brands-request.model";
 import BrandParameters from "../types/url-parameters/brand-filter.parameters";
+import SearchFieldParameters from "../types/url-parameters/search-field.parameters";
 
 import "./home.page.css";
 
@@ -75,6 +77,10 @@ export async function loader({ request }) {
   const category = goodsFilter.category;
   const price = goodsFilter.price;
   const brandsFilter = goodsFilter.brands;
+  // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  const customerSearchFilter =
+    SearchFieldParameters.fromUrlSearchParams(search);
+  // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
   // Get count of goods for current search parameters.
   const itemsCount = await getGoodsCount(goodsFilter);
   // Get maximum price for current search parameters.
@@ -91,6 +97,7 @@ export async function loader({ request }) {
     maxPrice,
     availableBrands,
     brandsFilter,
+    customerSearchFilter,
   };
 }
 
@@ -104,6 +111,7 @@ export default function Home() {
     maxPrice,
     availableBrands,
     brandsFilter,
+    customerSearchFilter,
   } = useLoaderData();
 
   // return items.length ? (
@@ -132,14 +140,17 @@ export default function Home() {
         />
       </Grid>
       <Grid item xs={9} md={9}>
-        {items.length ? (
-          <Paper>
-            <ItemsList items={items} />
-            <Pagination itemsCount={itemsCount} pagination={pagination} />
-          </Paper>
-        ) : (
-          <p>No items for sale</p>
-        )}
+        <Box className="items-list-wrapper">
+          <TopToolsBar customerSearchFilter={customerSearchFilter} />
+          {items.length ? (
+            <Paper>
+              <ItemsList items={items} />
+              <Pagination itemsCount={itemsCount} pagination={pagination} />
+            </Paper>
+          ) : (
+            <p>No items for sale</p>
+          )}
+        </Box>
       </Grid>
     </Grid>
   );

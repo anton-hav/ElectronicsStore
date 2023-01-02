@@ -18,10 +18,14 @@ export default class PriceParameters extends UrlSearchParameters {
 
   constructor(from, to) {
     super();
-    let fromValue = Number(from);
-    let toValue = Number(to);
-    this.from = fromValue !== NaN ? fromValue : null;
-    this.to = toValue !== NaN ? toValue : null;
+    if (from !== null) {
+      let fromValue = Number(from);
+      this.from = fromValue !== NaN ? fromValue : null;
+    }
+    if (to !== null) {
+      let toValue = Number(to);
+      this.to = toValue !== NaN ? toValue : null;
+    }
   }
 
   /**
@@ -50,8 +54,8 @@ export default class PriceParameters extends UrlSearchParameters {
    */
   setParametersToUrl(search) {
     if (search instanceof URLSearchParams) {
-      search.set("from", this.from);
-      search.set("to", this.to);
+      if (this.from !== null) search.set("from", this.from);
+      if (this.to !== null) search.set("to", this.to);
     }
     return search;
   }

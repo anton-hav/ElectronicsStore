@@ -22,7 +22,7 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  width: 1000px;
+  width: 1024px;
   background-color: rgb(255, 255, 255);
 }
 
@@ -33,7 +33,7 @@
 .App-footer {
   background-color: #282c34;
   height: 8vh;
-  width: 1000px;
+  width: 1024px;
   display: flex;
   align-items: center;
   justify-content:flex-start;
