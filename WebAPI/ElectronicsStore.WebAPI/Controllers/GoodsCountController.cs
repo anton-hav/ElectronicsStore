@@ -9,7 +9,7 @@ using Serilog;
 namespace ElectronicsStore.WebAPI.Controllers;
 
 /// <summary>
-/// Controller that provides API endpoints for the GoodsCount resource.
+///     Controller that provides API endpoints for the GoodsCount resource.
 /// </summary>
 [Route("api/[controller]")]
 [ApiController]

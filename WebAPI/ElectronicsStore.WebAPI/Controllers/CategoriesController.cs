@@ -11,6 +11,9 @@ using Serilog;
 
 namespace ElectronicsStore.WebAPI.Controllers;
 
+/// <summary>
+///     Controller that provides API endpoints for the Category resource.
+/// </summary>
 [Route("api/[controller]")]
 [ApiController]
 public class CategoriesController : ControllerBase
@@ -66,7 +69,7 @@ public class CategoriesController : ControllerBase
     [HttpGet]
     [ProducesResponseType(typeof(IEnumerable<CategoryResponseModel>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> GetCategories([FromQuery]GetCategoriesRequestModel model)
+    public async Task<IActionResult> GetCategories([FromQuery] GetCategoriesRequestModel model)
     {
         try
         {
@@ -103,7 +106,8 @@ public class CategoriesController : ControllerBase
             if (model.Name.IsNullOrEmpty())
                 throw new ArgumentNullException(nameof(model), "One or more object properties are null.");
 
-            var isExist = await _categoryService.IsCategoryExistByNameAndParentIdAsync(model.Name, model.ParentCategoryId);
+            var isExist =
+                await _categoryService.IsCategoryExistByNameAndParentIdAsync(model.Name, model.ParentCategoryId);
             if (isExist)
                 throw new ArgumentException("The same entry already exists in the storage.", nameof(model));
 
@@ -116,7 +120,8 @@ public class CategoriesController : ControllerBase
             }
             else
             {
-                var isParentCategoryExist = await _categoryService.IsCategoryExistByIdAsync((Guid)model.ParentCategoryId);
+                var isParentCategoryExist =
+                    await _categoryService.IsCategoryExistByIdAsync((Guid)model.ParentCategoryId);
                 if (!isParentCategoryExist)
                     throw new ArgumentNullException(nameof(model),
                         "The record with the specified unique identifier of the parent category does not exist.");
@@ -233,7 +238,8 @@ public class CategoriesController : ControllerBase
                 throw new ArgumentException("Fail to find a record with the specified Id in the storage",
                     nameof(id));
 
-            var isExistByName = await _categoryService.IsCategoryExistByNameAndParentIdAsync(model.Name, model.ParentCategoryId);
+            var isExistByName =
+                await _categoryService.IsCategoryExistByNameAndParentIdAsync(model.Name, model.ParentCategoryId);
             if (isExistByName)
                 throw new ArgumentException("The same entry already exists in the storage.", nameof(model));
 

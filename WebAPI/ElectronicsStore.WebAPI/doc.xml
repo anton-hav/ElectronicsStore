@@ -18,6 +18,11 @@
             <response code="400">Request contains null object or invalid object type.</response>
             <response code="500">Unexpected error on the server side.</response>
         </member>
+        <member name="T:ElectronicsStore.WebAPI.Controllers.CategoriesController">
+            <summary>
+                Controller that provides API endpoints for the Category resource.
+            </summary>
+        </member>
         <member name="M:ElectronicsStore.WebAPI.Controllers.CategoriesController.GetCategoryById(System.Guid)">
             <summary>
                 Get a category from storage with specified id.
@@ -141,7 +146,7 @@
         </member>
         <member name="T:ElectronicsStore.WebAPI.Controllers.GoodsCountController">
             <summary>
-            Controller that provides API endpoints for the GoodsCount resource.
+                Controller that provides API endpoints for the GoodsCount resource.
             </summary>
         </member>
         <member name="M:ElectronicsStore.WebAPI.Controllers.GoodsCountController.GetGoodsCount(ElectronicsStore.WebAPI.Models.Requests.GetGoodsCountRequestModel)">
@@ -217,6 +222,17 @@
             <response code="200">an empty</response>
             <response code="400">Request contains null object or invalid object type</response>
             <response code="500">Unexpected error on the server side.</response>
+        </member>
+        <member name="T:ElectronicsStore.WebAPI.Controllers.UserController">
+            <summary>
+            Controller that provides API endpoints for the User resource.
+            </summary>
+        </member>
+        <member name="M:ElectronicsStore.WebAPI.Controllers.UserController.Get">
+            <summary>
+            Get users
+            </summary>
+            <returns>all users</returns>
         </member>
         <member name="M:ElectronicsStore.WebAPI.Controllers.UserController.Create(ElectronicsStore.WebAPI.Models.Requests.RegisterUserRequestModel)">
             <summary>
@@ -395,6 +411,12 @@
             To ignore the search parameter, the value must be empty.
             </summary>
         </member>
+        <member name="P:ElectronicsStore.WebAPI.Models.Requests.GetGoodsCountRequestModel.Brands">
+            <summary>
+            Search parameter that represents the brand filter values.
+            To ignore the search parameter, the value must be empty.
+            </summary>
+        </member>
         <member name="T:ElectronicsStore.WebAPI.Models.Requests.GetGoodsRequestModel">
             <summary>
             Request model to get goods
@@ -432,7 +454,7 @@
         </member>
         <member name="P:ElectronicsStore.WebAPI.Models.Requests.GetGoodsRequestModel.Brands">
             <summary>
-            Search parameter that represents the brand filter values.
+            Search parameter that represents the brand filter values as a array of brand names.
             To ignore the search parameter, the value must be empty.
             </summary>
         </member>

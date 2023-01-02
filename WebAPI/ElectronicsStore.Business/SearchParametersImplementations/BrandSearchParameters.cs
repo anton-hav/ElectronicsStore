@@ -3,10 +3,10 @@
 namespace ElectronicsStore.Business.SearchParametersImplementations;
 
 /// <summary>
-/// Provide a category filter model for searching.
+/// Provide a brand filter model for searching.
 /// </summary>
-public class CategorySearchParameters : ICategorySearchParameters
+public class BrandSearchParameters : IBrandSearchParameters
 {
     /// <inheritdoc />
-    public Guid? CategoryId { get; set; }
+    public string[]? BrandNames { get; set; }
 }

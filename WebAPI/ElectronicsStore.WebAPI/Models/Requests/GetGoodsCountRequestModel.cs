@@ -21,4 +21,10 @@ public class GetGoodsCountRequestModel
     /// To ignore the search parameter, the value must be empty.
     /// </summary>
     public int? To { get; set; } = null;
+
+    /// <summary>
+    /// Search parameter that represents the brand filter values.
+    /// To ignore the search parameter, the value must be empty.
+    /// </summary>
+    public string[]? Brands { get; set; }
 }

@@ -64,6 +64,7 @@ public class ItemService : IItemService
 
         entities = await GetQueryWithCategoryFilter(entities, model.Category);
         entities = GetQueryWithPriceFilter(entities, model.Price);
+        entities = GetQueryWithBrandsFilter(entities, model.Brands);
 
         var result = (await entities
                 .Skip(model.Pagination.PageSize * (model.Pagination.PageNumber - 1))
@@ -85,6 +86,7 @@ public class ItemService : IItemService
 
         entities = await GetQueryWithCategoryFilter(entities, model.Category);
         entities = GetQueryWithPriceFilter(entities, model.Price);
+        entities = GetQueryWithBrandsFilter(entities, model.Brands);
 
         var result = await entities.AsNoTracking().CountAsync();
         return result;
@@ -108,7 +110,7 @@ public class ItemService : IItemService
     ///     Get query with category filters specified category search model.
     /// </summary>
     /// <param name="query">query</param>
-    /// <param name="category">category search model as a <see cref="ICategorySearchParameters" /></param>
+    /// <param name="category">category search parameters as a <see cref="ICategorySearchParameters" /></param>
     /// <returns>a query that includes category filters.</returns>
     private async Task<IQueryable<Item>> GetQueryWithCategoryFilter(IQueryable<Item> query,
         ICategorySearchParameters category)
@@ -131,13 +133,29 @@ public class ItemService : IItemService
     ///     Get query with price filters model.
     /// </summary>
     /// <param name="query">query</param>
-    /// <param name="price">price search model as a <see cref="IPriceSearchParameters" /></param>
+    /// <param name="price">price search parameters as a <see cref="IPriceSearchParameters" /></param>
     /// <returns>a query that includes price filters.</returns>
     private IQueryable<Item> GetQueryWithPriceFilter(IQueryable<Item> query, IPriceSearchParameters price)
     {
         if (price.From != null && price.From != 0) query = query.Where(entity => entity.Cost >= price.From);
 
         if (price.To != null && price.To != 0) query = query.Where(entity => entity.Cost <= price.To);
+
+        return query;
+    }
+
+    /// <summary>
+    /// Get query with brand filters model.
+    /// </summary>
+    /// <param name="query">query</param>
+    /// <param name="brands">brand search parameters as a <see cref="IBrandSearchParameters"/></param>
+    /// <returns>a query that includes brand filters.</returns>
+    private IQueryable<Item> GetQueryWithBrandsFilter(IQueryable<Item> query, IBrandSearchParameters brands)
+    {
+        if (brands.BrandNames != null && brands.BrandNames.Any())
+            query = query
+                .Where(entity => brands.BrandNames
+                    .Any(brand => brand.Equals(entity.Product.Brand.Name)));
 
         return query;
     }
