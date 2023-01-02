@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
-using ElectronicsStore.Core.Abstractions;
+using ElectronicsStore.Core.Abstractions.SearchModels;
+using ElectronicsStore.Core.Abstractions.SearchParameters;
+using ElectronicsStore.Core.Abstractions.Services;
 using ElectronicsStore.Core.DataTransferObjects;
 using ElectronicsStore.Data.Abstractions;
 using ElectronicsStore.DataBase.Entities;
@@ -56,16 +58,16 @@ public class ItemService : IItemService
     }
 
     /// <inheritdoc />
-    public async Task<IEnumerable<ItemDto>> GetItemsBySearchParametersAsync(IGoodsSearchParameters parameters)
+    public async Task<IEnumerable<ItemDto>> GetItemsBySearchParametersAsync(IGoodsSearchModel model)
     {
         var entities = _unitOfWork.Items.Get();
 
-        entities = await GetQueryWithCategoryFilter(entities, parameters.Category);
-        entities = GetQueryWithPriceFilter(entities, parameters.Price);
+        entities = await GetQueryWithCategoryFilter(entities, model.Category);
+        entities = GetQueryWithPriceFilter(entities, model.Price);
 
         var result = (await entities
-                .Skip(parameters.Pagination.PageSize * (parameters.Pagination.PageNumber - 1))
-                .Take(parameters.Pagination.PageSize)
+                .Skip(model.Pagination.PageSize * (model.Pagination.PageNumber - 1))
+                .Take(model.Pagination.PageSize)
                 .Include(item => item.Product)
                 .ThenInclude(product => product.Brand)
                 .AsNoTracking()
@@ -77,23 +79,23 @@ public class ItemService : IItemService
     }
 
     /// <inheritdoc />
-    public async Task<int> GetItemsCountBySearchParametersAsync(IGoodsCountSearchParameters parameters)
+    public async Task<int> GetItemsCountBySearchParametersAsync(IGoodsCountSearchModel model)
     {
         var entities = _unitOfWork.Items.Get();
 
-        entities = await GetQueryWithCategoryFilter(entities, parameters.Category);
-        entities = GetQueryWithPriceFilter(entities, parameters.Price);
+        entities = await GetQueryWithCategoryFilter(entities, model.Category);
+        entities = GetQueryWithPriceFilter(entities, model.Price);
 
         var result = await entities.AsNoTracking().CountAsync();
         return result;
     }
 
     /// <inheritdoc />
-    public async Task<double> GetMaxItemsPriceBySearchParametersAsync(IGoodsMaxPriceSearchParameters parameters)
+    public async Task<double> GetMaxItemsPriceBySearchParametersAsync(IGoodsMaxPriceSearchModel model)
     {
         var entities = _unitOfWork.Items.Get();
 
-        entities = await GetQueryWithCategoryFilter(entities, parameters.Category);
+        entities = await GetQueryWithCategoryFilter(entities, model.Category);
 
         var entity = await entities.AsNoTracking().OrderByDescending(entity => entity.Cost).FirstOrDefaultAsync();
         if (entity == null)
@@ -103,10 +105,10 @@ public class ItemService : IItemService
     }
 
     /// <summary>
-    ///     Get query with category filters specified category search parameters.
+    ///     Get query with category filters specified category search model.
     /// </summary>
     /// <param name="query">query</param>
-    /// <param name="category">category search parameters as a <see cref="ICategorySearchParameters" /></param>
+    /// <param name="category">category search model as a <see cref="ICategorySearchParameters" /></param>
     /// <returns>a query that includes category filters.</returns>
     private async Task<IQueryable<Item>> GetQueryWithCategoryFilter(IQueryable<Item> query,
         ICategorySearchParameters category)
@@ -126,10 +128,10 @@ public class ItemService : IItemService
     }
 
     /// <summary>
-    ///     Get query with price filters parameters.
+    ///     Get query with price filters model.
     /// </summary>
     /// <param name="query">query</param>
-    /// <param name="price">price search parameters as a <see cref="IPriceSearchParameters" /></param>
+    /// <param name="price">price search model as a <see cref="IPriceSearchParameters" /></param>
     /// <returns>a query that includes price filters.</returns>
     private IQueryable<Item> GetQueryWithPriceFilter(IQueryable<Item> query, IPriceSearchParameters price)
     {

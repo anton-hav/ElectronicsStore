@@ -1,9 +1,11 @@
-﻿namespace ElectronicsStore.Core.Abstractions;
+﻿using ElectronicsStore.Core.Abstractions.SearchParameters;
+
+namespace ElectronicsStore.Core.Abstractions.SearchModels;
 
 /// <summary>
-///     Search parameters to retrieve the brands from the storage.
+///     Model for searching the count of items in the storage.
 /// </summary>
-public interface IBrandSearchParameters
+public interface IGoodsCountSearchModel
 {
     /// <summary>
     ///     Category parameters.

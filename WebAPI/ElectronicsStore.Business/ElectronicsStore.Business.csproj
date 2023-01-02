@@ -15,8 +15,4 @@
     <ProjectReference Include="..\ElectronicsStore.Data.Abstractions\ElectronicsStore.Data.Abstractions.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="SearchParametersImplementations\" />
-  </ItemGroup>
-
 </Project>

@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
-using ElectronicsStore.Business.SearchParametersImplementations;
+using ElectronicsStore.Business.SearchModelImplementations;
 using ElectronicsStore.Business.ServiceImplementations;
-using ElectronicsStore.Core.Abstractions;
+using ElectronicsStore.Core.Abstractions.Services;
 using ElectronicsStore.WebAPI.Models.Requests;
 using ElectronicsStore.WebAPI.Models.Responses;
 using Microsoft.AspNetCore.Http;
@@ -30,8 +30,8 @@ namespace ElectronicsStore.WebAPI.Controllers
         /// <summary>
         ///     Get brands from the storage.
         /// </summary>
-        /// <returns>all brands that match the search parameters.</returns>
-        /// <response code="200">Returns all brands that match the search parameters.</response>
+        /// <returns>all brands that match the search model.</returns>
+        /// <response code="200">Returns all brands that match the search model.</response>
         /// <response code="400">Request contains null object or invalid object type.</response>
         /// <response code="500">Unexpected error on the server side.</response>
         [HttpGet]
@@ -42,7 +42,7 @@ namespace ElectronicsStore.WebAPI.Controllers
         {
             try
             {
-                var searchParams = _mapper.Map<BrandSearchParameters>(model);
+                var searchParams = _mapper.Map<BrandSearchModel>(model);
                 var brands = await _brandService.GetBrandsBySearchParametersAsync(searchParams);
                 var response = _mapper.Map<IEnumerable<GetBrandResponseModel>>(brands);
                 return Ok(response);

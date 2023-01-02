@@ -1,21 +1,28 @@
 ﻿using AutoMapper;
-using ElectronicsStore.Business;
+using ElectronicsStore.Business.SearchModelImplementations;
 using ElectronicsStore.Business.SearchParametersImplementations;
 using ElectronicsStore.WebAPI.Models.Requests;
 
 namespace ElectronicsStore.WebAPI.MappingProfiles;
 
 /// <summary>
-/// Mapper profile for GoodsCountSearchParameters
+///     Mapper profile for GoodsSearchModel
 /// </summary>
-public class GoodsCountSearchParametersProfile : Profile
+public class GoodsSearchModelProfile : Profile
 {
     /// <summary>
-    /// Mapper profile constructor
+    ///     Mapper profile constructor
     /// </summary>
-    public GoodsCountSearchParametersProfile()
+    public GoodsSearchModelProfile()
     {
-        CreateMap<GetGoodsCountRequestModel, GoodsCountSearchParameters>()
+        CreateMap<GetGoodsRequestModel, GoodsSearchModel>()
+            .ForMember(searchParams => searchParams.Pagination,
+                opt
+                    => opt.MapFrom(request => new PaginationParameters
+                    {
+                        PageNumber = request.PageNumber,
+                        PageSize = request.PageSize
+                    }))
             .ForMember(searchParams => searchParams.Category,
                 opt
                     => opt.MapFrom(request => new CategorySearchParameters

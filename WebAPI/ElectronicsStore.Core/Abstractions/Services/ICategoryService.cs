@@ -1,6 +1,6 @@
 ﻿using ElectronicsStore.Core.DataTransferObjects;
 
-namespace ElectronicsStore.Core.Abstractions;
+namespace ElectronicsStore.Core.Abstractions.Services;
 
 public interface ICategoryService
 {

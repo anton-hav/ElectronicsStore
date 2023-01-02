@@ -4,12 +4,17 @@
         <name>ElectronicsStore.WebAPI</name>
     </assembly>
     <members>
+        <member name="T:ElectronicsStore.WebAPI.Controllers.BrandsController">
+            <summary>
+            Controller that provides API endpoints for the Brands resource.
+            </summary>
+        </member>
         <member name="M:ElectronicsStore.WebAPI.Controllers.BrandsController.GetBrands(ElectronicsStore.WebAPI.Models.Requests.GetBrandsRequestModel)">
             <summary>
                 Get brands from the storage.
             </summary>
-            <returns>all brands that match the search parameters.</returns>
-            <response code="200">Returns all brands that match the search parameters.</response>
+            <returns>all brands that match the search model.</returns>
+            <response code="200">Returns all brands that match the search model.</response>
             <response code="400">Request contains null object or invalid object type.</response>
             <response code="500">Unexpected error on the server side.</response>
         </member>
@@ -129,8 +134,8 @@
             <summary>
                 Get goods from the storage.
             </summary>
-            <returns>all goods that match the search parameters</returns>
-            <response code="200">Returns all goods that match the search parameters.</response>
+            <returns>all goods that match the search model</returns>
+            <response code="200">Returns all goods that match the search model.</response>
             <response code="400">Request contains null object or invalid object type.</response>
             <response code="500">Unexpected error on the server side.</response>
         </member>
@@ -141,11 +146,11 @@
         </member>
         <member name="M:ElectronicsStore.WebAPI.Controllers.GoodsCountController.GetGoodsCount(ElectronicsStore.WebAPI.Models.Requests.GetGoodsCountRequestModel)">
             <summary>
-                Get item count specified search parameters from storage.
+                Get item count specified search model from storage.
             </summary>
             <param name="model"></param>
-            <returns>number of items matching search parameters.</returns>
-            <response code="200">Returns a number of items matching search parameters.</response>
+            <returns>number of items matching search model.</returns>
+            <response code="200">Returns a number of items matching search model.</response>
             <response code="400">Request contains null object or invalid object type.</response>
             <response code="500">Unexpected error on the server side.</response>
         </member>
@@ -156,11 +161,11 @@
         </member>
         <member name="M:ElectronicsStore.WebAPI.Controllers.MaxGoodsPriceController.GetGoodsCount(ElectronicsStore.WebAPI.Models.Requests.GetMaxGoodsPriceRequestModel)">
             <summary>
-                Get item count specified search parameters from storage.
+                Get item count specified search model from storage.
             </summary>
             <param name="model"></param>
-            <returns>number of items matching search parameters.</returns>
-            <response code="200">Returns a number of items matching search parameters.</response>
+            <returns>number of items matching search model.</returns>
+            <response code="200">Returns a number of items matching search model.</response>
             <response code="400">Request contains null object or invalid object type.</response>
             <response code="500">Unexpected error on the server side.</response>
         </member>
@@ -234,12 +239,12 @@
             Mapper profile constructor
             </summary>
         </member>
-        <member name="T:ElectronicsStore.WebAPI.MappingProfiles.BrandSearchParametersProfile">
+        <member name="T:ElectronicsStore.WebAPI.MappingProfiles.BrandSearchModelProfile">
             <summary>
-            Mapper profile for BrandSearchParameters
+            Mapper profile for BrandSearchModel
             </summary>
         </member>
-        <member name="M:ElectronicsStore.WebAPI.MappingProfiles.BrandSearchParametersProfile.#ctor">
+        <member name="M:ElectronicsStore.WebAPI.MappingProfiles.BrandSearchModelProfile.#ctor">
             <summary>
             Mapper profile constructor
             </summary>
@@ -254,34 +259,34 @@
             Mapper profile constructor
             </summary>
         </member>
-        <member name="T:ElectronicsStore.WebAPI.MappingProfiles.GoodsCountSearchParametersProfile">
+        <member name="T:ElectronicsStore.WebAPI.MappingProfiles.GoodsCountSearchModelProfile">
             <summary>
-            Mapper profile for GoodsCountSearchParameters
+                Mapper profile for GoodsCountSearchModel
             </summary>
         </member>
-        <member name="M:ElectronicsStore.WebAPI.MappingProfiles.GoodsCountSearchParametersProfile.#ctor">
+        <member name="M:ElectronicsStore.WebAPI.MappingProfiles.GoodsCountSearchModelProfile.#ctor">
             <summary>
-            Mapper profile constructor
+                Mapper profile constructor
             </summary>
         </member>
-        <member name="T:ElectronicsStore.WebAPI.MappingProfiles.GoodsMaxPriceSearchParametersProfile">
+        <member name="T:ElectronicsStore.WebAPI.MappingProfiles.GoodsMaxPriceSearchModelProfile">
             <summary>
-            Mapper profile for GoodsMaxPriceSearchParameters
+                Mapper profile for GoodsMaxPriceSearchModel
             </summary>
         </member>
-        <member name="M:ElectronicsStore.WebAPI.MappingProfiles.GoodsMaxPriceSearchParametersProfile.#ctor">
+        <member name="M:ElectronicsStore.WebAPI.MappingProfiles.GoodsMaxPriceSearchModelProfile.#ctor">
             <summary>
-            Mapper profile constructor
+                Mapper profile constructor
             </summary>
         </member>
-        <member name="T:ElectronicsStore.WebAPI.MappingProfiles.GoodsSearchParametersProfile">
+        <member name="T:ElectronicsStore.WebAPI.MappingProfiles.GoodsSearchModelProfile">
             <summary>
-            Mapper profile for GoodsSearchParameters
+                Mapper profile for GoodsSearchModel
             </summary>
         </member>
-        <member name="M:ElectronicsStore.WebAPI.MappingProfiles.GoodsSearchParametersProfile.#ctor">
+        <member name="M:ElectronicsStore.WebAPI.MappingProfiles.GoodsSearchModelProfile.#ctor">
             <summary>
-            Mapper profile constructor
+                Mapper profile constructor
             </summary>
         </member>
         <member name="T:ElectronicsStore.WebAPI.MappingProfiles.ItemProfile">
@@ -422,6 +427,12 @@
         <member name="P:ElectronicsStore.WebAPI.Models.Requests.GetGoodsRequestModel.To">
             <summary>
             Search parameter that represents the "Price To" price filter value.
+            To ignore the search parameter, the value must be empty.
+            </summary>
+        </member>
+        <member name="P:ElectronicsStore.WebAPI.Models.Requests.GetGoodsRequestModel.Brands">
+            <summary>
+            Search parameter that represents the brand filter values.
             To ignore the search parameter, the value must be empty.
             </summary>
         </member>

@@ -1,9 +1,9 @@
-﻿using ElectronicsStore.Core.Abstractions;
+﻿using ElectronicsStore.Core.Abstractions.SearchParameters;
 
 namespace ElectronicsStore.Business.SearchParametersImplementations;
 
 /// <summary>
-/// Represent a price filter parameters for searching goods.
+/// Represent a price filter model for searching goods.
 /// </summary>
 public class PriceSearchParameters : IPriceSearchParameters
 {

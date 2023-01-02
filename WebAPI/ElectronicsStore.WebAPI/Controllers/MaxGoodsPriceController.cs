@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
-using ElectronicsStore.Business.SearchParametersImplementations;
-using ElectronicsStore.Core.Abstractions;
+using ElectronicsStore.Business.SearchModelImplementations;
+using ElectronicsStore.Core.Abstractions.Services;
 using ElectronicsStore.WebAPI.Models.Requests;
 using ElectronicsStore.WebAPI.Models.Responses;
 using Microsoft.AspNetCore.Http;
@@ -27,11 +27,11 @@ namespace ElectronicsStore.WebAPI.Controllers
         }
 
         /// <summary>
-        ///     Get item count specified search parameters from storage.
+        ///     Get item count specified search model from storage.
         /// </summary>
         /// <param name="model"></param>
-        /// <returns>number of items matching search parameters.</returns>
-        /// <response code="200">Returns a number of items matching search parameters.</response>
+        /// <returns>number of items matching search model.</returns>
+        /// <response code="200">Returns a number of items matching search model.</response>
         /// <response code="400">Request contains null object or invalid object type.</response>
         /// <response code="500">Unexpected error on the server side.</response>
         [HttpGet]
@@ -42,7 +42,7 @@ namespace ElectronicsStore.WebAPI.Controllers
         {
             try
             {
-                var searchParams = _mapper.Map<GoodsMaxPriceSearchParameters>(model);
+                var searchParams = _mapper.Map<GoodsMaxPriceSearchModel>(model);
                 var response = await _itemService
                     .GetMaxItemsPriceBySearchParametersAsync(searchParams);
 

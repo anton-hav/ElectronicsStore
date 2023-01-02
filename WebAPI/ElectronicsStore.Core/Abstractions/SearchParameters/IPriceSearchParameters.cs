@@ -1,4 +1,4 @@
-﻿namespace ElectronicsStore.Core.Abstractions;
+﻿namespace ElectronicsStore.Core.Abstractions.SearchParameters;
 
 /// <summary>
 /// Represent a price filter parameters.

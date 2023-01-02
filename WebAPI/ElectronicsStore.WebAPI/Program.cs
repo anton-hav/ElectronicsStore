@@ -7,7 +7,6 @@ using ElectronicsStore.DataBase;
 using ElectronicsStore.Data.Abstractions;
 using ElectronicsStore.Data.Repositories;
 using ElectronicsStore.Business.ServiceImplementations;
-using ElectronicsStore.Core.Abstractions;
 using ElectronicsStore.Data.Abstractions.Repositories;
 using ElectronicsStore.Data.Repositories.Repositories;
 using ElectronicsStore.DataBase.Entities;
@@ -15,6 +14,7 @@ using ElectronicsStore.WebAPI.Utils;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using ElectronicsStore.Core.Abstractions.Services;
 
 namespace ElectronicsStore.WebAPI
 {

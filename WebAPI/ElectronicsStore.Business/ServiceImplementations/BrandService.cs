@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
-using ElectronicsStore.Core.Abstractions;
+using ElectronicsStore.Core.Abstractions.SearchModels;
+using ElectronicsStore.Core.Abstractions.SearchParameters;
+using ElectronicsStore.Core.Abstractions.Services;
 using ElectronicsStore.Core.DataTransferObjects;
 using ElectronicsStore.Data.Abstractions;
 using ElectronicsStore.DataBase.Entities;
@@ -36,12 +38,12 @@ public class BrandService : IBrandService
         return dto;
     }
 
-    public async Task<IEnumerable<BrandDto>> GetBrandsBySearchParametersAsync(IBrandSearchParameters parameters)
+    public async Task<IEnumerable<BrandDto>> GetBrandsBySearchParametersAsync(IBrandSearchModel model)
     {
         var entities = _unitOfWork.Items.Get();
 
-        entities = await GetQueryWithCategoryFilter(entities, parameters.Category);
-        entities = GetQueryWithPriceFilter(entities, parameters.Price);
+        entities = await GetQueryWithCategoryFilter(entities, model.Category);
+        entities = GetQueryWithPriceFilter(entities, model.Price);
 
         var brands = (await entities
                 .Include(entity => entity.Product)
@@ -56,10 +58,10 @@ public class BrandService : IBrandService
     }
 
     /// <summary>
-    ///     Get query with category filters specified category search parameters.
+    ///     Get query with category filters specified category search model.
     /// </summary>
     /// <param name="query">query</param>
-    /// <param name="category">category search parameters as a <see cref="ICategorySearchParameters" /></param>
+    /// <param name="category">category search model as a <see cref="ICategorySearchParameters" /></param>
     /// <returns>a query that includes category filters.</returns>
     private async Task<IQueryable<Item>> GetQueryWithCategoryFilter(IQueryable<Item> query,
         ICategorySearchParameters category)
@@ -79,10 +81,10 @@ public class BrandService : IBrandService
     }
 
     /// <summary>
-    ///     Get query with price filters parameters.
+    ///     Get query with price filters model.
     /// </summary>
     /// <param name="query">query</param>
-    /// <param name="price">price search parameters as a <see cref="IPriceSearchParameters" /></param>
+    /// <param name="price">price search model as a <see cref="IPriceSearchParameters" /></param>
     /// <returns>a query that includes price filters.</returns>
     private IQueryable<Item> GetQueryWithPriceFilter(IQueryable<Item> query, IPriceSearchParameters price)
     {
