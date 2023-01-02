@@ -9,6 +9,8 @@ export const environment = {
   },
   goodsEndpoint: "Goods",
   goodsCountEndpoint: "GoodsCount",
+  maxGoodsPriceEndpoint: "MaxGoodsPrice",
   orderSheetEndpoint: "OrderSheet",
   categoriesEndpoint: "Categories",
+  brandsEndpoint: "Brands",
 };

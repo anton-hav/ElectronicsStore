@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
-using ElectronicsStore.Business.SearchParametersImplementations;
-using ElectronicsStore.Core.Abstractions;
+using ElectronicsStore.Business.SearchModelImplementations;
+using ElectronicsStore.Core.Abstractions.Services;
 using ElectronicsStore.WebAPI.Models.Requests;
 using ElectronicsStore.WebAPI.Models.Responses;
 using Microsoft.AspNetCore.Mvc;
@@ -9,7 +9,7 @@ using Serilog;
 namespace ElectronicsStore.WebAPI.Controllers;
 
 /// <summary>
-/// Controller that provides API endpoints for the GoodsCount resource.
+///     Controller that provides API endpoints for the GoodsCount resource.
 /// </summary>
 [Route("api/[controller]")]
 [ApiController]
@@ -26,11 +26,11 @@ public class GoodsCountController : ControllerBase
     }
 
     /// <summary>
-    ///     Get item count specified search parameters from storage.
+    ///     Get item count specified search model from storage.
     /// </summary>
     /// <param name="model"></param>
-    /// <returns>number of items matching search parameters.</returns>
-    /// <response code="200">Returns a number of items matching search parameters.</response>
+    /// <returns>number of items matching search model.</returns>
+    /// <response code="200">Returns a number of items matching search model.</response>
     /// <response code="400">Request contains null object or invalid object type.</response>
     /// <response code="500">Unexpected error on the server side.</response>
     [HttpGet]
@@ -41,7 +41,7 @@ public class GoodsCountController : ControllerBase
     {
         try
         {
-            var searchParams = _mapper.Map<GoodsCountSearchParameters>(model);
+            var searchParams = _mapper.Map<GoodsCountSearchModel>(model);
             var response = await _itemService
                 .GetItemsCountBySearchParametersAsync(searchParams);
 

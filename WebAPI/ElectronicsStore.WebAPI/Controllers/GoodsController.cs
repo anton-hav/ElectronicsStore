@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
-using ElectronicsStore.Business.ServiceImplementations;
-using ElectronicsStore.Core.Abstractions;
+using ElectronicsStore.Business.SearchModelImplementations;
+using ElectronicsStore.Core.Abstractions.Services;
 using ElectronicsStore.WebAPI.Models.Requests;
 using ElectronicsStore.WebAPI.Models.Responses;
 using Microsoft.AspNetCore.Mvc;
@@ -57,10 +57,10 @@ public class GoodsController : ControllerBase
     }
 
     /// <summary>
-    ///     Get goods from storage.
+    ///     Get goods from the storage.
     /// </summary>
-    /// <returns>all goods</returns>
-    /// <response code="200">Returns all goods.</response>
+    /// <returns>all goods that match the search model</returns>
+    /// <response code="200">Returns all goods that match the search model.</response>
     /// <response code="400">Request contains null object or invalid object type.</response>
     /// <response code="500">Unexpected error on the server side.</response>
     [HttpGet]
@@ -71,7 +71,7 @@ public class GoodsController : ControllerBase
     {
         try
         {
-            var searchParams = _mapper.Map<GoodsSearchParameters>(model);
+            var searchParams = _mapper.Map<GoodsSearchModel>(model);
             var goods = await _itemService.GetItemsBySearchParametersAsync(searchParams);
             var response = _mapper.Map<IEnumerable<GetItemResponseModel>>(goods);
             return Ok(response);

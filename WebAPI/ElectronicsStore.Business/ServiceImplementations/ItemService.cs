@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
-using ElectronicsStore.Core.Abstractions;
+using ElectronicsStore.Core.Abstractions.SearchModels;
+using ElectronicsStore.Core.Abstractions.SearchParameters;
+using ElectronicsStore.Core.Abstractions.Services;
 using ElectronicsStore.Core.DataTransferObjects;
 using ElectronicsStore.Data.Abstractions;
 using ElectronicsStore.DataBase.Entities;
@@ -14,7 +16,7 @@ public class ItemService : IItemService
     private readonly ICategoryService _categoryService;
 
     public ItemService(IMapper mapper,
-        IUnitOfWork unitOfWork, 
+        IUnitOfWork unitOfWork,
         ICategoryService categoryService)
     {
         _mapper = mapper;
@@ -56,26 +58,17 @@ public class ItemService : IItemService
     }
 
     /// <inheritdoc />
-    public async Task<IEnumerable<ItemDto>> GetItemsBySearchParametersAsync(IGoodsSearchParameters parameters)
+    public async Task<IEnumerable<ItemDto>> GetItemsBySearchParametersAsync(IGoodsSearchModel model)
     {
         var entities = _unitOfWork.Items.Get();
 
-        //// Category filter
-        //if (parameters.Category.CategoryId != null)
-        //{
-        //    var categoryId = (Guid)parameters.Category.CategoryId;
-        //    var isRoot = await _categoryService.IsCategoryRootByIdAsync(categoryId);
-        //    if (!isRoot)
-        //    {
-        //        var innerCategoryIds = await _categoryService.GetInnerCategoriesByCurrentCategoryIdAsync(categoryId);
-        //        entities = entities.Where(entity => innerCategoryIds.Any(id => entity.CategoryId.Equals(id)));
-        //    }
-        //}
-        entities = await GetQueryWithCategoryFilter(entities, parameters.Category);
+        entities = await GetQueryWithCategoryFilter(entities, model.Category);
+        entities = GetQueryWithPriceFilter(entities, model.Price);
+        entities = GetQueryWithBrandsFilter(entities, model.Brands);
 
         var result = (await entities
-                .Skip(parameters.Pagination.PageSize * (parameters.Pagination.PageNumber - 1))
-                .Take(parameters.Pagination.PageSize)
+                .Skip(model.Pagination.PageSize * (model.Pagination.PageNumber - 1))
+                .Take(model.Pagination.PageSize)
                 .Include(item => item.Product)
                 .ThenInclude(product => product.Brand)
                 .AsNoTracking()
@@ -87,30 +80,37 @@ public class ItemService : IItemService
     }
 
     /// <inheritdoc />
-    public async Task<int> GetItemsCountBySearchParametersAsync(IGoodsCountSearchParameters parameters)
+    public async Task<int> GetItemsCountBySearchParametersAsync(IGoodsCountSearchModel model)
     {
         var entities = _unitOfWork.Items.Get();
 
-        entities = await GetQueryWithCategoryFilter(entities, parameters.Category);
+        entities = await GetQueryWithCategoryFilter(entities, model.Category);
+        entities = GetQueryWithPriceFilter(entities, model.Price);
+        entities = GetQueryWithBrandsFilter(entities, model.Brands);
 
         var result = await entities.AsNoTracking().CountAsync();
         return result;
     }
 
-    ///// <inheritdoc />
-    //public async Task<int> GetItemsCountBySearchParametersAsync()
-    //{
-    //    var entities = _unitOfWork.Items.Get();
+    /// <inheritdoc />
+    public async Task<double> GetMaxItemsPriceBySearchParametersAsync(IGoodsMaxPriceSearchModel model)
+    {
+        var entities = _unitOfWork.Items.Get();
 
-    //    var result = await entities.AsNoTracking().CountAsync();
-    //    return result;
-    //}
+        entities = await GetQueryWithCategoryFilter(entities, model.Category);
+
+        var entity = await entities.AsNoTracking().OrderByDescending(entity => entity.Cost).FirstOrDefaultAsync();
+        if (entity == null)
+            throw new ArgumentException("No records matching the search conditions were found");
+
+        return entity.Cost;
+    }
 
     /// <summary>
-    /// Get query with category filters specified category search parameters.
+    ///     Get query with category filters specified category search model.
     /// </summary>
     /// <param name="query">query</param>
-    /// <param name="category">category search parameters as a <see cref="ICategorySearchParameters"/></param>
+    /// <param name="category">category search parameters as a <see cref="ICategorySearchParameters" /></param>
     /// <returns>a query that includes category filters.</returns>
     private async Task<IQueryable<Item>> GetQueryWithCategoryFilter(IQueryable<Item> query,
         ICategorySearchParameters category)
@@ -125,6 +125,37 @@ public class ItemService : IItemService
                 query = query.Where(entity => innerCategoryIds.Any(id => entity.CategoryId.Equals(id)));
             }
         }
+
+        return query;
+    }
+
+    /// <summary>
+    ///     Get query with price filters model.
+    /// </summary>
+    /// <param name="query">query</param>
+    /// <param name="price">price search parameters as a <see cref="IPriceSearchParameters" /></param>
+    /// <returns>a query that includes price filters.</returns>
+    private IQueryable<Item> GetQueryWithPriceFilter(IQueryable<Item> query, IPriceSearchParameters price)
+    {
+        if (price.From != null && price.From != 0) query = query.Where(entity => entity.Cost >= price.From);
+
+        if (price.To != null && price.To != 0) query = query.Where(entity => entity.Cost <= price.To);
+
+        return query;
+    }
+
+    /// <summary>
+    /// Get query with brand filters model.
+    /// </summary>
+    /// <param name="query">query</param>
+    /// <param name="brands">brand search parameters as a <see cref="IBrandSearchParameters"/></param>
+    /// <returns>a query that includes brand filters.</returns>
+    private IQueryable<Item> GetQueryWithBrandsFilter(IQueryable<Item> query, IBrandSearchParameters brands)
+    {
+        if (brands.BrandNames != null && brands.BrandNames.Any())
+            query = query
+                .Where(entity => brands.BrandNames
+                    .Any(brand => brand.Equals(entity.Product.Brand.Name)));
 
         return query;
     }

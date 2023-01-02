@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Outlet, useLoaderData } from "react-router-dom";
 import { Paper, Box, Typography, Grid } from "@mui/material";
 
@@ -8,33 +8,103 @@ import Pagination from "../components/pagination/pagination.component";
 import AsideMenu from "../components/aside-menu/aside-menu.component";
 // Import services
 import GoodsService from "../services/goods.service";
+import BrandService from "../services/brand.service";
 // Import custom object types and utils
 import PaginationParameters from "../types/url-parameters/pagination.parameters";
 import CategoryParameters from "../types/url-parameters/category-filter.parameters";
 import GoodsParameters from "../types/url-parameters/goods-filter.parameters";
 import GoodsCountRequestModel from "../types/model/requests/goods-count-request.model";
+import MaxGoodsPriceRequestModel from "../types/model/requests/max-goods-price-request.model";
+import BrandsRequestModel from "../types/model/requests/brands-request.model";
+import BrandParameters from "../types/url-parameters/brand-filter.parameters";
 
 import "./home.page.css";
 
 const _goodsService = new GoodsService();
+const _brandService = new BrandService();
 
 export async function loader({ request }) {
+  /**
+   * Get a count of goods specified by search parameters.
+   * @param {GoodsParameters} goodsFilter - complex search parameters for retrieving items.
+   * @returns the number of goods that match the search parameters.
+   */
+  const getGoodsCount = async (goodsFilter) => {
+    const goodsCountParameters =
+      GoodsCountRequestModel.fromGoodsParameters(goodsFilter);
+    const itemsCount = await _goodsService.getGoodsCountFromApi(
+      goodsCountParameters
+    );
+    return itemsCount;
+  };
+
+  /**
+   * Get maximum price of goods specified by search parameters.
+   * @param {GoodsParameters} goodsFilter - complex search parameters for retrieving items.
+   * @returns a maximum price of goods that match the search parameters.
+   */
+  const getMaxGoodsPrice = async (goodsFilter) => {
+    const maxGoodsPriceParameters =
+      MaxGoodsPriceRequestModel.fromGoodsParameters(goodsFilter);
+    const maxPrice = await _goodsService.getMaxGoodsPriceFromApi(
+      maxGoodsPriceParameters
+    );
+    return maxPrice;
+  };
+
+  /**
+   * Get a list of brands specified by search parameters.
+   * @param {GoodsParameters} goodsFilter - complex search parameters for retrieving items.
+   * @returns brands that match the search parameters.
+   */
+  const getAvailableBrands = async (goodsFilter) => {
+    const brandsRequestModel =
+      BrandsRequestModel.fromGoodsParameters(goodsFilter);
+    const availableBrands = await _brandService.getBrandsFromApi(
+      brandsRequestModel
+    );
+    return availableBrands;
+  };
+
   const url = new URL(request.url);
   const search = new URLSearchParams(url.search);
+  // Get parameters from query string
   const goodsFilter = GoodsParameters.fromUrlSearchParams(search);
   const items = await _goodsService.getGoodsFromApi(goodsFilter);
   const pagination = goodsFilter.pagination;
   const category = goodsFilter.category;
-  const goodsCountParameters =
-    GoodsCountRequestModel.fromGoodsParameters(goodsFilter);
-  const itemsCount = await _goodsService.getGoodsCountFromApi(
-    goodsCountParameters
-  );
-  return { items, itemsCount, pagination, category };
+  const price = goodsFilter.price;
+  const brandsFilter = goodsFilter.brands;
+  // Get count of goods for current search parameters.
+  const itemsCount = await getGoodsCount(goodsFilter);
+  // Get maximum price for current search parameters.
+  const maxPrice = await getMaxGoodsPrice(goodsFilter);
+  // Get list of brands for current search parameters.
+  const availableBrands = await getAvailableBrands(goodsFilter);
+
+  return {
+    items,
+    itemsCount,
+    pagination,
+    category,
+    price,
+    maxPrice,
+    availableBrands,
+    brandsFilter,
+  };
 }
 
 export default function Home() {
-  const { items, itemsCount, pagination, category } = useLoaderData();
+  const {
+    items,
+    itemsCount,
+    pagination,
+    category,
+    price,
+    maxPrice,
+    availableBrands,
+    brandsFilter,
+  } = useLoaderData();
 
   // return items.length ? (
   //   // <Box className="page-wrapper">
@@ -53,7 +123,13 @@ export default function Home() {
   return (
     <Grid container>
       <Grid item xs={3} md={3}>
-        <AsideMenu category={category} />
+        <AsideMenu
+          category={category}
+          price={price}
+          maxPrice={maxPrice}
+          availableBrands={availableBrands}
+          defaultBrandsFilter={brandsFilter}
+        />
       </Grid>
       <Grid item xs={9} md={9}>
         {items.length ? (

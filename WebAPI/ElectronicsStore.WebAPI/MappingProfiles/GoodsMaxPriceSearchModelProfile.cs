@@ -1,15 +1,21 @@
 ﻿using AutoMapper;
-using ElectronicsStore.Business;
+using ElectronicsStore.Business.SearchModelImplementations;
 using ElectronicsStore.Business.SearchParametersImplementations;
 using ElectronicsStore.WebAPI.Models.Requests;
 
 namespace ElectronicsStore.WebAPI.MappingProfiles;
 
-public class GoodsCountSearchParametersProfile : Profile
+/// <summary>
+///     Mapper profile for GoodsMaxPriceSearchModel
+/// </summary>
+public class GoodsMaxPriceSearchModelProfile : Profile
 {
-    public GoodsCountSearchParametersProfile()
+    /// <summary>
+    ///     Mapper profile constructor
+    /// </summary>
+    public GoodsMaxPriceSearchModelProfile()
     {
-        CreateMap<GetGoodsCountRequestModel, GoodsCountSearchParameters>()
+        CreateMap<GetMaxGoodsPriceRequestModel, GoodsMaxPriceSearchModel>()
             .ForMember(searchParams => searchParams.Category,
                 opt
                     => opt.MapFrom(request => new CategorySearchParameters

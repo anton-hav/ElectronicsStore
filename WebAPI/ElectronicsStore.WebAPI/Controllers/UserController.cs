@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using ElectronicsStore.Core.Abstractions;
+using ElectronicsStore.Core.Abstractions.Services;
 using ElectronicsStore.Core.DataTransferObjects;
 using ElectronicsStore.WebAPI.Models.Requests;
 using ElectronicsStore.WebAPI.Models.Responses;
@@ -10,6 +10,9 @@ using Serilog;
 
 namespace ElectronicsStore.WebAPI.Controllers;
 
+/// <summary>
+/// Controller that provides API endpoints for the User resource.
+/// </summary>
 [Route("api/[controller]")]
 [ApiController]
 public class UserController : ControllerBase
@@ -32,6 +35,10 @@ public class UserController : ControllerBase
 
     // TEST ENDPOINT
     // todo: DELETE THIS CODE
+    /// <summary>
+    /// Get users
+    /// </summary>
+    /// <returns>all users</returns>
     [HttpGet]
     [Authorize(Roles = "Admin")]
     public async Task<IActionResult> Get()

@@ -1,10 +1,10 @@
 ﻿using System.ComponentModel;
-using ElectronicsStore.Core.Abstractions;
+using ElectronicsStore.Core.Abstractions.SearchParameters;
 
-namespace ElectronicsStore.Business;
+namespace ElectronicsStore.Business.SearchParametersImplementations;
 
 /// <summary>
-/// Represent a pagination parameters.
+/// Represent a pagination model.
 /// </summary>
 public class PaginationParameters : IPaginationParameters
 {
