@@ -26,4 +26,9 @@ public interface IGoodsSearchModel
     ///     Brands parameters.
     /// </summary>
     IBrandSearchParameters Brands { get; set; }
+
+    /// <summary>
+    ///     Search bar parameters.
+    /// </summary>
+    ISearchesSearchParameters Searches { get; set; }
 }

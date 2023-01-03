@@ -45,9 +45,14 @@ namespace ElectronicsStore.WebAPI.Models.Requests
         public int? To { get; set; } = null;
 
         /// <summary>
-        /// Search parameter that represents the brand filter values as a array of brand names.
+        /// Search parameter that represents the brand filter values as an array of brand names.
         /// To ignore the search parameter, the value must be empty.
         /// </summary>
         public string[]? Brands { get; set; }
+
+        /// <summary>
+        /// Search parameter that represents the user search filter as an array of custom search options.
+        /// </summary>
+        public string[]? Finds { get; set; }
     }
 }

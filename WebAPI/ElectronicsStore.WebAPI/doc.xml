@@ -417,6 +417,11 @@
             To ignore the search parameter, the value must be empty.
             </summary>
         </member>
+        <member name="P:ElectronicsStore.WebAPI.Models.Requests.GetGoodsCountRequestModel.Finds">
+            <summary>
+            Search parameter that represents the user search filter as an array of custom search options.
+            </summary>
+        </member>
         <member name="T:ElectronicsStore.WebAPI.Models.Requests.GetGoodsRequestModel">
             <summary>
             Request model to get goods
@@ -454,8 +459,13 @@
         </member>
         <member name="P:ElectronicsStore.WebAPI.Models.Requests.GetGoodsRequestModel.Brands">
             <summary>
-            Search parameter that represents the brand filter values as a array of brand names.
+            Search parameter that represents the brand filter values as an array of brand names.
             To ignore the search parameter, the value must be empty.
+            </summary>
+        </member>
+        <member name="P:ElectronicsStore.WebAPI.Models.Requests.GetGoodsRequestModel.Finds">
+            <summary>
+            Search parameter that represents the user search filter as an array of custom search options.
             </summary>
         </member>
         <member name="T:ElectronicsStore.WebAPI.Models.Requests.GetMaxGoodsPriceRequestModel">

@@ -19,4 +19,7 @@ public class GoodsSearchModel : IGoodsSearchModel
 
     /// <inheritdoc />
     public IBrandSearchParameters Brands { get; set; }
+
+    /// <inheritdoc />
+    public ISearchesSearchParameters Searches { get; set; }
 }

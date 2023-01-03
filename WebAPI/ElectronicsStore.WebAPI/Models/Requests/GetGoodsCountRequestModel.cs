@@ -27,4 +27,9 @@ public class GetGoodsCountRequestModel
     /// To ignore the search parameter, the value must be empty.
     /// </summary>
     public string[]? Brands { get; set; }
+
+    /// <summary>
+    /// Search parameter that represents the user search filter as an array of custom search options.
+    /// </summary>
+    public string[]? Finds { get; set; }
 }
