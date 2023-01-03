@@ -1,0 +1,14 @@
+.search-chips-pool {
+    display: flex;
+    justify-content: "center";
+
+}
+
+.search-chips-pool .chips-list {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    list-style: none;
+    padding: 1px;
+    margin: 0px;
+}

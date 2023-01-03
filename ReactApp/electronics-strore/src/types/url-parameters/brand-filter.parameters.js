@@ -32,7 +32,6 @@ export default class BrandParameters extends UrlSearchParameters {
   /**
    * Set brands filter parameters to the URLSearchParameters object.
    * @param {*} search - URLSearchParams object.
-   * @returns URLSearchParams object with updated parameters.
    */
   setParametersToUrl(search) {
     if (search instanceof URLSearchParams) {
@@ -40,6 +39,5 @@ export default class BrandParameters extends UrlSearchParameters {
         this.brands.forEach((brand) => search.append("brands", brand));
       }
     }
-    return search;
   }
 }

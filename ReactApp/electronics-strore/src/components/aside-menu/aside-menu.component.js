@@ -1,10 +1,8 @@
 import React, { useState } from "react";
-import { Typography } from "@mui/material";
 import Box from "@mui/material/Box";
 import Divider from "@mui/material/Divider";
 import Button from "@mui/material/Button";
 import FilterAltOutlinedIcon from "@mui/icons-material/FilterAltOutlined";
-import { useNavigate } from "react-router-dom";
 // Import custom components
 import CategoriesBar from "../categories-bar/categories-bar.component";
 import PriceFilterBar from "../price-filter/price-filter.component";
@@ -18,38 +16,17 @@ import BrandParameters from "../../types/url-parameters/brand-filter.parameters"
 import "./aside-menu.component.css";
 
 export default function AsideMenu(props) {
-  const { category, price, maxPrice, availableBrands, defaultBrandsFilter } =
-    props;
+  const {
+    category,
+    price,
+    maxPrice,
+    availableBrands,
+    defaultBrandsFilter,
+    onFiltersChange,
+    onCategoryChange,
+  } = props;
   const [priceFilter, setPriceFilter] = useState(price);
   const [brandFilter, setBrandFilter] = useState([]);
-
-  const navigate = useNavigate();
-
-  /**
-   * Get the relative path to the current webpage
-   * with filters parameters as URL search parameters.
-   * @returns relative path to the current webpage with pagination parameters.
-   */
-  const generateUrlPath = () => {
-    // Get current URLSearchParams object
-    let url = new URL(window.location.href);
-    let search = new URLSearchParams(url.search);
-    // Create filters object from current URLSearchParams
-    let categoryFilter = CategoryParameters.fromUrlSearchParams(search);
-    // Create new empty URLSearchParams object.
-    // It is required to remove unnecessary attributes (e.g. pagination).
-    let newSearchParams = new URLSearchParams();
-    // Set filters parameters to new URLSearchParams object.
-    newSearchParams = priceFilter.setParametersToUrl(newSearchParams);
-    newSearchParams = brandFilter.setParametersToUrl(newSearchParams);
-    if (categoryFilter.categoryId !== null) {
-      newSearchParams = categoryFilter.setParametersToUrl(newSearchParams);
-    }
-    // Generate new relative path with filters parameters.
-    url.search = newSearchParams;
-    let relativePath = url.pathname + url.search;
-    return relativePath;
-  };
 
   /**
    * Handles the changes of the price filter values.
@@ -62,8 +39,7 @@ export default function AsideMenu(props) {
   };
 
   const handleApplyFilterButtonClick = () => {
-    let relativePath = generateUrlPath();
-    navigate(relativePath);
+    onFiltersChange(priceFilter, brandFilter);
   };
 
   /**
@@ -73,14 +49,19 @@ export default function AsideMenu(props) {
   const handleBrandFilterChange = (selectedBrands) => {
     let filter = new BrandParameters(selectedBrands);
     setBrandFilter(filter);
-
-    // brands.forEach((brand) => {
-    //   console.log(`${brand.name}`);
-    //   console.log(selectedItems.includes(brand.name));
-    // });
   };
 
-  const categoriesSection = <CategoriesBar category={category} />;
+  /**
+   * Handles the changes of the category tree values.
+   * @param {CategoryParameters} categoryFilter - category filter parameters.
+   */
+  const handleCategoryChange = (categoryFilter) => {
+    onCategoryChange(categoryFilter);
+  };
+
+  const categoriesSection = (
+    <CategoriesBar category={category} onChange={handleCategoryChange} />
+  );
 
   const filterSection = (
     <Box>
@@ -107,21 +88,6 @@ export default function AsideMenu(props) {
       ) : null}
     </Box>
   );
-
-  // return (
-  //   <Box>
-  //     <Box className="section">
-  //       <Typography variant="h6" component="div">
-  //         Select category
-  //       </Typography>
-  //       <Divider variant="middle" />
-  //       <CategoriesBar category={category} />
-  //     </Box>
-  //     <Box className="section">
-  //       <PriceFilterBar />
-  //     </Box>
-  //   </Box>
-  // );
 
   return (
     <Box>

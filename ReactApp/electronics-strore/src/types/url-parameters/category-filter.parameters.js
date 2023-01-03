@@ -34,12 +34,10 @@ export default class CategoryParameters extends UrlSearchParameters {
   /**
    * Set category filter parameters to the URLSearchParameters object.
    * @param {URLSearchParams} search - URLSearchParams object
-   * @returns URLSearchParams object with updated parameters.
    */
   setParametersToUrl(search) {
     if (search instanceof URLSearchParams) {
       search.set("node", this.categoryId);
     }
-    return search;
   }
 }

@@ -34,6 +34,12 @@ public class GoodsCountSearchModelProfile : Profile
                     => opt.MapFrom(request => new BrandSearchParameters
                     {
                         BrandNames = request.Brands
+                    }))
+            .ForMember(searchParams => searchParams.Searches,
+                opt
+                    => opt.MapFrom(request => new SearchesSearchParameters()
+                    {
+                        Searches = request.Finds
                     }));
     }
 }

@@ -17,3 +17,7 @@
     /* flex-grow: 1; */
     /* align-self: flex-end; */
 }
+
+.items-list-wrapper {
+    margin-right: 10px;
+}

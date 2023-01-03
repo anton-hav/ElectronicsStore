@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import TablePagination from "@mui/material/TablePagination";
-import { useNavigate } from "react-router-dom";
 import PaginationParameters from "../../types/url-parameters/pagination.parameters";
 
 const defaultPageSize = PaginationParameters.defaultPageSize;
@@ -51,7 +50,7 @@ export default function RouteBasedPagination(props) {
     }
   };
 
-  const { itemsCount, pagination } = props;
+  const { itemsCount, pagination, onChange } = props;
   const [page, setPage] = useState(() => {
     const initialState = pageNumberGuard();
     return initialState;
@@ -67,36 +66,29 @@ export default function RouteBasedPagination(props) {
     }
   });
 
-  const navigate = useNavigate();
+  /**
+   * Handles change page number.
+   * @param {*} event - React event.
+   * @param {*} newPage - new page number.
+   */
+  const handleChangePage = (event, newPage) => {
+    const paginationParameters = new PaginationParameters(
+      itemsPerPage,
+      newPage
+    );
+    onChange(paginationParameters);
+  };
 
   /**
-   * Get the relative path to the current webpage
-   * with pagination parameters as URL search parameters.
-   * @param {number} newPage - number of page
-   * @param {number} rows - number of items per page
-   * @returns relative path to the current webpage with pagination parameters
+   * Handles change page size.
+   * @param {*} event - React event.
    */
-  const generateUrlPath = (newPage = page, rows = itemsPerPage) => {
-    let url = new URL(window.location.href);
-    let search = new URLSearchParams(url.search);
-    const params = new PaginationParameters(rows, newPage);
-    url.search = params.setParametersToUrl(search);
-    let relativePath = url.pathname + url.search;
-    return relativePath;
-  };
-
-  const handleChangePage = (event, newPage) => {
-    let relativePath = generateUrlPath(newPage);
-    setPage(newPage);
-    navigate(relativePath);
-  };
-
   const handleChangeitemsPerPage = (event) => {
     let pageSize = parseInt(event.target.value, 10);
-    let relativePath = generateUrlPath(0, pageSize);
+    const paginationParameters = new PaginationParameters(pageSize, 0);
     setItemsPerPage(pageSize);
     setPage(0);
-    navigate(relativePath);
+    onChange(paginationParameters);
   };
 
   return (

@@ -65,6 +65,7 @@ public class ItemService : IItemService
         entities = await GetQueryWithCategoryFilter(entities, model.Category);
         entities = GetQueryWithPriceFilter(entities, model.Price);
         entities = GetQueryWithBrandsFilter(entities, model.Brands);
+        entities = GetQueryWithSearchFilter(entities, model.Searches);
 
         var result = (await entities
                 .Skip(model.Pagination.PageSize * (model.Pagination.PageNumber - 1))
@@ -87,6 +88,7 @@ public class ItemService : IItemService
         entities = await GetQueryWithCategoryFilter(entities, model.Category);
         entities = GetQueryWithPriceFilter(entities, model.Price);
         entities = GetQueryWithBrandsFilter(entities, model.Brands);
+        entities = GetQueryWithSearchFilter(entities, model.Searches);
 
         var result = await entities.AsNoTracking().CountAsync();
         return result;
@@ -145,10 +147,10 @@ public class ItemService : IItemService
     }
 
     /// <summary>
-    /// Get query with brand filters model.
+    ///     Get query with brand filters model.
     /// </summary>
     /// <param name="query">query</param>
-    /// <param name="brands">brand search parameters as a <see cref="IBrandSearchParameters"/></param>
+    /// <param name="brands">brand search parameters as a <see cref="IBrandSearchParameters" /></param>
     /// <returns>a query that includes brand filters.</returns>
     private IQueryable<Item> GetQueryWithBrandsFilter(IQueryable<Item> query, IBrandSearchParameters brands)
     {
@@ -156,6 +158,27 @@ public class ItemService : IItemService
             query = query
                 .Where(entity => brands.BrandNames
                     .Any(brand => brand.Equals(entity.Product.Brand.Name)));
+
+        return query;
+    }
+
+    /// <summary>
+    /// Get query with custom search filters.
+    /// </summary>
+    /// <param name="query">query</param>
+    /// <param name="searches">custom search parameters as a <see cref="ISearchesSearchParameters"/></param>
+    /// <returns>a query that includes custom filters.</returns>
+    private IQueryable<Item> GetQueryWithSearchFilter(IQueryable<Item> query, ISearchesSearchParameters searches)
+    {
+        if (searches.Searches != null && searches.Searches.Any())
+            foreach (var search in searches.Searches)
+            {
+                var pureSearch = search.Trim().ToLower();
+                query = query.Where(entity
+                    => entity.Product.Name.ToLower().Contains(pureSearch)
+                       || entity.Summary.ToLower().Contains(pureSearch)
+                       || entity.Description.ToLower().Contains(pureSearch));
+            }
 
         return query;
     }
