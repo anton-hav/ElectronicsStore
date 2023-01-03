@@ -56,11 +56,15 @@ export default function TopToolsBar(props) {
 
   return (
     <Box className="top-tools-bar-wrapper">
-      <SearchItemsBar onChange={handleSearchValueChange} />
-      <SearchChipsPool
-        items={searchChips}
-        onDelete={handleDeleteItemFromSearchChipsPool}
-      />
+      <Box className="search-bar">
+        <SearchItemsBar onChange={handleSearchValueChange} />
+      </Box>
+      <Box className="chips-pool">
+        <SearchChipsPool
+          items={searchChips}
+          onDelete={handleDeleteItemFromSearchChipsPool}
+        />
+      </Box>
     </Box>
   );
 }
