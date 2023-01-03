@@ -3,7 +3,6 @@ import { Box } from "@mui/material";
 import TreeView from "@mui/lab/TreeView";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
-import { useNavigate } from "react-router-dom";
 
 import "./categories-bar.component.css";
 import CategoryParameters from "../../types/url-parameters/category-filter.parameters";
@@ -16,7 +15,7 @@ import CategoryDto from "../../types/dto/category.dto";
 const _categoryService = new CategoryService();
 
 export default function CategoriesBar(props) {
-  const { category } = props;
+  const { category, onChange } = props;
   const [categoriesTree, setcategoriesTree] = useState();
   const [expandedNodes, setExpandedNodes] = useState([]);
 
@@ -73,8 +72,6 @@ export default function CategoriesBar(props) {
     }
   });
 
-  const navigate = useNavigate();
-
   /**
    * Generates a category tree and an array of extended nodes.
    * Performs recursion from the current category to the root category.
@@ -105,27 +102,14 @@ export default function CategoriesBar(props) {
     return { tree: tree, expanded: expanded };
   };
 
-  const generateUrlPath = (category) => {
-    let url = new URL(window.location.href);
-    // Changing a category resets the pagination and other filters.
-    // If you want to leave the whole query string unchanged,
-    // pass "url.search" to the constructor of the URLSearchParams object.
-    let search = new URLSearchParams();
-    const params = new CategoryParameters(category);
-    url.search = params.setParametersToUrl(search);
-    let relativePath = url.pathname + url.search;
-    return relativePath;
-  };
-
   /**
    * Handles category selection events
    * @param {*} event - React select event
    * @param {*} nodeId - id of the selected category
    */
   const handleSelect = (event, nodeId) => {
-    let relativePath = generateUrlPath(nodeId);
-    setSelected(nodeId);
-    navigate(relativePath);
+    const categoryFilter = new CategoryParameters(nodeId);
+    onChange(categoryFilter);
   };
 
   /**

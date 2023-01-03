@@ -57,7 +57,6 @@ export default class PaginationParameters extends UrlSearchParameters {
   /**
    * Set pagination parameters to the URLSearchParams object.
    * @param {URLSearchParams} search - URLSearchParams object
-   * @returns URLSearchParams object with updated parameters
    */
   setParametersToUrl(search) {
     if (search instanceof URLSearchParams) {
@@ -66,6 +65,5 @@ export default class PaginationParameters extends UrlSearchParameters {
       search.set("page", this.pageNumber + 1);
       search.set("size", this.pageSize);
     }
-    return search;
   }
 }

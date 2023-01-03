@@ -50,13 +50,11 @@ export default class PriceParameters extends UrlSearchParameters {
   /**
    * Set price filter parameters to the URLSearchParameters object.
    * @param {*} search - URLSearchParams object.
-   * @returns URLSearchParams object with updated parameters.
    */
   setParametersToUrl(search) {
     if (search instanceof URLSearchParams) {
       if (this.from !== null) search.set("from", this.from);
       if (this.to !== null) search.set("to", this.to);
     }
-    return search;
   }
 }

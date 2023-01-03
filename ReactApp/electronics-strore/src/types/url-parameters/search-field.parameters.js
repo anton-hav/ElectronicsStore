@@ -35,7 +35,6 @@ export default class SearchFieldParameters extends UrlSearchParameters {
   /**
    * Set search field filter parameters to the URLSearchParameters object.
    * @param {*} search - URLSearchParams object.
-   * @returns URLSearchParams object with updated parameters.
    */
   setParametersToUrl(search) {
     if (search instanceof URLSearchParams) {
@@ -43,6 +42,5 @@ export default class SearchFieldParameters extends UrlSearchParameters {
         this.finds.forEach((find) => search.append("finds", find));
       }
     }
-    return search;
   }
 }

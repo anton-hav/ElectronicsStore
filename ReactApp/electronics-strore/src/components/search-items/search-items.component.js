@@ -11,7 +11,7 @@ import BackspaceOutlinedIcon from "@mui/icons-material/BackspaceOutlined";
 import "./search-items.component.css";
 
 export default function SearchItemsBar(props) {
-  const { onChangeSearchValue } = props;
+  const { onChange } = props;
   const [currentQueryString, setCurrentQueryString] = useState();
 
   /**
@@ -24,15 +24,30 @@ export default function SearchItemsBar(props) {
   };
 
   /**
+   * Calls the onChange props.
+   */
+  const callParrentOnChangeEvent = () => {
+    onChange(currentQueryString);
+    setCurrentQueryString("");
+  };
+
+  /**
    * Handles the key down event on the search input field.
    * @param {*} event - React event
    */
   const handleKeyDown = (event) => {
     // The Enter key has a key code of 13.
     if (event.keyCode === 13) {
-      onChangeSearchValue(currentQueryString);
-      setCurrentQueryString("");
+      callParrentOnChangeEvent();
     }
+  };
+
+  /**
+   * Handles the search button click event.
+   * @param {*} event - React event
+   */
+  const handleSearchButtonClick = (event) => {
+    callParrentOnChangeEvent();
   };
 
   /**
@@ -46,7 +61,11 @@ export default function SearchItemsBar(props) {
   return (
     <Box className="search-wrapper">
       <Paper className="search-paper">
-        <IconButton sx={{ p: "10px" }} aria-label="menu">
+        <IconButton
+          sx={{ p: "10px" }}
+          aria-label="menu"
+          onClick={handleSearchButtonClick}
+        >
           <SearchOutlinedIcon />
         </IconButton>
         <Box className="input">
