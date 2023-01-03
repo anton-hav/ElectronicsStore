@@ -1,3 +1,4 @@
+// Import custom object types and utils
 import UrlSearchParameters from "../../url-parameters/url-parameters.parameters";
 
 /**
@@ -20,11 +21,17 @@ export default class GoodsCountRequestModel extends UrlSearchParameters {
    */
   brands = null;
 
-  constructor(category, price, brands) {
+  /**
+   * @property {SearchFieldParameters} - the search parameters that the user entered in the search toolbar.
+   */
+  userSearches = null;
+
+  constructor(category, price, brands, userSearches) {
     super();
     this.category = category;
     this.price = price;
     this.brands = brands;
+    this.userSearches = userSearches;
   }
 
   /**
@@ -36,10 +43,13 @@ export default class GoodsCountRequestModel extends UrlSearchParameters {
     let categoryParameters = goodsParameters.category;
     let priceFilterParameters = goodsParameters.price;
     let brandsParameters = goodsParameters.brands;
+    let userSearches = goodsParameters.userSearches;
+
     return new GoodsCountRequestModel(
       categoryParameters,
       priceFilterParameters,
-      brandsParameters
+      brandsParameters,
+      userSearches
     );
   }
 }

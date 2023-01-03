@@ -31,7 +31,7 @@ export default class GoodsParameters extends UrlSearchParameters {
   brands = null;
 
   /**
-   * @property {SearchFieldParameters} - parameters of a search that user can enter into the search toolbar.
+   * @property {SearchFieldParameters} - the search parameters that the user entered in the search toolbar.
    */
   userSearches = null;
 
