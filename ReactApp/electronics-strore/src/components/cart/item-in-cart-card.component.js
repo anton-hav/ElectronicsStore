@@ -14,18 +14,19 @@ import { formatter } from "../../utils/formatter";
 import "./item-in-cart-card.component.css";
 
 export default function ItemInCartCard(props) {
-  const { item, handleRemoveItem } = props;
+  const { item, handleRemoveItem, onChangeCount } = props;
 
-  console.log(item);
-  const value = 2;
+  const handleChangeCount = (count) => {
+    onChangeCount(item.goods.id, count);
+  };
 
   return (
     <Box className="item-wrapper">
       <Card className="item-card">
         <Box className="product-info">
-          <Link to={`/details/${item.id}`} className="item-card__link">
+          <Link to={`/details/${item.goods.id}`} className="item-card__link">
             <CardActionArea>
-              <GoodsSummary item={item} />
+              <GoodsSummary item={item.goods} />
             </CardActionArea>
           </Link>
         </Box>
@@ -41,12 +42,16 @@ export default function ItemInCartCard(props) {
             </IconButton>
           </Box>
           <Box className="count">
-            <NumberInputBar />
+            <NumberInputBar
+              count={item.count}
+              onChangeCount={handleChangeCount}
+            />
           </Box>
           <Box className="info">
             <Typography variant="body2" color="textSecondary">
-              The total cost of {value} {value > 1 ? "pieces" : "piece"} is{" "}
-              {formatter.format(item.cost * value, 0)}
+              The total cost of {item.count}{" "}
+              {item.count > 1 ? "pieces" : "piece"} is{" "}
+              {formatter.format(item.goods.cost * item.count, 0)}
             </Typography>
           </Box>
         </CardActions>

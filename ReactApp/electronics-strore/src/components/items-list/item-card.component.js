@@ -5,24 +5,25 @@ import { CardActionArea, CardActions, Box } from "@mui/material";
 import { Link } from "react-router-dom";
 // Import custom components
 import GoodsSummary from "../goods/goods-summary.component";
-// Import storage and other utils
-import useCartItemIds from "../../utils/hooks/useCartItemIds";
+// Import custom types and utils
+import useCartItems from "../../utils/hooks/use-cart-item.hook";
+import GoodsInCartShort from "../../types/dto/goods-in-cart-short.dto";
 
 import "./item-card.component.css";
 
-
 export default function ItemCard(props) {
   const { item } = props;
-  const { ids, setIds } = useCartItemIds();
+  const { cartItems, setCartItems } = useCartItems();
 
   /**
    * Handle Add item to cart button click event.
    * Adds item id to the store.
    */
   const handleAddItemToCartClick = () => {
-    let newIds = ids.slice();
-    newIds.push(item.id);
-    setIds(newIds);
+    let newCartItems = cartItems.slice();
+    const product = new GoodsInCartShort(item.id, 1);
+    newCartItems.push(product);
+    setCartItems(newCartItems);
   };
 
   return (
@@ -35,7 +36,11 @@ export default function ItemCard(props) {
         </Link>
 
         <CardActions>
-          <IconButton onClick={handleAddItemToCartClick} aria-label="add-to-cart" size="large">
+          <IconButton
+            onClick={handleAddItemToCartClick}
+            aria-label="add-to-cart"
+            size="large"
+          >
             <AddShoppingCartOutlinedIcon fontSize="inherit" />
           </IconButton>
         </CardActions>
