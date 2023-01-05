@@ -1,0 +1,35 @@
+.number-input-wrapper {
+
+}
+
+.number-input-wrapper .paper {
+    display: flex;
+    align-items: center;
+    width: 150px;
+    padding-top: 2px;
+    padding-right: 4px;
+}
+
+.number-input-wrapper .paper .action-button {
+    margin-left: 4px;
+    padding-left: 5px
+}
+
+.number-input-wrapper .paper .divider {
+    height: 28px;
+    margin: 4px;
+}
+
+.number-input-wrapper .paper .input-number {
+    display: flex;
+    margin-left: 8px;
+    flex-grow: 1;
+
+}
+
+.number-input-wrapper .paper .input-number .input {
+    text-align: right;
+    font-size:larger;
+    padding-right: 4px;
+    
+}

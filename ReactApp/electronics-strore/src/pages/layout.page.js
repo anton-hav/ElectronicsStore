@@ -7,7 +7,7 @@ import NavBar from "../components/nav-bar/nav-bar.component";
 
 export default function Layout() {
   const navigation = useNavigation();
-  const counterOfItems = useSelector((state) => state.cart.items.length);
+  const counterOfItems = useSelector((state) => state.cart.length);
 
   return (
     <div className="App">

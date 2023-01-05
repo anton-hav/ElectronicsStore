@@ -174,22 +174,51 @@
             <response code="400">Request contains null object or invalid object type.</response>
             <response code="500">Unexpected error on the server side.</response>
         </member>
-        <member name="T:ElectronicsStore.WebAPI.Controllers.OrderSheetController">
+        <member name="T:ElectronicsStore.WebAPI.Controllers.OrdersController">
             <summary>
             API controller for the order sheet resource.
             </summary>
         </member>
-        <member name="M:ElectronicsStore.WebAPI.Controllers.OrderSheetController.CreateNewOrderList">
+        <member name="M:ElectronicsStore.WebAPI.Controllers.OrdersController.GetOrderById(System.Guid)">
+            <summary>
+            Get an order with specified id from the storage.
+            </summary>
+            <param name="id">an order unique identifier as a <see cref="T:System.Guid"/></param>
+            <returns>An order with specified Id</returns>
+            <response code="200">Returns an order corresponding to the specified identifier.</response>
+            <response code="404">Failed to find record in the database that match the specified id.</response>
+            <response code="500">Unexpected error on the server side.</response>
+        </member>
+        <member name="M:ElectronicsStore.WebAPI.Controllers.OrdersController.CreateNewOrder(ElectronicsStore.WebAPI.Models.Requests.AddOrderRequestModel)">
             <summary>
             Create new order list.
             </summary>
-            <remarks>
-            Warning. The endpoint sends a message instead of the created resource.
-            It is a requirement of the specification. The endpoint behavior
-            perhaps will change in the future.
-            </remarks>
-            <returns>An anonymous object contains the thanksgiving message</returns>
-            <response code="200">Returns a thanksgiving message</response>
+            <returns>A newly created order.</returns>
+            <response code="200">Returns a newly created order.</response>
+            <response code="401">Authorization failed, access token is invalid or expired</response>
+            <response code="500">Unexpected error on the server side.</response>
+        </member>
+        <member name="T:ElectronicsStore.WebAPI.Controllers.PurchasesController">
+            <summary>
+            API controller for the purchases resource.
+            </summary>
+        </member>
+        <member name="M:ElectronicsStore.WebAPI.Controllers.PurchasesController.GetPurchaseById(System.Guid)">
+            <summary>
+            Get a purchase with specified id from the storage.
+            </summary>
+            <param name="id">a purchase unique identifier as a <see cref="T:System.Guid"/></param>
+            <returns>A purchase that matches the id</returns>
+            <response code="200">Returns  a purchase corresponding to the specified identifier.</response>
+            <response code="404">Failed to find record in the database that match the specified id.</response>
+            <response code="500">Unexpected error on the server side.</response>
+        </member>
+        <member name="M:ElectronicsStore.WebAPI.Controllers.PurchasesController.CreateNewPurchase(ElectronicsStore.WebAPI.Models.Requests.AddPurchaseRequestModel)">
+            <summary>
+            Create new purchase.
+            </summary>
+            <returns>A newly created purchase.</returns>
+            <response code="200">Returns a newly created purchase.</response>
             <response code="401">Authorization failed, access token is invalid or expired</response>
             <response code="500">Unexpected error on the server side.</response>
         </member>
@@ -244,6 +273,9 @@
             <response code="400">Request contains null object or invalid object type</response>
             <response code="409">The same entry already exists in the storage.</response>
             <response code="500">Unexpected error on the server side.</response>
+        </member>
+        <member name="M:ElectronicsStore.WebAPI.IdentityManagers.UserManager.GetUserId">
+            <inheritdoc />
         </member>
         <member name="T:ElectronicsStore.WebAPI.MappingProfiles.BrandProfile">
             <summary>
@@ -315,12 +347,32 @@
             Mapper profile constructor
             </summary>
         </member>
+        <member name="T:ElectronicsStore.WebAPI.MappingProfiles.OrderProfile">
+            <summary>
+            Mapper profile for Order.
+            </summary>
+        </member>
+        <member name="M:ElectronicsStore.WebAPI.MappingProfiles.OrderProfile.#ctor">
+            <summary>
+            Mapper profile constructor.
+            </summary>
+        </member>
         <member name="T:ElectronicsStore.WebAPI.MappingProfiles.ProductProfile">
             <summary>
             Mapper profile for Product
             </summary>
         </member>
         <member name="M:ElectronicsStore.WebAPI.MappingProfiles.ProductProfile.#ctor">
+            <summary>
+            Mapper profile constructor
+            </summary>
+        </member>
+        <member name="T:ElectronicsStore.WebAPI.MappingProfiles.PurchaseProfile">
+            <summary>
+            Mapper profile for Purchase
+            </summary>
+        </member>
+        <member name="M:ElectronicsStore.WebAPI.MappingProfiles.PurchaseProfile.#ctor">
             <summary>
             Mapper profile constructor
             </summary>
@@ -353,6 +405,47 @@
         <member name="M:ElectronicsStore.WebAPI.MappingProfiles.UserProfile.#ctor">
             <summary>
             Mapper profile constructor
+            </summary>
+        </member>
+        <member name="T:ElectronicsStore.WebAPI.Models.Requests.AddOrderRequestModel">
+            <summary>
+            Request model to create new order.
+            </summary>
+        </member>
+        <member name="P:ElectronicsStore.WebAPI.Models.Requests.AddOrderRequestModel.DateTimeOfCreate">
+            <summary>
+            Creation date.
+            </summary>
+        </member>
+        <member name="P:ElectronicsStore.WebAPI.Models.Requests.AddOrderRequestModel.UserId">
+            <summary>
+            An unique identifier of the order creator.
+            </summary>
+        </member>
+        <member name="T:ElectronicsStore.WebAPI.Models.Requests.AddPurchaseRequestModel">
+            <summary>
+                Request model to create new purchase.
+            </summary>
+        </member>
+        <member name="P:ElectronicsStore.WebAPI.Models.Requests.AddPurchaseRequestModel.Count">
+            <summary>
+                The count of items.
+                Values between 1 and 999 are allowed.
+            </summary>
+        </member>
+        <member name="P:ElectronicsStore.WebAPI.Models.Requests.AddPurchaseRequestModel.Cost">
+            <summary>
+                Cost of goods at the time of purchase.
+            </summary>
+        </member>
+        <member name="P:ElectronicsStore.WebAPI.Models.Requests.AddPurchaseRequestModel.OrderId">
+            <summary>
+                An unique identifier of the order.
+            </summary>
+        </member>
+        <member name="P:ElectronicsStore.WebAPI.Models.Requests.AddPurchaseRequestModel.ItemId">
+            <summary>
+                An unique identifier of the item.
             </summary>
         </member>
         <member name="T:ElectronicsStore.WebAPI.Models.Requests.GetBrandsRequestModel">
@@ -604,6 +697,61 @@
         <member name="P:ElectronicsStore.WebAPI.Models.Responses.GetItemResponseModel.Brand">
             <summary>
             Brand name
+            </summary>
+        </member>
+        <member name="T:ElectronicsStore.WebAPI.Models.Responses.GetOrderResponseModel">
+            <summary>
+            Order response model
+            </summary>
+        </member>
+        <member name="P:ElectronicsStore.WebAPI.Models.Responses.GetOrderResponseModel.Id">
+            <summary>
+            An unique identifier.
+            </summary>
+        </member>
+        <member name="P:ElectronicsStore.WebAPI.Models.Responses.GetOrderResponseModel.UserId">
+            <summary>
+            An unique identifier of order creator.
+            </summary>
+        </member>
+        <member name="P:ElectronicsStore.WebAPI.Models.Responses.GetOrderResponseModel.Status">
+            <summary>
+            Status of the order.
+            </summary>
+        </member>
+        <member name="P:ElectronicsStore.WebAPI.Models.Responses.GetOrderResponseModel.DateTimeOfCreate">
+            <summary>
+            Creation date.
+            </summary>
+        </member>
+        <member name="T:ElectronicsStore.WebAPI.Models.Responses.GetPurchaseResponseModel">
+            <summary>
+            A purchase response model.
+            </summary>
+        </member>
+        <member name="P:ElectronicsStore.WebAPI.Models.Responses.GetPurchaseResponseModel.Id">
+            <summary>
+                An unique identifier.
+            </summary>
+        </member>
+        <member name="P:ElectronicsStore.WebAPI.Models.Responses.GetPurchaseResponseModel.Count">
+            <summary>
+                The count of the item.
+            </summary>
+        </member>
+        <member name="P:ElectronicsStore.WebAPI.Models.Responses.GetPurchaseResponseModel.Cost">
+            <summary>
+                Cost of goods at the time of purchase.
+            </summary>
+        </member>
+        <member name="P:ElectronicsStore.WebAPI.Models.Responses.GetPurchaseResponseModel.OrderId">
+            <summary>
+                An unique identifier of the order.
+            </summary>
+        </member>
+        <member name="P:ElectronicsStore.WebAPI.Models.Responses.GetPurchaseResponseModel.ItemId">
+            <summary>
+                An unique identifier of the item.
             </summary>
         </member>
         <member name="T:ElectronicsStore.WebAPI.Models.Responses.TokenResponse">

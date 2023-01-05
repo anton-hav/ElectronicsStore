@@ -1,7 +1,7 @@
 import UrlSearchParameters from "../../url-parameters/url-parameters.parameters";
 
 /**
- * Represents a complex search parameters for requesting brands through API.
+ * Represents complex search parameters for requesting brands through API.
  * Don't use this class for generate url search string for URL.
  */
 export default class BrandsRequestModel extends UrlSearchParameters {

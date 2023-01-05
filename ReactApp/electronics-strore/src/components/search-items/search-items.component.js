@@ -63,7 +63,7 @@ export default function SearchItemsBar(props) {
       <Paper className="search-paper">
         <IconButton
           sx={{ p: "10px" }}
-          aria-label="menu"
+          aria-label="search"
           onClick={handleSearchButtonClick}
         >
           <SearchOutlinedIcon />

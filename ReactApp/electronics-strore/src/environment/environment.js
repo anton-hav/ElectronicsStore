@@ -10,7 +10,8 @@ export const environment = {
   goodsEndpoint: "Goods",
   goodsCountEndpoint: "GoodsCount",
   maxGoodsPriceEndpoint: "MaxGoodsPrice",
-  orderSheetEndpoint: "OrderSheet",
+  orderSheetEndpoint: "Orders",
   categoriesEndpoint: "Categories",
   brandsEndpoint: "Brands",
+  purchaseEndpoint: "Purchases",
 };
