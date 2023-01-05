@@ -11,6 +11,10 @@ export default class PurchaseDto {
    */
   goodsId = null;
   /**
+   * @property {string} orderId - an unique identifier of the order.
+   */
+  orderId = null;
+  /**
    * @property {number} count - the number of the goods in the order sheet.
    */
   count = null;
@@ -19,25 +23,26 @@ export default class PurchaseDto {
    */
   cost = null;
 
-  constructor(id, goodsId, count, cost) {
+  constructor(id, goodsId, orderId, count, cost) {
     this.id = id;
     this.goodsId = goodsId;
+    this.orderId = orderId;
     this.count = count;
     this.cost = cost;
   }
 
   /**
-   * Mapping from GoodsInCartDto to PurchaseDto object.
-   * @param {GoodsInCartDto} goodsInCartDto - GoodsInCartDto object.
+   * Mapping from api response (as an json) to PurchaseDto
+   * @param {*} response - response object as an JSON.
    * @returns new instance of PurchaseDto
    */
-  static fromGoodsInCartDto(goodsInCartDto) {
-    let newId = crypto.randomUUID();
+  static fromResponse(response) {
     return new PurchaseDto(
-      newId,
-      goodsInCartDto.goods.id,
-      goodsInCartDto.count,
-      goodsInCartDto.goods.cost
+      response.id,
+      response.goodsId,
+      response.orderId,
+      response.count,
+      response.cost
     );
   }
 }

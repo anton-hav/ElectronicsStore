@@ -8,6 +8,7 @@ import CartView from "../components/cart/cart.component";
 import GoodsService from "../services/goods.service";
 import OrderSheetService from "../services/orderSheet.service";
 import UserService from "../services/user.service";
+import PurchaseService from "../services/purchase.service";
 // Import custom types and utils
 import useToken from "../utils/hooks/useToken";
 import useCartItems from "../utils/hooks/use-cart-item.hook";
@@ -17,10 +18,12 @@ import OrderSheetDto from "../types/dto/order-sheet.dto";
 import PurchaseDto from "../types/dto/purchase.dto";
 import OrderStatuses from "../utils/order-statuses";
 import AddNewOrderSheetModel from "../types/model/requests/add-new-order-sheet.model";
+import AddNewPurchaseRequestModel from "../types/model/requests/add-new-purchase-request.model";
 
 const _goodsService = new GoodsService();
 const _orderSheetService = new OrderSheetService();
 const _userService = new UserService();
+const _purchaseService = new PurchaseService();
 
 export default function Cart() {
   const { cartItems, setCartItems } = useCartItems();
@@ -55,13 +58,46 @@ export default function Cart() {
    * Handles the purchase button click event.
    */
   const handlePurchaseClick = async () => {
+    /**
+     * Create an array of the purchase for sending to the API server.
+     * @param {OrderSheetDto} order - an order object.
+     * @returns an array of the purchase as a AddNewPurchaseRequestModel objects.
+     */
+    const createPurchases = (order) => {
+      let purchases = items.map((item) => {
+        return new AddNewPurchaseRequestModel(
+          item.count,
+          item.goods.cost,
+          order.id,
+          item.goods.id
+        );
+      });
+
+      return purchases;
+    };
+
     const goCheckout = async (accessToken) => {
       let orderRequestModel = new AddNewOrderSheetModel(token.userId);
-      let result = await _orderSheetService.createNewOrderSheet(
+      let order = await _orderSheetService.createNewOrderSheet(
         accessToken,
         orderRequestModel
       );
-      if (result instanceof OrderSheetDto) {
+      if (order instanceof OrderSheetDto) {
+        let purchaseRequestModels = createPurchases(order);
+        let result = await Promise.all(
+          purchaseRequestModels.map(async (model) => {
+            let purchase = await _purchaseService.createNewPurchase(
+              accessToken,
+              model
+            );
+            return purchase;
+          })
+        );
+        // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+        // let result = await _purchaseService.createNewPurchase(
+        //   purchaseRequestModels[0]
+        // );
+        // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
         setCartItems([]);
         setItems([]);
         let message = "Thank you for your purchase!";

@@ -13,4 +13,5 @@ export const environment = {
   orderSheetEndpoint: "Orders",
   categoriesEndpoint: "Categories",
   brandsEndpoint: "Brands",
+  purchaseEndpoint: "Purchases",
 };
