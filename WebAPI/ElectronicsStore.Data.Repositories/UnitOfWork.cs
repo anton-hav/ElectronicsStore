@@ -15,6 +15,7 @@ public class UnitOfWork : IUnitOfWork
     public IRepository<Item> Items { get; }
     public IRepository<RefreshToken> RefreshToken { get; }
     public IRepository<Category> Categories { get; }
+    public IRepository<Order> Orders { get; }
 
 
     public UnitOfWork(ElectronicsStoreDbContext dbContext, 
@@ -24,7 +25,8 @@ public class UnitOfWork : IUnitOfWork
         IRepository<Brand> brands, 
         IRepository<Product> products, 
         IRepository<Item> items, 
-        IRepository<Category> categories)
+        IRepository<Category> categories, 
+        IRepository<Order> orders)
     {
         _dbContext = dbContext;
         Users = users;
@@ -34,6 +36,7 @@ public class UnitOfWork : IUnitOfWork
         Products = products;
         Items = items;
         Categories = categories;
+        Orders = orders;
     }
 
 

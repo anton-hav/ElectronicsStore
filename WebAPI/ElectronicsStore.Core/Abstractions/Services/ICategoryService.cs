@@ -69,7 +69,6 @@ public interface ICategoryService
     /// </summary>
     /// <param name="dto"><see cref="CategoryDto"/></param>
     /// <returns>the number of successfully created records in the storage.</returns>
-    /// <exception cref="ArgumentException"></exception>
     Task<int> CreateAsync(CategoryDto dto);
 
     // UPDATE
