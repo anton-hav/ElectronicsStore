@@ -21,7 +21,7 @@ public class OrderProfile : Profile
         CreateMap<Order, OrderDto>();
         CreateMap<OrderDto, Order>();
 
-        CreateMap<AddOrderModel, OrderDto>()
+        CreateMap<AddOrderRequestModel, OrderDto>()
             .ForMember(dto => dto.Id,
                 opt
                     => opt.MapFrom(model => Guid.NewGuid()))

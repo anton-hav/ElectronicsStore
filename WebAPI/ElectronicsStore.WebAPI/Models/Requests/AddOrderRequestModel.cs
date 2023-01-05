@@ -5,7 +5,7 @@ namespace ElectronicsStore.WebAPI.Models.Requests;
 /// <summary>
 /// Request model to create new order.
 /// </summary>
-public class AddOrderModel
+public class AddOrderRequestModel
 {
     /// <summary>
     /// Creation date.

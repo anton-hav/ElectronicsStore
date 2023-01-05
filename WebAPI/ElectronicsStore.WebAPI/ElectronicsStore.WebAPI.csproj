@@ -34,4 +34,8 @@
     <ProjectReference Include="..\ElectronicsStore.DataBase\ElectronicsStore.DataBase.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="IdentityManagers\" />
+  </ItemGroup>
+
 </Project>

@@ -1,5 +1,5 @@
-﻿using System.Security.Claims;
-using AutoMapper;
+﻿using AutoMapper;
+using ElectronicsStore.Business.ServiceImplementations;
 using ElectronicsStore.Core.Abstractions.IdentityManagers;
 using ElectronicsStore.Core.Abstractions.Services;
 using ElectronicsStore.Core.DataTransferObjects;
@@ -13,42 +13,45 @@ using Serilog;
 namespace ElectronicsStore.WebAPI.Controllers
 {
     /// <summary>
-    /// API controller for the order sheet resource.
+    /// API controller for the purchases resource.
     /// </summary>
     [Route("api/[controller]")]
     [ApiController]
-    public class OrdersController : ControllerBase
+    public class PurchasesController : ControllerBase
     {
         private readonly IMapper _mapper;
+        private readonly IPurchaseService _purchaseService;
         private readonly IOrderService _orderService;
         private readonly IUserManager _userManager;
 
-        public OrdersController(IMapper mapper, 
+        public PurchasesController(IMapper mapper, 
+            IPurchaseService purchaseService, 
             IOrderService orderService, 
             IUserManager userManager)
         {
             _mapper = mapper;
+            _purchaseService = purchaseService;
             _orderService = orderService;
             _userManager = userManager;
         }
 
         /// <summary>
-        /// Get an order with specified id from the storage.
+        /// Get a purchase with specified id from the storage.
         /// </summary>
-        /// <param name="id">an order unique identifier as a <see cref="Guid"/></param>
-        /// <returns>An order with specified Id</returns>
-        /// <response code="200">Returns an order corresponding to the specified identifier.</response>
+        /// <param name="id">a purchase unique identifier as a <see cref="Guid"/></param>
+        /// <returns>A purchase that matches the id</returns>
+        /// <response code="200">Returns  a purchase corresponding to the specified identifier.</response>
         /// <response code="404">Failed to find record in the database that match the specified id.</response>
         /// <response code="500">Unexpected error on the server side.</response>
         [HttpGet("{id}")]
-        [ProducesResponseType(typeof(GetOrderResponseModel), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(GetPurchaseResponseModel), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(Nullable), StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> GetOrderById(Guid id)
+        public async Task<IActionResult> GetPurchaseById(Guid id)
         {
             try
             {
-                var dto = await _orderService.GetByIdAsync(id);
-                var response = _mapper.Map<GetOrderResponseModel>(dto);
+                var dto = await _purchaseService.GetByIdAsync(id);
+                var response = _mapper.Map<GetPurchaseResponseModel>(dto);
                 return Ok(response);
             }
             catch (ArgumentException ex)
@@ -64,10 +67,10 @@ namespace ElectronicsStore.WebAPI.Controllers
         }
 
         /// <summary>
-        /// Create new order list.
+        /// Create new purchase.
         /// </summary>
-        /// <returns>A newly created order.</returns>
-        /// <response code="200">Returns a newly created order.</response>
+        /// <returns>A newly created purchase.</returns>
+        /// <response code="200">Returns a newly created purchase.</response>
         /// <response code="401">Authorization failed, access token is invalid or expired</response>
         /// <response code="500">Unexpected error on the server side.</response>
         [HttpPost]
@@ -75,26 +78,27 @@ namespace ElectronicsStore.WebAPI.Controllers
         [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> CreateNewOrder([FromBody] AddOrderRequestModel requestModel)
+        public async Task<IActionResult> CreateNewPurchase([FromBody] AddPurchaseRequestModel model)
         {
             try
             {
                 var userId = _userManager.GetUserId();
-                if (!userId.Equals(requestModel.UserId))
-                    // todo: refactor exception handles with filter and add custom Exceptions.
-                    throw new ArgumentNullException(nameof(requestModel),
+                var order = await _orderService.GetByIdAsync(model.OrderId);
+
+                if (!userId.Equals(order.UserId))
+                    throw new ArgumentNullException(nameof(model),
                         "The user token information doesn't compare with request model user Id");
 
                 var isExist =
-                    await _orderService.IsOrderExistByCreationDateAndUserIdAsync(requestModel.DateTimeOfCreate, requestModel.UserId);
+                    await _purchaseService.IsPurchaseExistByOrderIdAndItemIdAsync(model.OrderId, model.ItemId);
                 if (isExist)
-                    throw new ArgumentException("The same entry already exist in the storage.", nameof(requestModel));
+                    throw new ArgumentException("The same entry already exist in the storage.", nameof(model));
 
-                var dto = _mapper.Map<OrderDto>(requestModel);
-                var result = await _orderService.CreateAsync(dto);
-                var response = _mapper.Map<GetOrderResponseModel>(dto);
+                var dto = _mapper.Map<PurchaseDto>(model);
+                var result = await _purchaseService.CreateAsync(dto);
+                var response = _mapper.Map<GetPurchaseResponseModel>(dto);
 
-                return CreatedAtAction(nameof(GetOrderById), new { id = response.Id }, response);
+                return CreatedAtAction(nameof(GetPurchaseById), new { id = response.Id }, response);
             }
             catch (ArgumentNullException ex)
             {
