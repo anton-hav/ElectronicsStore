@@ -63,7 +63,6 @@ export const cartSlice = createSlice({
           ];
         }
       });
-      console.log(stateTemp);
       return stateTemp;
     },
 

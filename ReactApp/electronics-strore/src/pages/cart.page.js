@@ -13,6 +13,10 @@ import useToken from "../utils/hooks/useToken";
 import useCartItems from "../utils/hooks/use-cart-item.hook";
 import UnauthorizedError from "../types/errors/unauthorized.error";
 import GoodsInCartDto from "../types/dto/goods-in-cart.dto";
+import OrderSheetDto from "../types/dto/order-sheet.dto";
+import PurchaseDto from "../types/dto/purchase.dto";
+import OrderStatuses from "../utils/order-statuses";
+import AddNewOrderSheetModel from "../types/model/requests/add-new-order-sheet.model";
 
 const _goodsService = new GoodsService();
 const _orderSheetService = new OrderSheetService();
@@ -33,7 +37,6 @@ export default function Cart() {
           let goodsDto = await _goodsService.getItemByIdFromApi(
             cartItem.goodsId
           );
-          console.log(cartItem.count);
           return new GoodsInCartDto(goodsDto, cartItem.count);
         })
       );
@@ -48,12 +51,22 @@ export default function Cart() {
     }
   });
 
+  /**
+   * Handles the purchase button click event.
+   */
   const handlePurchaseClick = async () => {
     const goCheckout = async (accessToken) => {
-      let result = await _orderSheetService.createNewOrderSheet(accessToken);
-      setCartItems([]);
-      setItems([]);
-      setMessage(result.message);
+      let orderRequestModel = new AddNewOrderSheetModel(token.userId);
+      let result = await _orderSheetService.createNewOrderSheet(
+        accessToken,
+        orderRequestModel
+      );
+      if (result instanceof OrderSheetDto) {
+        setCartItems([]);
+        setItems([]);
+        let message = "Thank you for your purchase!";
+        setMessage(message);
+      }
     };
 
     if (token === undefined || token.accessToken === null) {
@@ -95,6 +108,11 @@ export default function Cart() {
     setCartItems(newIds);
   };
 
+  /**
+   * Handles the change count of item in the cart.
+   * @param {string} id - an unique identifier of the goods.
+   * @param {number} count - new value of the count.
+   */
   const handleChangeCount = (id, count) => {
     // Set changes to the local state
     let index = items.findIndex((i) => i.goods.id === id);
