@@ -12,9 +12,12 @@ import About from "./pages/about.page";
 import Details, { loader as detailsLoader } from "./pages/details.page";
 import Cart from "./pages/cart.page";
 import Login from "./pages/login.page";
+import DashboardPage from "./pages/dashboard.page";
 // Import utils
 import store from "./storage/store";
 import Register from "./pages/register.page";
+// Import guards
+import AuthGuard from "./guards/auth.guard";
 
 const router = createBrowserRouter([
   {
@@ -45,7 +48,7 @@ const router = createBrowserRouter([
             element: <Details />,
           },
           {
-            path: "/cart",            
+            path: "/cart",
             element: <Cart />,
           },
           {
@@ -55,6 +58,10 @@ const router = createBrowserRouter([
           {
             path: "/register",
             element: <Register />,
+          },
+          {
+            path: "/dashboard",
+            element: <AuthGuard component=<DashboardPage /> />,
           },
         ],
       },

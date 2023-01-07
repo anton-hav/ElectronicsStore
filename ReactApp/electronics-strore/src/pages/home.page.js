@@ -1,13 +1,14 @@
 import React, { useState } from "react";
 import { Outlet, useLoaderData } from "react-router-dom";
 import { Paper, Box, Typography, Grid } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 
 // Import custom components
 import ItemsList from "../components/items-list/items-list.component";
 import Pagination from "../components/pagination/pagination.component";
 import AsideMenu from "../components/aside-menu/aside-menu.component";
 import TopToolsBar from "../components/top-tools-bar/top-tools-bar.component";
-import { useNavigate } from "react-router-dom";
+
 // Import services
 import GoodsService from "../services/goods.service";
 import BrandService from "../services/brand.service";

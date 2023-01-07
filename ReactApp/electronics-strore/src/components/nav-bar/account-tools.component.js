@@ -21,6 +21,7 @@ import "./account-tools.component.css";
 const _userService = new UserService();
 
 const authorizedSettings = ["Logout"]; // Account.. Dashboard
+const adminSettings = ["Dashboard", ...authorizedSettings];
 const nonAuthorizedSettings = ["Login", "Register"];
 
 export default function AccountTools() {
@@ -34,21 +35,55 @@ export default function AccountTools() {
   };
 
   const revokeToken = () => {
-    console.log(token);
     _userService.revokeRefreshToken(token.refreshToken);
   };
 
+  /**
+   * Handler for the Logout menu item.
+   */
+  const handleLogout = () => {
+    revokeToken();
+    const newToken = new TokenDto();
+    setToken(newToken);
+  };
+
+  /**
+   * Handler for the close menu.
+   */
   const handleCloseUserMenu = (event) => {
     setAnchorElUser(null);
     let menu = event.target.textContent;
     if (menu === "Logout") {
-      //await logout();
-      revokeToken();
-      const newToken = new TokenDto();
-      setToken(newToken);
+      handleLogout();
     } else if (menu !== "") {
       navigate(`${menu}/`);
     }
+  };
+
+  /**
+   * Get menu items depending on the token state of authorization.
+   * @returns React component with menu items.
+   */
+  const getMenuItems = () => {
+    let items = [];
+    if (token.accessToken !== null) {
+      if (token.role === "Admin") {
+        items = adminSettings.slice();
+      } else {
+        items = authorizedSettings.slice();
+      }
+    } else {
+      items = nonAuthorizedSettings.slice();
+    }
+    return (
+      <Box>
+        {items.map((setting) => (
+          <MenuItem key={setting} onClick={handleCloseUserMenu}>
+            <Typography textAlign="center">{setting}</Typography>
+          </MenuItem>
+        ))}
+      </Box>
+    );
   };
 
   return (
@@ -75,14 +110,7 @@ export default function AccountTools() {
         open={Boolean(anchorElUser)}
         onClose={handleCloseUserMenu}
       >
-        {(token.accessToken !== null
-          ? authorizedSettings
-          : nonAuthorizedSettings
-        ).map((setting) => (
-          <MenuItem key={setting} onClick={handleCloseUserMenu}>
-            <Typography textAlign="center">{setting}</Typography>
-          </MenuItem>
-        ))}
+        {getMenuItems()}
       </Menu>
     </Box>
   );
