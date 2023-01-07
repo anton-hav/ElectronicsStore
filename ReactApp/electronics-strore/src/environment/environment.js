@@ -6,6 +6,7 @@ export const environment = {
     createToken: "Token",
     refreshToken: "Token/Refresh",
     revokeToken: "Token/Revoke",
+    validateToken: "Token/Validate",
   },
   goodsEndpoint: "Goods",
   goodsCountEndpoint: "GoodsCount",
