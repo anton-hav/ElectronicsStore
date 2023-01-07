@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using ElectronicsStore.Core;
 using ElectronicsStore.Core.Abstractions.Services;
 using ElectronicsStore.Core.DataTransferObjects;
 using ElectronicsStore.Data.Abstractions;
@@ -44,6 +45,17 @@ public class OrderService : IOrderService
     }
 
     /// <inheritdoc />
+    public async Task<bool> IsOrderExistByIdAsync(Guid id)
+    {
+        var entity = await _unitOfWork.Orders
+            .Get()
+            .AsNoTracking()
+            .FirstOrDefaultAsync(entity => entity.Id.Equals(id));
+
+        return entity != null;
+    }
+
+    /// <inheritdoc />
     public async Task<int> CreateAsync(OrderDto dto)
     {
         var entity = _mapper.Map<Order>(dto);
@@ -51,5 +63,38 @@ public class OrderService : IOrderService
         await _unitOfWork.Orders.AddAsync(entity);
         var result = await _unitOfWork.Commit();
         return result;
+    }
+
+    /// <inheritdoc />
+    public async Task<int> PatchAsync(Guid id, OrderDto dto)
+    {
+        var sourceDto = await GetByIdAsync(id);
+
+        var patchList = new List<PatchModel>();
+
+        if (!dto.UserId.Equals(sourceDto.UserId))
+            patchList.Add(new PatchModel
+            {
+                PropertyName = nameof(dto.UserId),
+                PropertyValue = dto.UserId
+            });
+
+        if (!dto.Status.Equals(sourceDto.Status)
+            && Enum.IsDefined(typeof(OrderStatus), dto.Status))
+            patchList.Add(new PatchModel
+            {
+                PropertyName = nameof(dto.Status),
+                PropertyValue = dto.Status
+            });
+
+        if (!dto.DateTimeOfCreate.Equals(sourceDto.DateTimeOfCreate))
+            patchList.Add(new PatchModel
+            {
+                PropertyName = nameof(dto.DateTimeOfCreate),
+                PropertyValue = dto.DateTimeOfCreate
+            });
+
+        await _unitOfWork.Orders.PatchAsync(id, patchList);
+        return await _unitOfWork.Commit();
     }
 }

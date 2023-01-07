@@ -1,4 +1,5 @@
-﻿using ElectronicsStore.Core.DataTransferObjects;
+﻿using ElectronicsStore.Core.Abstractions.SearchModels;
+using ElectronicsStore.Core.DataTransferObjects;
 
 namespace ElectronicsStore.Core.Abstractions.Services;
 
@@ -12,6 +13,13 @@ public interface IPurchaseService
     /// <param name="id">an unique identifier as a <see cref="Guid"/></param>
     /// <returns>A purchase that matches the id.</returns>
     Task<PurchaseDto> GetByIdAsync(Guid id);
+
+    /// <summary>
+    /// Get purchases from storage by search model.
+    /// </summary>
+    /// <param name="model">search parameters as a <see cref="IPurchasesSearchModel"/></param>
+    /// <returns>purchases matching the search model</returns>
+    Task<IEnumerable<PurchaseDto>> GetPurchasesBySearchParametersAsync(IPurchasesSearchModel model);
 
     /// <summary>
     /// Checks if the record with the same parameters exists in the storage.

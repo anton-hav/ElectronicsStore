@@ -127,7 +127,7 @@
         </member>
         <member name="M:ElectronicsStore.WebAPI.Controllers.GoodsController.GetItemById(System.Guid)">
             <summary>
-                Get goods note from storage with specified id.
+                Get goods note with specified id from the storage.
             </summary>
             <param name="id">a goods unique identifier as a <see cref="T:System.Guid" /></param>
             <returns>An item with specified Id</returns>
@@ -198,24 +198,69 @@
             <response code="401">Authorization failed, access token is invalid or expired</response>
             <response code="500">Unexpected error on the server side.</response>
         </member>
+        <member name="M:ElectronicsStore.WebAPI.Controllers.OrdersController.PatchBookNote(System.Guid,ElectronicsStore.WebAPI.Models.Requests.PatchOrderRequestModel)">
+            <summary>
+            Patch an order with specified Id in the storage.
+            </summary>
+            <param name="id">an order unique identifier as a <see cref="T:System.Guid"/></param>
+            <param name="model">an order used for patching</param>
+            <returns>An order with specified Id.</returns>
+            <response code="200">Returns the updated order</response>
+            <response code="400">Request contains null object or invalid object type</response>
+            <response code="409">Fail to find a record with the specified Id in the storage
+            or the entry with the same property already exists in the storage.</response>
+            <response code="500">Unexpected error on the server side.</response>
+        </member>
+        <member name="M:ElectronicsStore.WebAPI.Controllers.OrdersController.CheckOrderForEditAsync(System.Guid,System.Guid,System.DateTime)">
+            <summary>
+            Validate an order model for update.
+            </summary>
+            <param name="id">a unique identifier that defines the order to be updated </param>
+            <param name="userId">an user unique identifier</param>
+            <param name="creationDate">a date and time of the order creation</param>
+            <returns>A boolean</returns>
+            <exception cref="T:System.ArgumentNullException">If the id is empty.</exception>
+            <exception cref="T:System.ArgumentException">If the same entry already exists in the storage.</exception>
+        </member>
+        <member name="M:ElectronicsStore.WebAPI.Controllers.OrdersController.IsOrderTheSameAsync(System.Guid,System.Guid,System.DateTime)">
+            <summary>
+            Check if the existing order is the same.
+            </summary>
+            <remarks>
+            This check is necessary to ensure idempotent behavior of the PUT method.
+            </remarks>
+            <param name="id">order unique identifier</param>
+            <param name="userId">user unique identifier</param>
+            <param name="creationDate">a date and time of the order creation</param>
+            <returns>A boolean</returns>
+        </member>
         <member name="T:ElectronicsStore.WebAPI.Controllers.PurchasesController">
             <summary>
-            API controller for the purchases resource.
+                API controller for the purchases resource.
             </summary>
         </member>
         <member name="M:ElectronicsStore.WebAPI.Controllers.PurchasesController.GetPurchaseById(System.Guid)">
             <summary>
-            Get a purchase with specified id from the storage.
+                Get a purchase with specified id from the storage.
             </summary>
-            <param name="id">a purchase unique identifier as a <see cref="T:System.Guid"/></param>
+            <param name="id">a purchase unique identifier as a <see cref="T:System.Guid" /></param>
             <returns>A purchase that matches the id</returns>
             <response code="200">Returns  a purchase corresponding to the specified identifier.</response>
             <response code="404">Failed to find record in the database that match the specified id.</response>
             <response code="500">Unexpected error on the server side.</response>
         </member>
+        <member name="M:ElectronicsStore.WebAPI.Controllers.PurchasesController.GetPurchases(ElectronicsStore.WebAPI.Models.Requests.GetPurchasesRequestModel)">
+            <summary>
+                Get purchases from the storage.
+            </summary>
+            <returns>all purchases that match the search model</returns>
+            <response code="200">Returns all purchases that match the search model.</response>
+            <response code="400">Request contains null object or invalid object type.</response>
+            <response code="500">Unexpected error on the server side.</response>
+        </member>
         <member name="M:ElectronicsStore.WebAPI.Controllers.PurchasesController.CreateNewPurchase(ElectronicsStore.WebAPI.Models.Requests.AddPurchaseRequestModel)">
             <summary>
-            Create new purchase.
+                Create new purchase.
             </summary>
             <returns>A newly created purchase.</returns>
             <response code="200">Returns a newly created purchase.</response>
@@ -256,15 +301,24 @@
             <summary>
             Validate access token.
             </summary>
-            <returns>new access token for authorized user</returns>
-            <response code="200">Returns the access token for the authorized user</response>
-            <response code="400">Request contains null object or invalid object type</response>
+            <returns>true if the token is valid</returns>
+            <response code="200">Returns true if the token is valid</response>
             <response code="500">Unexpected error on the server side.</response>
         </member>
         <member name="T:ElectronicsStore.WebAPI.Controllers.UserController">
             <summary>
             Controller that provides API endpoints for the User resource.
             </summary>
+        </member>
+        <member name="M:ElectronicsStore.WebAPI.Controllers.UserController.GetUserById(System.Guid)">
+            <summary>
+                Get user information with specified id from the storage.
+            </summary>
+            <param name="id">an user unique identifier as a <see cref="T:System.Guid" /></param>
+            <returns>An user with specified Id</returns>
+            <response code="200">Returns an user corresponding to the specified identifier.</response>
+            <response code="404">Failed to find record in the database that match the specified id.</response>
+            <response code="500">Unexpected error on the server side.</response>
         </member>
         <member name="M:ElectronicsStore.WebAPI.Controllers.UserController.Get">
             <summary>
@@ -285,6 +339,19 @@
         </member>
         <member name="M:ElectronicsStore.WebAPI.IdentityManagers.UserManager.GetUserId">
             <inheritdoc />
+        </member>
+        <member name="M:ElectronicsStore.WebAPI.IdentityManagers.UserManager.IsAdmin">
+            <inheritdoc />
+        </member>
+        <member name="M:ElectronicsStore.WebAPI.IdentityManagers.UserManager.IsUser">
+            <inheritdoc />
+        </member>
+        <member name="M:ElectronicsStore.WebAPI.IdentityManagers.UserManager.GetRoleName">
+            <summary>
+                Gets the role for the current access token.
+            </summary>
+            <returns>the role as a string</returns>
+            <exception cref="T:System.Security.Authentication.AuthenticationException"></exception>
         </member>
         <member name="T:ElectronicsStore.WebAPI.MappingProfiles.BrandProfile">
             <summary>
@@ -384,6 +451,16 @@
         <member name="M:ElectronicsStore.WebAPI.MappingProfiles.PurchaseProfile.#ctor">
             <summary>
             Mapper profile constructor
+            </summary>
+        </member>
+        <member name="T:ElectronicsStore.WebAPI.MappingProfiles.PurchasesSearchModelProfile">
+            <summary>
+                Mapper profile for PurchasesSearchModelProfile
+            </summary>
+        </member>
+        <member name="M:ElectronicsStore.WebAPI.MappingProfiles.PurchasesSearchModelProfile.#ctor">
+            <summary>
+                Mapper profile constructor
             </summary>
         </member>
         <member name="T:ElectronicsStore.WebAPI.MappingProfiles.RefreshTokenProfile">
@@ -580,6 +657,17 @@
             Search parameter that represents the category of goods.
             </summary>
         </member>
+        <member name="T:ElectronicsStore.WebAPI.Models.Requests.GetPurchasesRequestModel">
+            <summary>
+            Request model to get purchases
+            </summary>
+        </member>
+        <member name="P:ElectronicsStore.WebAPI.Models.Requests.GetPurchasesRequestModel.OrderId">
+            <summary>
+            Search parameter that represents the order id.
+            To ignore the search parameter, the value must be empty.
+            </summary>
+        </member>
         <member name="T:ElectronicsStore.WebAPI.Models.Requests.LoginUserRequestModel">
             <summary>
             Login model
@@ -593,6 +681,26 @@
         <member name="P:ElectronicsStore.WebAPI.Models.Requests.LoginUserRequestModel.Password">
             <summary>
             User password
+            </summary>
+        </member>
+        <member name="T:ElectronicsStore.WebAPI.Models.Requests.PatchOrderRequestModel">
+            <summary>
+            Request model to patch order.
+            </summary>
+        </member>
+        <member name="P:ElectronicsStore.WebAPI.Models.Requests.PatchOrderRequestModel.UserId">
+            <summary>
+            An unique identifier of order creator.
+            </summary>
+        </member>
+        <member name="P:ElectronicsStore.WebAPI.Models.Requests.PatchOrderRequestModel.Status">
+            <summary>
+            Status of the order.
+            </summary>
+        </member>
+        <member name="P:ElectronicsStore.WebAPI.Models.Requests.PatchOrderRequestModel.DateTimeOfCreate">
+            <summary>
+            Creation date.
             </summary>
         </member>
         <member name="T:ElectronicsStore.WebAPI.Models.Requests.RefreshTokenRequestModel">
@@ -761,6 +869,21 @@
         <member name="P:ElectronicsStore.WebAPI.Models.Responses.GetPurchaseResponseModel.ItemId">
             <summary>
                 An unique identifier of the item.
+            </summary>
+        </member>
+        <member name="T:ElectronicsStore.WebAPI.Models.Responses.GetUserResponseModel">
+            <summary>
+            Response model for user
+            </summary>
+        </member>
+        <member name="P:ElectronicsStore.WebAPI.Models.Responses.GetUserResponseModel.Email">
+            <summary>
+            User email
+            </summary>
+        </member>
+        <member name="P:ElectronicsStore.WebAPI.Models.Responses.GetUserResponseModel.RoleId">
+            <summary>
+            AN unique identifier of user role
             </summary>
         </member>
         <member name="T:ElectronicsStore.WebAPI.Models.Responses.TokenResponse">

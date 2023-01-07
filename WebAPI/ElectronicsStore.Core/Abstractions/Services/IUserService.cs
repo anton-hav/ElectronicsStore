@@ -5,6 +5,13 @@ namespace ElectronicsStore.Core.Abstractions.Services;
 public interface IUserService
 {
     //READ
+    /// <summary>
+    /// Get user with specified id from the storage.
+    /// </summary>
+    /// <param name="id">an unique identifier as a <see cref="Guid"/></param>
+    /// <returns>an user as a <see cref="UserDto"/></returns>
+    Task<UserDto> GetUserByIdAsync(Guid id);
+
     Task<IEnumerable<UserDto>> GetAllUsersAsync();
 
     /// <summary>

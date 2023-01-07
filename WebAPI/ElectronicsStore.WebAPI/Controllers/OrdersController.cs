@@ -112,5 +112,110 @@ namespace ElectronicsStore.WebAPI.Controllers
                 return StatusCode(500, new ErrorModel { Message = "Unexpected error on the server side." });
             }
         }
+
+        /// <summary>
+        /// Patch an order with specified Id in the storage.
+        /// </summary>
+        /// <param name="id">an order unique identifier as a <see cref="Guid"/></param>
+        /// <param name="model">an order used for patching</param>
+        /// <returns>An order with specified Id.</returns>
+        /// <response code="200">Returns the updated order</response>
+        /// <response code="400">Request contains null object or invalid object type</response>
+        /// <response code="409">Fail to find a record with the specified Id in the storage
+        /// or the entry with the same property already exists in the storage.</response>
+        /// <response code="500">Unexpected error on the server side.</response>
+        [ProducesResponseType(typeof(GetOrderResponseModel), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status500InternalServerError)]
+        [HttpPatch("{id}")]
+        public async Task<IActionResult> PatchBookNote(Guid id, [FromBody] PatchOrderRequestModel model)
+        {
+            try
+            {
+
+                if (id.Equals(default))
+                    throw new ArgumentNullException(nameof(id), "A non-empty Id is required.");
+
+                var isExistById = await _orderService.IsOrderExistByIdAsync(id);
+                if (!isExistById)
+                    throw new ArgumentException("Fail to find a record with the specified Id in the storage",
+                        nameof(id));
+
+                var isValid = await CheckOrderForEditAsync(id, model.UserId, model.DateTimeOfCreate);
+
+                var dto = _mapper.Map<OrderDto>(model);
+                dto.Id = id;
+                var result = await _orderService.PatchAsync(id, dto);
+                var response = _mapper.Map<GetOrderResponseModel>(dto);
+
+                return Ok(response);
+            }
+            catch (ArgumentNullException ex)
+            {
+                Log.Warning($"{ex.Message}. {Environment.NewLine} {ex.StackTrace}");
+                return BadRequest(new ErrorModel { Message = ex.Message });
+            }
+            catch (ArgumentException ex)
+            {
+                Log.Warning($"{ex.Message}. {Environment.NewLine} {ex.StackTrace}");
+                return NotFound(new ErrorModel { Message = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                Log.Error($"{ex.Message}. {Environment.NewLine} {ex.StackTrace}");
+                return StatusCode(500);
+            }
+        }
+
+        /// <summary>
+        /// Validate an order model for update.
+        /// </summary>
+        /// <param name="id">a unique identifier that defines the order to be updated </param>
+        /// <param name="userId">an user unique identifier</param>
+        /// <param name="creationDate">a date and time of the order creation</param>
+        /// <returns>A boolean</returns>
+        /// <exception cref="ArgumentNullException">If the id is empty.</exception>
+        /// <exception cref="ArgumentException">If the same entry already exists in the storage.</exception>
+        private async Task<bool> CheckOrderForEditAsync(Guid id, Guid userId, DateTime creationDate)
+        {
+            var isExist = await _orderService.IsOrderExistByCreationDateAndUserIdAsync(creationDate, userId);
+
+            if (isExist)
+            {
+                if (!id.Equals(default))
+                {
+                    var isOrderTheSame = await IsOrderTheSameAsync(id, userId, creationDate);
+
+                    if (isOrderTheSame)
+                    {
+                        return true;
+                    }
+                }
+                else
+                {
+                    throw new ArgumentNullException(nameof(id), "A non-empty Id is required.");
+                }
+
+                throw new ArgumentException("The same entry already exists in the storage.", nameof(id)); ;
+            }
+            return true;
+        }
+
+        /// <summary>
+        /// Check if the existing order is the same.
+        /// </summary>
+        /// <remarks>
+        /// This check is necessary to ensure idempotent behavior of the PUT method.
+        /// </remarks>
+        /// <param name="id">order unique identifier</param>
+        /// <param name="userId">user unique identifier</param>
+        /// <param name="creationDate">a date and time of the order creation</param>
+        /// <returns>A boolean</returns>
+        private async Task<bool> IsOrderTheSameAsync(Guid id, Guid userId, DateTime creationDate)
+        {
+            var dto = await _orderService.GetByIdAsync(id);
+            return dto.UserId.Equals(userId) && dto.DateTimeOfCreate.Equals(creationDate);
+        }
     }
 }

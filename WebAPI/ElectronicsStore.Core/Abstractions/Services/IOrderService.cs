@@ -21,6 +21,13 @@ public interface IOrderService
     /// <returns>A boolean</returns>
     Task<bool> IsOrderExistByCreationDateAndUserIdAsync(DateTime orderCreationDate, Guid userId);
 
+    /// <summary>
+    /// Checks if the record exists in the storage by Id.
+    /// </summary>
+    /// <param name="id">an unique identifier as a <see cref="Guid"/></param>
+    /// <returns>A boolean</returns>
+    Task<bool> IsOrderExistByIdAsync(Guid id);
+
     // CREATE
 
     /// <summary>
@@ -31,6 +38,14 @@ public interface IOrderService
     Task<int> CreateAsync(OrderDto dto);
 
     // UPDATE
+
+    /// <summary>
+    /// Patch order with specified id in the storage
+    /// </summary>
+    /// <param name="id">an unique identifier as a <see cref="Guid"/></param>
+    /// <param name="dto"><see cref="OrderDto"/></param>
+    /// <returns>the number of successfully patched records in the storage.</returns>
+    Task<int> PatchAsync(Guid id, OrderDto dto);
 
     // REMOVE
 }

@@ -2,6 +2,7 @@
 using ElectronicsStore.Core.DataTransferObjects;
 using ElectronicsStore.DataBase.Entities;
 using ElectronicsStore.WebAPI.Models.Requests;
+using ElectronicsStore.WebAPI.Models.Responses;
 
 namespace ElectronicsStore.WebAPI.MappingProfiles;
 
@@ -23,5 +24,7 @@ public class UserProfile : Profile
                     => opt.MapFrom(dto => Guid.NewGuid()));
 
         CreateMap<RegisterUserRequestModel, UserDto>();
+
+        CreateMap<UserDto, GetUserResponseModel>();
     }
 }
