@@ -93,11 +93,6 @@ export default function Cart() {
             return purchase;
           })
         );
-        // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-        // let result = await _purchaseService.createNewPurchase(
-        //   purchaseRequestModels[0]
-        // );
-        // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
         setCartItems([]);
         setItems([]);
         let message = "Thank you for your purchase!";
@@ -112,7 +107,6 @@ export default function Cart() {
       await goCheckout(token.accessToken);
     } catch (error) {
       if (error instanceof UnauthorizedError) {
-        console.log("You are not authorized");
         try {
           let newToken = await _userService.getTokenByRefreshToken(
             token.refreshToken

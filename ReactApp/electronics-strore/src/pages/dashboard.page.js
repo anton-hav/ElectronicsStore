@@ -8,6 +8,7 @@ import MuiAlert from "@mui/material/Alert";
 // Import custom components
 import DashboardAsideMenu from "../components/dashboard-aside-menu/dashboard-aside-menu.component";
 import AdminPanelMainItem from "../components/admin-panel-main/admin-panel-main.component";
+import AdminPanelOrdersItem from "../components/admin-panel-orders/admin-panel-orders.component";
 // Import custom types and utils
 import { formatter } from "../utils/formatter";
 
@@ -64,7 +65,7 @@ export default function DashboardPage() {
         />
       );
     } else {
-      return <Box>Welcom panel!!!</Box>;
+      return <AdminPanelOrdersItem />;
     }
   };
 

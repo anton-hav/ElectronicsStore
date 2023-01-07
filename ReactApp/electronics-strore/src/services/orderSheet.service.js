@@ -30,4 +30,21 @@ export default class OrderSheetService {
       this._logger.error(error);
     }
   }
+
+  /**
+   * Update the order sheet through the API
+   * @param {string} accessToken - an access token
+   * @param {OrderSheetDto} order - The order sheet
+   * @returns a boolean (true if record successfully updated)
+   */
+  async updateOrderSheet(accessToken, order) {
+    let response = await this._apiService.patch(
+      this._orderSheetEndpoint,
+      order,
+      order.id,
+      accessToken
+    );
+    let result = OrderSheetDto.fromResponse(response);
+    return result instanceof OrderSheetDto;
+  }
 }

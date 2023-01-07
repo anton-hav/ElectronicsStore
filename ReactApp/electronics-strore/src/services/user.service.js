@@ -2,6 +2,7 @@
 import ApiService from "./api.service";
 // Import custom types and utils
 import TokenDto from "../types/dto/token.dto";
+import UserDto from "../types/dto/user.dto";
 import { environment } from "../environment/environment";
 import UnauthorizedError from "../types/errors/unauthorized.error";
 
@@ -74,23 +75,44 @@ export default class UserService {
   }
 
   async validateToken(accessToken) {
-    const validateTokenThroughApi = async () => {
+    try {
       let response = await this._apiService.post(
         this._tokenEndpoints.validateToken,
         {},
         accessToken
       );
-      return response;
-    };
-
-    try {
-      let result = await validateTokenThroughApi();
-      if (result) return true;
+      if (response) return true;
     } catch (error) {
       if (error instanceof UnauthorizedError) {
-        let result = await validateTokenThroughApi();
-        if (result) return true;
+        this._logger.warn(error);
+        throw error;
       }
+      this._logger.error(error);
+    }
+  }
+
+  /**
+   * Get user information by user id.
+   * @param {string} accessToken - access token
+   * @param {string} userId - user id.
+   * @returns an user information as an UserDto object
+   */
+  async getUserInformationById(accessToken, userId) {
+    try {
+      let response = await this._apiService.getById(
+        this._userEndpoint,
+        userId,
+        accessToken
+      );
+      let user = UserDto.fromResponse(response);
+      user.id = userId;
+      return user;
+    } catch (error) {
+      if (error instanceof UnauthorizedError) {
+        this._logger.warn(error);
+        throw error;
+      }
+      this._logger.error(error);
     }
   }
 }
