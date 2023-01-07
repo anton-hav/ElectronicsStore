@@ -18,6 +18,7 @@ import store from "./storage/store";
 import Register from "./pages/register.page";
 // Import guards
 import AuthGuard from "./guards/auth.guard";
+import RootGuard from "./guards/root.guard";
 
 const router = createBrowserRouter([
   {
@@ -61,7 +62,9 @@ const router = createBrowserRouter([
           },
           {
             path: "/dashboard",
-            element: <AuthGuard component=<DashboardPage /> />,
+            element: (
+              <RootGuard component=<DashboardPage /> authorised="Admin" />
+            ),
           },
         ],
       },

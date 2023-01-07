@@ -92,8 +92,11 @@ export default function DashboardPage() {
           severity="success"
           sx={{ width: "100%" }}
         >
-          Successfully success. This message is a stub. It's just a
-          demonstration of what the widget can do.
+          <div>Successfully success.</div>
+          <div>
+            This message is a stub. It's just a demonstration of what the widget
+            can do.
+          </div>
         </MuiAlert>
       </Snackbar>
     </Box>

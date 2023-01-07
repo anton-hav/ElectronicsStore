@@ -1,8 +1,9 @@
 // Import services
 import ApiService from "./api.service";
-// Import data transfer objects and utils
+// Import custom types and utils
 import TokenDto from "../types/dto/token.dto";
 import { environment } from "../environment/environment";
+import UnauthorizedError from "../types/errors/unauthorized.error";
 
 export default class UserService {
   constructor() {
@@ -70,5 +71,26 @@ export default class UserService {
     await this._apiService.post(this._tokenEndpoints.revokeToken, {
       refreshToken: refreshToken,
     });
+  }
+
+  async validateToken(accessToken) {
+    const validateTokenThroughApi = async () => {
+      let response = await this._apiService.post(
+        this._tokenEndpoints.validateToken,
+        {},
+        accessToken
+      );
+      return response;
+    };
+
+    try {
+      let result = await validateTokenThroughApi();
+      if (result) return true;
+    } catch (error) {
+      if (error instanceof UnauthorizedError) {
+        let result = await validateTokenThroughApi();
+        if (result) return true;
+      }
+    }
   }
 }
