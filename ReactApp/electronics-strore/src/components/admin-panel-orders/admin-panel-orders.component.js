@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Paper from "@mui/material/Paper";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
@@ -20,14 +20,32 @@ const _userService = new UserService();
 
 export default function AdminPanelOrdersItem(props) {
   const { token, setToken } = useToken();
-  const [orders, setOrders] = useState([
-    new OrderSheetDto(
-      "25E90FB8-3755-40A7-99B5-7983BE6B5407",
-      new Date(),
-      "1F30D943-F49E-4C29-AEAF-C19632B954CD",
-      0
-    ),
-  ]);
+  const [orders, setOrders] = useState([]);
+
+  useEffect(() => {
+    const getOrders = async () => {
+      let data;
+      try {
+        data = await _orderSheetService.getOrdersFromApi(token.accessToken);
+      } catch (error) {
+        if (error instanceof UnauthorizedError) {
+          let newToken = await _userService.getTokenByRefreshToken(
+            token.refreshToken
+          );
+          if (newToken) {
+            data = await _orderSheetService.getOrdersFromApi(token.accessToken);
+            setToken(newToken);
+          }
+        }
+      }
+
+      setOrders(data);
+    };
+
+    if (orders.length === 0) {
+      getOrders();
+    }
+  });
 
   /**
    * Handles the orders status change event
@@ -40,7 +58,7 @@ export default function AdminPanelOrdersItem(props) {
       try {
         result = await _orderSheetService.updateOrderSheet(
           token.accessToken,
-          order
+          orderForUpdate
         );
       } catch (error) {
         if (error instanceof UnauthorizedError) {
@@ -50,7 +68,7 @@ export default function AdminPanelOrdersItem(props) {
           if (newToken) {
             result = await _orderSheetService.updateOrderSheet(
               token.accessToken,
-              order
+              orderForUpdate
             );
             setToken(newToken);
           }
@@ -66,7 +84,7 @@ export default function AdminPanelOrdersItem(props) {
       ...orders.slice(index + 1),
     ];
     setOrders(newOrders);
-    updateOrderSheet();
+    updateOrderSheet(order);
   };
 
   return (

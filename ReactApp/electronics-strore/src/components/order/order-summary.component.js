@@ -16,6 +16,7 @@ import PurchaseService from "../../services/purchase.service";
 import { formatter } from "../../utils/formatter";
 import OrderStatuses from "../../utils/order-statuses";
 import useToken from "../../utils/hooks/useToken";
+import UnauthorizedError from "../../types/errors/unauthorized.error";
 
 import "./order-summary.component.css";
 
@@ -24,26 +25,70 @@ const _purchaseService = new PurchaseService();
 
 export default function OrderSummary(props) {
   const { order, onStatusChange } = props;
-  const { token } = useToken();
+  const { token, setToken } = useToken();
   const [user, setUser] = useState();
   const [purchases, setPurchases] = useState([]);
 
   const [status, setStatus] = useState(order.status);
 
   useEffect(() => {
+    /**
+     * Get information about the owner (user) of the order.
+     */
     const getUser = async () => {
-      const user = await _userService.getUserInformationById(
-        token.accessToken,
-        order.userId
-      );
+      let user;
+      try {
+        user = await _userService.getUserInformationById(
+          token.accessToken,
+          order.userId
+        );
+      } catch (error) {
+        if (error instanceof UnauthorizedError) {
+          let newToken = await _userService.getTokenByRefreshToken(
+            token.refreshToken
+          );
+          if (newToken) {
+            user = await _userService.getUserInformationById(
+              token.accessToken,
+              order.userId
+            );
+            setToken(newToken);
+          }
+        }
+      }
+
       setUser(user);
     };
 
+    /**
+     * Get purchases for current order.
+     */
     const getPurchases = async () => {
-      const data = await _purchaseService.getPurchasesByOrderId(
-        token.accessToken,
-        order.id
-      );
+      let data;
+      try {
+        data = await _purchaseService.getPurchasesByOrderId(
+          token.accessToken,
+          order.id
+        );
+      } catch (error) {
+        if (error instanceof UnauthorizedError) {
+          let newToken = await _userService.getTokenByRefreshToken(
+            token.refreshToken
+          );
+          if (newToken) {
+            data = await _purchaseService.getPurchasesByOrderId(
+              token.accessToken,
+              order.id
+            );
+            setToken(newToken);
+          }
+        }
+      }
+
+      //   const data = await _purchaseService.getPurchasesByOrderId(
+      //     token.accessToken,
+      //     order.id
+      //   );
       setPurchases(data);
     };
 

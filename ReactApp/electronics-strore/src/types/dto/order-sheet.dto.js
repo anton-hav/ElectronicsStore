@@ -34,7 +34,7 @@ export default class OrderSheetDto {
   static fromResponse(response) {
     return new OrderSheetDto(
       response.id,
-      response.dateTimeOfCreate,
+      new Date(Date.parse(response.dateTimeOfCreate)),
       response.userId,
       response.status
     );

@@ -13,12 +13,25 @@ export default class OrderSheetService {
     this._logger = new Logger();
   }
 
-  async createNewOrderSheet(token, orderSheet) {
+  // READ
+  async getOrdersFromApi(accessToken, parameters) {
+    let response = await this._apiService.get(
+      this._orderSheetEndpoint,
+      parameters,
+      accessToken
+    );
+    let orders = response.map((resp) => OrderSheetDto.fromResponse(resp));
+    return orders;
+  }
+
+  // CREATE
+
+  async createNewOrderSheet(accessToken, orderSheet) {
     try {
       let response = await this._apiService.post(
         this._orderSheetEndpoint,
         orderSheet,
-        token
+        accessToken
       );
       let order = OrderSheetDto.fromResponse(response);
       return order;
@@ -30,6 +43,8 @@ export default class OrderSheetService {
       this._logger.error(error);
     }
   }
+
+  // UPDATE
 
   /**
    * Update the order sheet through the API
@@ -47,4 +62,6 @@ export default class OrderSheetService {
     let result = OrderSheetDto.fromResponse(response);
     return result instanceof OrderSheetDto;
   }
+
+  // DELETE
 }
