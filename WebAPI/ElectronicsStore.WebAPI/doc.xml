@@ -252,6 +252,15 @@
             <response code="400">Request contains null object or invalid object type</response>
             <response code="500">Unexpected error on the server side.</response>
         </member>
+        <member name="M:ElectronicsStore.WebAPI.Controllers.TokenController.ValidateToken">
+            <summary>
+            Validate access token.
+            </summary>
+            <returns>new access token for authorized user</returns>
+            <response code="200">Returns the access token for the authorized user</response>
+            <response code="400">Request contains null object or invalid object type</response>
+            <response code="500">Unexpected error on the server side.</response>
+        </member>
         <member name="T:ElectronicsStore.WebAPI.Controllers.UserController">
             <summary>
             Controller that provides API endpoints for the User resource.
