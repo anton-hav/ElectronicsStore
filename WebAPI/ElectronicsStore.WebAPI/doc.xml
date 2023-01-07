@@ -176,22 +176,31 @@
         </member>
         <member name="T:ElectronicsStore.WebAPI.Controllers.OrdersController">
             <summary>
-            API controller for the order sheet resource.
+                API controller for the order sheet resource.
             </summary>
         </member>
         <member name="M:ElectronicsStore.WebAPI.Controllers.OrdersController.GetOrderById(System.Guid)">
             <summary>
-            Get an order with specified id from the storage.
+                Get an order with specified id from the storage.
             </summary>
-            <param name="id">an order unique identifier as a <see cref="T:System.Guid"/></param>
+            <param name="id">an order unique identifier as a <see cref="T:System.Guid" /></param>
             <returns>An order with specified Id</returns>
             <response code="200">Returns an order corresponding to the specified identifier.</response>
             <response code="404">Failed to find record in the database that match the specified id.</response>
             <response code="500">Unexpected error on the server side.</response>
         </member>
+        <member name="M:ElectronicsStore.WebAPI.Controllers.OrdersController.GetOrders(ElectronicsStore.WebAPI.Models.Requests.GetOrdersRequestModel)">
+            <summary>
+                Get orders from the storage.
+            </summary>
+            <returns>all orders that match the search model</returns>
+            <response code="200">Returns all orders that match the search model.</response>
+            <response code="400">Request contains null object or invalid object type.</response>
+            <response code="500">Unexpected error on the server side.</response>
+        </member>
         <member name="M:ElectronicsStore.WebAPI.Controllers.OrdersController.CreateNewOrder(ElectronicsStore.WebAPI.Models.Requests.AddOrderRequestModel)">
             <summary>
-            Create new order list.
+                Create new order list.
             </summary>
             <returns>A newly created order.</returns>
             <response code="200">Returns a newly created order.</response>
@@ -200,20 +209,22 @@
         </member>
         <member name="M:ElectronicsStore.WebAPI.Controllers.OrdersController.PatchBookNote(System.Guid,ElectronicsStore.WebAPI.Models.Requests.PatchOrderRequestModel)">
             <summary>
-            Patch an order with specified Id in the storage.
+                Patch an order with specified Id in the storage.
             </summary>
-            <param name="id">an order unique identifier as a <see cref="T:System.Guid"/></param>
+            <param name="id">an order unique identifier as a <see cref="T:System.Guid" /></param>
             <param name="model">an order used for patching</param>
             <returns>An order with specified Id.</returns>
             <response code="200">Returns the updated order</response>
             <response code="400">Request contains null object or invalid object type</response>
-            <response code="409">Fail to find a record with the specified Id in the storage
-            or the entry with the same property already exists in the storage.</response>
+            <response code="409">
+                Fail to find a record with the specified Id in the storage
+                or the entry with the same property already exists in the storage.
+            </response>
             <response code="500">Unexpected error on the server side.</response>
         </member>
         <member name="M:ElectronicsStore.WebAPI.Controllers.OrdersController.CheckOrderForEditAsync(System.Guid,System.Guid,System.DateTime)">
             <summary>
-            Validate an order model for update.
+                Validate an order model for update.
             </summary>
             <param name="id">a unique identifier that defines the order to be updated </param>
             <param name="userId">an user unique identifier</param>
@@ -224,10 +235,10 @@
         </member>
         <member name="M:ElectronicsStore.WebAPI.Controllers.OrdersController.IsOrderTheSameAsync(System.Guid,System.Guid,System.DateTime)">
             <summary>
-            Check if the existing order is the same.
+                Check if the existing order is the same.
             </summary>
             <remarks>
-            This check is necessary to ensure idempotent behavior of the PUT method.
+                This check is necessary to ensure idempotent behavior of the PUT method.
             </remarks>
             <param name="id">order unique identifier</param>
             <param name="userId">user unique identifier</param>
@@ -433,6 +444,16 @@
             Mapper profile constructor.
             </summary>
         </member>
+        <member name="T:ElectronicsStore.WebAPI.MappingProfiles.OrdersSearchModelProfile">
+            <summary>
+                Mapper profile for OrdersSearchModel
+            </summary>
+        </member>
+        <member name="M:ElectronicsStore.WebAPI.MappingProfiles.OrdersSearchModelProfile.#ctor">
+            <summary>
+                Mapper profile constructor
+            </summary>
+        </member>
         <member name="T:ElectronicsStore.WebAPI.MappingProfiles.ProductProfile">
             <summary>
             Mapper profile for Product
@@ -455,7 +476,7 @@
         </member>
         <member name="T:ElectronicsStore.WebAPI.MappingProfiles.PurchasesSearchModelProfile">
             <summary>
-                Mapper profile for PurchasesSearchModelProfile
+                Mapper profile for PurchasesSearchModel
             </summary>
         </member>
         <member name="M:ElectronicsStore.WebAPI.MappingProfiles.PurchasesSearchModelProfile.#ctor">
@@ -655,6 +676,11 @@
         <member name="P:ElectronicsStore.WebAPI.Models.Requests.GetMaxGoodsPriceRequestModel.CategoryId">
             <summary>
             Search parameter that represents the category of goods.
+            </summary>
+        </member>
+        <member name="T:ElectronicsStore.WebAPI.Models.Requests.GetOrdersRequestModel">
+            <summary>
+            Request model to get orders
             </summary>
         </member>
         <member name="T:ElectronicsStore.WebAPI.Models.Requests.GetPurchasesRequestModel">

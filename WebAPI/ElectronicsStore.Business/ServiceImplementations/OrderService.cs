@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
 using ElectronicsStore.Core;
+using ElectronicsStore.Core.Abstractions.SearchModels;
+using ElectronicsStore.Core.Abstractions.SearchParameters;
 using ElectronicsStore.Core.Abstractions.Services;
 using ElectronicsStore.Core.DataTransferObjects;
 using ElectronicsStore.Data.Abstractions;
@@ -30,6 +32,20 @@ public class OrderService : IOrderService
             throw new ArgumentException("Failed to find record in the database that match the specified id. ", nameof(id));
         var dto = _mapper.Map<OrderDto>(entity);
         return dto;
+    }
+
+    /// <inheritdoc />
+    public async Task<IEnumerable<OrderDto>> GetOrdersBySearchParametersAsync(IOrdersSearchModel model)
+    {
+        var entities = _unitOfWork.Orders.Get();
+
+        entities = GetQueryWithUserFilter(entities, model.User);
+
+        var result = (await entities.AsNoTracking().ToListAsync())
+            .Select(entity => _mapper.Map<OrderDto>(entity))
+            .ToArray();
+
+        return result;
     }
 
     /// <inheritdoc />
@@ -96,5 +112,19 @@ public class OrderService : IOrderService
 
         await _unitOfWork.Orders.PatchAsync(id, patchList);
         return await _unitOfWork.Commit();
+    }
+
+    /// <summary>
+    /// Get query with user filters specified user search parameters.
+    /// </summary>
+    /// <param name="query">query</param>
+    /// <param name="user">user search parameters as a <see cref="IUserSearchParameters"/></param>
+    /// <returns>a query that includes user filter.</returns>
+    private IQueryable<Order> GetQueryWithUserFilter(IQueryable<Order> query, IUserSearchParameters user)
+    {
+        if (user.UserId != null && !user.UserId.Equals(default))
+            query = query.Where(entity => entity.UserId.Equals(user.UserId));
+
+        return query;
     }
 }

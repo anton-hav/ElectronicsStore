@@ -6,22 +6,16 @@ using ElectronicsStore.WebAPI.Models.Requests;
 namespace ElectronicsStore.WebAPI.MappingProfiles;
 
 /// <summary>
-///     Mapper profile for PurchasesSearchModel
+///     Mapper profile for OrdersSearchModel
 /// </summary>
-public class PurchasesSearchModelProfile : Profile
+public class OrdersSearchModelProfile : Profile
 {
     /// <summary>
     ///     Mapper profile constructor
     /// </summary>
-    public PurchasesSearchModelProfile()
+    public OrdersSearchModelProfile()
     {
-        CreateMap<GetPurchasesRequestModel, PurchasesSearchModel>()
-            .ForMember(searchParams => searchParams.Order,
-                opt
-                    => opt.MapFrom(request => new OrderSearchParameters()
-                    {
-                        OrderId = request.OrderId,
-                    }))
+        CreateMap<GetOrdersRequestModel, OrdersSearchModel>()
             .ForMember(searchParams => searchParams.User,
                 opt
                     => opt.MapFrom(request => new UserSearchParameters()

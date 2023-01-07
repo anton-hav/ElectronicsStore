@@ -1,4 +1,5 @@
-﻿using ElectronicsStore.Core.DataTransferObjects;
+﻿using ElectronicsStore.Core.Abstractions.SearchModels;
+using ElectronicsStore.Core.DataTransferObjects;
 
 namespace ElectronicsStore.Core.Abstractions.Services;
 
@@ -12,6 +13,13 @@ public interface IOrderService
     /// <param name="id">an unique identifier as a <see cref="Guid"/></param>
     /// <returns>An order that matches the id</returns>
     Task<OrderDto> GetByIdAsync(Guid id);
+
+    /// <summary>
+    /// Get orders from the storage by search model.
+    /// </summary>
+    /// <param name="model">search parameters as a <see cref="IOrdersSearchModel"/></param>
+    /// <returns>orders matching the search model</returns>
+    Task<IEnumerable<OrderDto>> GetOrdersBySearchParametersAsync(IOrdersSearchModel model);
 
     /// <summary>
     /// Checks if the record with the same creation date and user id exists in the storage.
