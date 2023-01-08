@@ -63,7 +63,16 @@ const router = createBrowserRouter([
           {
             path: "/dashboard",
             element: (
-              <RootGuard component=<DashboardPage /> authorised="Admin" />
+              <RootGuard component=<DashboardPage /> authorised={["Admin"]} />
+            ),
+          },
+          {
+            path: "/orders",
+            element: (
+              <RootGuard
+                component=<DashboardPage />
+                authorised={["User", "Admin"]}
+              />
             ),
           },
         ],

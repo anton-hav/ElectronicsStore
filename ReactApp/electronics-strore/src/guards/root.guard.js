@@ -5,7 +5,7 @@ export default function RootGuard(props) {
 
   const GuardedComponent = () => {
     let guarded;
-    if (authorised) {
+    if (authorised && authorised.length > 0) {
       guarded = <AuthGuard component={component} role={authorised} />;
     }
     return guarded;

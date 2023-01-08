@@ -34,7 +34,7 @@ export default function AuthGuard(props) {
       }
 
       if (isTokenValid) {
-        if (token.role !== role) {
+        if (!role.includes(token.role)) {
           navigate("/login");
         }
       } else {
@@ -47,8 +47,6 @@ export default function AuthGuard(props) {
     } else {
       navigate("/login");
     }
-
-    console.log("Auth guard");
   }, [token]);
 
   return component;
