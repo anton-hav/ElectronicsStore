@@ -13,6 +13,7 @@ import Details, { loader as detailsLoader } from "./pages/details.page";
 import Cart from "./pages/cart.page";
 import Login from "./pages/login.page";
 import DashboardPage from "./pages/dashboard.page";
+import OrdersPage from "./pages/orders.page";
 // Import utils
 import store from "./storage/store";
 import Register from "./pages/register.page";
@@ -63,7 +64,16 @@ const router = createBrowserRouter([
           {
             path: "/dashboard",
             element: (
-              <RootGuard component=<DashboardPage /> authorised="Admin" />
+              <RootGuard component=<DashboardPage /> authorised={["Admin"]} />
+            ),
+          },
+          {
+            path: "/orders",
+            element: (
+              <RootGuard
+                component=<OrdersPage />
+                authorised={["User", "Admin"]}
+              />
             ),
           },
         ],
