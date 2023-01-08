@@ -20,7 +20,7 @@ import "./account-tools.component.css";
 
 const _userService = new UserService();
 
-const authorizedSettings = ["Logout"]; // Account.. Dashboard
+const authorizedSettings = ["Orders", "Logout"]; // Account.. Dashboard
 const adminSettings = ["Dashboard", ...authorizedSettings];
 const nonAuthorizedSettings = ["Login", "Register"];
 
