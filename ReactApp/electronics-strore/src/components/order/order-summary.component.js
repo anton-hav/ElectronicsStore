@@ -9,6 +9,8 @@ import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
+// Import custom components
+import OrderSummaryModalInfo from "./order-summary-modal-info.component";
 // Import services
 import UserService from "../../services/user.service";
 import PurchaseService from "../../services/purchase.service";
@@ -23,11 +25,19 @@ import "./order-summary.component.css";
 const _userService = new UserService();
 const _purchaseService = new PurchaseService();
 
+const cardStyles = [
+  "card-created",
+  "card-confirmed",
+  "card-delivered",
+  "card-cancelled",
+];
+
 export default function OrderSummary(props) {
   const { order, onStatusChange } = props;
   const { token, setToken } = useToken();
   const [user, setUser] = useState();
   const [purchases, setPurchases] = useState([]);
+  const [openModal, setOpenModal] = useState(false);
 
   const [status, setStatus] = useState(order.status);
 
@@ -84,11 +94,6 @@ export default function OrderSummary(props) {
           }
         }
       }
-
-      //   const data = await _purchaseService.getPurchasesByOrderId(
-      //     token.accessToken,
-      //     order.id
-      //   );
       setPurchases(data);
     };
 
@@ -111,14 +116,28 @@ export default function OrderSummary(props) {
     onStatusChange(order, newStatus);
   };
 
+  /**
+   * Handles click event on the order card.
+   */
+  const handleOnClick = () => {
+    setOpenModal(true);
+  };
+
+  /**
+   * Handles close event of the modal dialog.
+   */
+  const handleOnCloseModal = () => {
+    setOpenModal(false);
+  };
+
   return (
     <Box className="order-wrapper">
-      <Card className="card">
+      <Card className={cardStyles[order.status]}>
         <Box className="info">
-          <CardActionArea>
+          <CardActionArea onClick={handleOnClick}>
             <CardContent>
               <Box className="summary">
-                <Typography
+                {/* <Typography
                   sx={{ textAlign: "left" }}
                   gutterBottom
                   variant="body2"
@@ -126,7 +145,7 @@ export default function OrderSummary(props) {
                   color="text.secondary"
                 >
                   ID: {order.id}
-                </Typography>
+                </Typography> */}
                 <Typography
                   sx={{ textAlign: "left" }}
                   gutterBottom
@@ -134,7 +153,9 @@ export default function OrderSummary(props) {
                   component="div"
                   color="text.secondary"
                 >
-                  created: {order.dateTimeOfCreate.toString().split("G")[0]}
+                  Created:
+                  <br />
+                  {order.dateTimeOfCreate.toString().split("G")[0]}
                 </Typography>
                 <Typography
                   sx={{ textAlign: "left" }}
@@ -188,6 +209,13 @@ export default function OrderSummary(props) {
           </CardActions>
         </Box>
       </Card>
+      <OrderSummaryModalInfo
+        open={openModal}
+        order={order}
+        owner={user}
+        purchases={purchases}
+        onClose={handleOnCloseModal}
+      />
     </Box>
   );
 }

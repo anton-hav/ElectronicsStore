@@ -39,7 +39,7 @@ export default class PurchaseDto {
   static fromResponse(response) {
     return new PurchaseDto(
       response.id,
-      response.goodsId,
+      response.itemId,
       response.orderId,
       response.count,
       response.cost

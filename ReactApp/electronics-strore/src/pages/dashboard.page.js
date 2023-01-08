@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
+import Typography from "@mui/material/Typography";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import AssignmentIcon from "@mui/icons-material/Assignment";
 import Snackbar from "@mui/material/Snackbar";
@@ -71,15 +72,23 @@ export default function DashboardPage() {
 
   return (
     <Box>
+      <Typography
+        variant="h4"
+        marginLeft={2}
+        gutterBottom
+        sx={{ textAlign: "left" }}
+      >
+        Dashboard.
+      </Typography>
       <Grid container>
-        <Grid item xs={3}>
+        <Grid item xs={2}>
           <DashboardAsideMenu
             menuItems={menuItems}
             selected={selectedMenu}
             onClick={handleAsideMenuClick}
           />
         </Grid>
-        <Grid item xs={9}>
+        <Grid item xs={10}>
           <PanelItem />
         </Grid>
       </Grid>
