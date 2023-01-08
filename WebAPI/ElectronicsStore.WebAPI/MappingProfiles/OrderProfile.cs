@@ -29,6 +29,10 @@ public class OrderProfile : Profile
                 opt
                     => opt.MapFrom(model => OrderStatus.Created));
 
+        CreateMap<PatchOrderRequestModel, OrderDto>();
+
         CreateMap<OrderDto, GetOrderResponseModel>();
+
+        
     }
 }

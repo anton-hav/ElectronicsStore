@@ -31,7 +31,7 @@ export default class CategoryDto {
   /**
    * Mapping from api response (as an json) to CategoryDto.
    * @param {*} response - response object as an JSON.
-   * @returns
+   * @returns a new CategoryDto object
    */
   static fromResponse(response) {
     return new CategoryDto(

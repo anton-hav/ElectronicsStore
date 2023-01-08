@@ -26,7 +26,7 @@ export default function DashboardAsideMenu(props) {
 
   return (
     <Box>
-      <AsideMenuSection component={menu} title={"Dashboard menu"} />
+      <AsideMenuSection component={menu} title={"Menu"} />
     </Box>
   );
 }

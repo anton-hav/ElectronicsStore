@@ -260,14 +260,12 @@ export default function Home() {
 
   const handleSearchFilterChange = (searchFilter) => {
     console.log(searchFilter);
-    // let relativePath = generateUrlPathSearch(searchFilter);
     let relativePath = generateUrlPath(searchFilter);
     navigate(relativePath);
   };
 
   const handleAsideMenuFiltersChange = (priceFilter, brandFilter) => {
     console.log("Filters changed");
-    // let relativePath = generateUrlPathAside(priceFilter, brandFilter);
     let relativePath = generateUrlPath(priceFilter, brandFilter);
     navigate(relativePath);
   };
@@ -277,13 +275,11 @@ export default function Home() {
    * @param {CategoryParameters} categoryFilter - category filter parameters.
    */
   const handleCategoryChange = (categoryFilter) => {
-    // let relativePath = generateUrlPathCategory(categoryFilter);
     let relativePath = generateUrlPath(categoryFilter);
     navigate(relativePath);
   };
 
   const handlePaginationChange = (paginationParameters) => {
-    // let relativePath = generateUrlPathPagination(paginationParameters);
     let relativePath = generateUrlPath(paginationParameters);
     navigate(relativePath);
   };

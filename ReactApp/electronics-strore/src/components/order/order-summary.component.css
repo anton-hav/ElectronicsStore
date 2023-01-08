@@ -1,0 +1,20 @@
+.order-wrapper {
+    margin: 5px;
+    
+}
+
+.order-wrapper .card-created {
+    background-color:rgba(255, 255, 0, 0.255);
+}
+
+.order-wrapper .card-confirmed {
+    background-color:rgba(0, 128, 0, 0.255);
+}
+
+.order-wrapper .card-delivered {
+    background-color:rgba(100, 148, 237, 0.255);
+}
+
+.order-wrapper .card-cancelled {
+    background-color:rgba(255, 0, 0, 0.255);
+}

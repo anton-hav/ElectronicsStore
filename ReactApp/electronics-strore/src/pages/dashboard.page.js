@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
+import Typography from "@mui/material/Typography";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import AssignmentIcon from "@mui/icons-material/Assignment";
 import Snackbar from "@mui/material/Snackbar";
@@ -8,6 +9,7 @@ import MuiAlert from "@mui/material/Alert";
 // Import custom components
 import DashboardAsideMenu from "../components/dashboard-aside-menu/dashboard-aside-menu.component";
 import AdminPanelMainItem from "../components/admin-panel-main/admin-panel-main.component";
+import AdminPanelOrdersItem from "../components/admin-panel-orders/admin-panel-orders.component";
 // Import custom types and utils
 import { formatter } from "../utils/formatter";
 
@@ -64,21 +66,29 @@ export default function DashboardPage() {
         />
       );
     } else {
-      return <Box>Welcom panel!!!</Box>;
+      return <AdminPanelOrdersItem />;
     }
   };
 
   return (
     <Box>
+      <Typography
+        variant="h4"
+        marginLeft={2}
+        gutterBottom
+        sx={{ textAlign: "left" }}
+      >
+        Dashboard.
+      </Typography>
       <Grid container>
-        <Grid item xs={3}>
+        <Grid item xs={2}>
           <DashboardAsideMenu
             menuItems={menuItems}
             selected={selectedMenu}
             onClick={handleAsideMenuClick}
           />
         </Grid>
-        <Grid item xs={9}>
+        <Grid item xs={10}>
           <PanelItem />
         </Grid>
       </Grid>

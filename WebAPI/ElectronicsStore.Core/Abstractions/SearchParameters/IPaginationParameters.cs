@@ -8,7 +8,6 @@ public interface IPaginationParameters
     /// <summary>
     ///     Search parameter that represents the page number.
     /// </summary>
-    /// 
     int PageNumber { get; set; }
 
     /// <summary>

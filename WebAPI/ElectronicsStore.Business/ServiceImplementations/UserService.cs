@@ -28,6 +28,19 @@ public class UserService : IUserService
         _roleService = roleService;
     }
 
+    /// <inheritdoc />
+    /// <exception cref="ArgumentException"></exception>
+    public async Task<UserDto> GetUserByIdAsync(Guid id)
+    {
+        var entity = await _unitOfWork.Users.GetByIdAsync(id);
+
+        if (entity == null)
+            throw new ArgumentException("Failed to find record in the database that match the specified id. ",
+                nameof(id));
+
+        var dto = _mapper.Map<UserDto>(entity);
+        return dto;
+    }
 
     public async Task<IEnumerable<UserDto>> GetAllUsersAsync()
     {

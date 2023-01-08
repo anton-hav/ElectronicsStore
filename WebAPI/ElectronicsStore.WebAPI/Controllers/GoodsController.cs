@@ -26,7 +26,7 @@ public class GoodsController : ControllerBase
     }
 
     /// <summary>
-    ///     Get goods note from storage with specified id.
+    ///     Get goods note with specified id from the storage.
     /// </summary>
     /// <param name="id">a goods unique identifier as a <see cref="Guid" /></param>
     /// <returns>An item with specified Id</returns>

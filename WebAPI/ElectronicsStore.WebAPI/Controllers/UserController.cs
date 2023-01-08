@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using ElectronicsStore.Business.ServiceImplementations;
 using ElectronicsStore.Core.Abstractions.Services;
 using ElectronicsStore.Core.DataTransferObjects;
 using ElectronicsStore.WebAPI.Models.Requests;
@@ -31,6 +32,39 @@ public class UserController : ControllerBase
         _roleService = roleService;
         _mapper = mapper;
         _jwtUtil = jwtUtil;
+    }
+
+    /// <summary>
+    ///     Get user information with specified id from the storage.
+    /// </summary>
+    /// <param name="id">an user unique identifier as a <see cref="Guid" /></param>
+    /// <returns>An user with specified Id</returns>
+    /// <response code="200">Returns an user corresponding to the specified identifier.</response>
+    /// <response code="404">Failed to find record in the database that match the specified id.</response>
+    /// <response code="500">Unexpected error on the server side.</response>
+    [HttpGet("{id}")]
+    [Authorize(Roles = "Admin")]
+    [ProducesResponseType(typeof(GetUserResponseModel), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(Nullable), StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> GetUserById(Guid id)
+    {
+        try
+        {
+            var item = await _userService.GetUserByIdAsync(id);
+            var response = _mapper.Map<GetUserResponseModel>(item);
+            return Ok(response);
+            
+        }
+        catch (ArgumentException ex)
+        {
+            Log.Warning($"{ex.Message}. {Environment.NewLine} {ex.StackTrace}");
+            return NotFound(new ErrorModel { Message = ex.Message });
+        }
+        catch (Exception ex)
+        {
+            Log.Error($"{ex.Message}. {Environment.NewLine} {ex.StackTrace}");
+            return StatusCode(500, new ErrorModel { Message = "Unexpected error on the server side." });
+        }
     }
 
     // TEST ENDPOINT
