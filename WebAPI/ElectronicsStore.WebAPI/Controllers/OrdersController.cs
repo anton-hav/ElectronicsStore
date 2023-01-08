@@ -82,11 +82,14 @@ public class OrdersController : ControllerBase
 
             // The administrator can view information about any orders.
             // Users are only allowed to receive information about their orders.
-            var isAdmin = _userManager.IsAdmin();
-            if (!isAdmin)
+            if (model.UserId == null)
             {
-                var userId = _userManager.GetUserId();
-                searchParams.User.UserId = userId;
+                var isAdmin = _userManager.IsAdmin();
+                if (!isAdmin)
+                {
+                    var userId = _userManager.GetUserId();
+                    searchParams.User.UserId = userId;
+                }
             }
 
             var orders = await _orderService.GetOrdersBySearchParametersAsync(searchParams);
