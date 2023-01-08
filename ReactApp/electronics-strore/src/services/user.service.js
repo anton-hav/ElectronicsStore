@@ -5,12 +5,14 @@ import TokenDto from "../types/dto/token.dto";
 import UserDto from "../types/dto/user.dto";
 import { environment } from "../environment/environment";
 import UnauthorizedError from "../types/errors/unauthorized.error";
+import Logger from "../utils/logger";
 
 export default class UserService {
   constructor() {
     this._userEndpoint = environment.userEndpoint;
     this._tokenEndpoints = environment.tokenEndpoints;
     this._apiService = new ApiService();
+    this._logger = new Logger();
   }
 
   /**

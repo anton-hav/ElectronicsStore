@@ -33,7 +33,9 @@ export default function AdminPanelOrdersItem(props) {
             token.refreshToken
           );
           if (newToken) {
-            data = await _orderSheetService.getOrdersFromApi(token.accessToken);
+            data = await _orderSheetService.getOrdersFromApi(
+              newToken.accessToken
+            );
             setToken(newToken);
           }
         }

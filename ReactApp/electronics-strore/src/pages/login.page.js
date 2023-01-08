@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 // Import custom components
 import LoginComponent from "../components/login/login.component";
@@ -11,7 +11,7 @@ import useToken from "../utils/hooks/useToken";
 const _userService = new UserService();
 
 export default function Login() {
-  const { setToken } = useToken();
+  const { token, setToken } = useToken();
   const [email, setEmail] = useState();
   const [password, setPassword] = useState();
 
