@@ -5,6 +5,5 @@
 /// </summary>
 public class GetOrdersRequestModel
 {
-    // Right now the model is empty.
-    // But it will be changed if you add some filters to search for orders.
+    public Guid? UserId { get; set; }
 }

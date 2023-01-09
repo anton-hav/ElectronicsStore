@@ -20,7 +20,7 @@ public class OrdersSearchModelProfile : Profile
                 opt
                     => opt.MapFrom(request => new UserSearchParameters()
                     {
-                        UserId = null,
+                        UserId = request.UserId,
                     }));
     }
 }

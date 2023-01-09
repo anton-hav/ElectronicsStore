@@ -79,9 +79,9 @@ export default function OrderPurchasesTable(props) {
                 </TableCell>
               </TableRow>
             ))}
-            <TableRow component="div">
-              <TableCell rowSpan={3} component="div" />
-              <TableCell align="right" colSpan={2} component="div">
+            <TableRow>
+              <TableCell rowSpan={3} />
+              <TableCell align="right" colSpan={2}>
                 Total
               </TableCell>
               <TableCell align="right" component="div">
