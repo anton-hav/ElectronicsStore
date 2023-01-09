@@ -67,6 +67,9 @@ export default function OrdersPage() {
     setStatusFilter(newStatus);
   };
 
+  /**
+   * Encapsulates the constitution of the filter component
+   */
   const statusFilterBar = (
     <Box sx={{ minWidth: 120, m: 1 }}>
       <FormControl fullWidth size="small">
@@ -113,9 +116,11 @@ export default function OrdersPage() {
         <Grid item xs={9}>
           <Box>
             {filteredOrder.length > 0 ? (
-              filteredOrder.map((order) => (
-                <OrderHistoryItem order={order} key={order.id} />
-              ))
+              filteredOrder
+                .sort((a, b) => -(a.dateTimeOfCreate - b.dateTimeOfCreate))
+                .map((order) => (
+                  <OrderHistoryItem order={order} key={order.id} />
+                ))
             ) : (
               <Typography
                 variant="body1"
