@@ -4,40 +4,277 @@
         <name>ElectronicsStore.WebAPI</name>
     </assembly>
     <members>
+        <member name="T:ElectronicsStore.WebAPI.Controllers.BrandsController">
+            <summary>
+            Controller that provides API endpoints for the Brands resource.
+            </summary>
+        </member>
+        <member name="M:ElectronicsStore.WebAPI.Controllers.BrandsController.GetBrands(ElectronicsStore.WebAPI.Models.Requests.GetBrandsRequestModel)">
+            <summary>
+                Get brands from the storage.
+            </summary>
+            <returns>all brands that match the search model.</returns>
+            <response code="200">Returns all brands that match the search model.</response>
+            <response code="400">Request contains null object or invalid object type.</response>
+            <response code="500">Unexpected error on the server side.</response>
+        </member>
+        <member name="T:ElectronicsStore.WebAPI.Controllers.CategoriesController">
+            <summary>
+                Controller that provides API endpoints for the Category resource.
+            </summary>
+        </member>
+        <member name="M:ElectronicsStore.WebAPI.Controllers.CategoriesController.GetCategoryById(System.Guid)">
+            <summary>
+                Get a category from storage with specified id.
+            </summary>
+            <param name="id">a category unique identifier as a <see cref="T:System.Guid" /></param>
+            <returns>A category with specified Id</returns>
+            <response code="200">Returns a category corresponding to the specified identifier.</response>
+            <response code="404">Failed to find record in the database that match the specified id.</response>
+            <response code="500">Unexpected error on the server side.</response>
+        </member>
+        <member name="M:ElectronicsStore.WebAPI.Controllers.CategoriesController.GetCategories(ElectronicsStore.WebAPI.Models.Requests.GetCategoriesRequestModel)">
+            <summary>
+                Get categories from storage.
+            </summary>
+            <param name="model">category request model</param>
+            <returns>child categories for the requested category id</returns>
+            <response code="200">Returns all categories.</response>
+            <response code="500">Unexpected error on the server side.</response>
+        </member>
+        <member name="M:ElectronicsStore.WebAPI.Controllers.CategoriesController.AddCategory(ReadingList.WebAPI.Models.Requests.AddOrUpdateCategoryRequestModel)">
+            <summary>
+                Add a new category to storage.
+            </summary>
+            <param name="model">a category</param>
+            <returns>A newly created category</returns>
+            <response code="201">Returns the newly created category</response>
+            <response code="400">Request contains null object or invalid object type</response>
+            <response code="409">The same entry already exists in the storage.</response>
+            <response code="500">Unexpected error on the server side.</response>
+        </member>
+        <member name="M:ElectronicsStore.WebAPI.Controllers.CategoriesController.UpdateCategory(System.Guid,ReadingList.WebAPI.Models.Requests.AddOrUpdateCategoryRequestModel)">
+            <summary>
+                Update or replace a category with specified Id in storage.
+            </summary>
+            <param name="id">a category unique identifier as a <see cref="T:System.Guid" /></param>
+            <param name="model">a category used for update</param>
+            <returns>A category with specified Id.</returns>
+            <response code="200">Returns the updated category</response>
+            <response code="400">Request contains null object or invalid object type</response>
+            <response code="409">
+                Fail to find a record with the specified Id in the storage
+                or the entry with the same property already exists in the storage.
+            </response>
+            <response code="500">Unexpected error on the server side.</response>
+        </member>
+        <member name="M:ElectronicsStore.WebAPI.Controllers.CategoriesController.PatchCategory(System.Guid,ReadingList.WebAPI.Models.Requests.AddOrUpdateCategoryRequestModel)">
+            <summary>
+                Patch a category with specified Id in storage.
+            </summary>
+            <param name="id">a category unique identifier as a <see cref="T:System.Guid" /></param>
+            <param name="model">a category used for patching</param>
+            <returns>A category with specified Id.</returns>
+            <response code="200">Returns the updated category</response>
+            <response code="400">Request contains null object or invalid object type</response>
+            <response code="409">
+                Fail to find a record with the specified Id in the storage
+                or the entry with the same property already exists in the storage.
+            </response>
+            <response code="500">Unexpected error on the server side.</response>
+        </member>
+        <member name="M:ElectronicsStore.WebAPI.Controllers.CategoriesController.DeleteCategory(System.Guid)">
+            <summary>
+                Delete a category with specified Id from the storage.
+            </summary>
+            <param name="id">a category unique identifier as a <see cref="T:System.Guid" /></param>
+            <returns></returns>
+            <response code="204">Successful deletion</response>
+            <response code="400">Request contains null object or invalid object type</response>
+            <response code="409">
+                Fail to find a record with the specified Id in the storage
+                or the entry with the same property already exists in the storage.
+            </response>
+            <response code="500">Unexpected error on the server side.</response>
+        </member>
+        <member name="M:ElectronicsStore.WebAPI.Controllers.CategoriesController.CheckCategoryForEditAsync(System.Guid,System.String,System.Nullable{System.Guid})">
+            <summary>
+                Validate a category model for update.
+            </summary>
+            <param name="id">a unique identifier that defines the category to be updated </param>
+            <param name="categoryName">a category name</param>
+            <param name="parentId">an unique identifier of the parent category</param>
+            <returns>A boolean</returns>
+            <exception cref="T:System.ArgumentNullException">If the id is empty.</exception>
+            <exception cref="T:System.ArgumentException">If the same entry already exists in the storage.</exception>
+        </member>
+        <member name="M:ElectronicsStore.WebAPI.Controllers.CategoriesController.IsCategoryTheSameAsync(System.Guid,System.String,System.Nullable{System.Guid})">
+            <summary>
+                Check if the existing category is the same.
+            </summary>
+            <remarks>
+                This check is necessary to ensure idempotent behavior of the PUT method.
+            </remarks>
+            <param name="id">category unique identifier</param>
+            <param name="categoryName">category name</param>
+            <param name="parentId">an unique identifier of the parent category</param>
+            <returns></returns>
+        </member>
+        <member name="T:ElectronicsStore.WebAPI.Controllers.GoodsController">
+            <summary>
+            Controller that provides API endpoints for the Item resource.
+            </summary>
+        </member>
         <member name="M:ElectronicsStore.WebAPI.Controllers.GoodsController.GetItemById(System.Guid)">
             <summary>
-            Get goods note from storage with specified id.
+                Get goods note with specified id from the storage.
             </summary>
-            <param name="id">a goods unique identifier as a <see cref="T:System.Guid"/></param>
+            <param name="id">a goods unique identifier as a <see cref="T:System.Guid" /></param>
             <returns>An item with specified Id</returns>
             <response code="200">Returns an item corresponding to the specified identifier.</response>
             <response code="404">Failed to find record in the database that match the specified id.</response>
             <response code="500">Unexpected error on the server side.</response>
         </member>
-        <member name="M:ElectronicsStore.WebAPI.Controllers.GoodsController.GetGoods">
+        <member name="M:ElectronicsStore.WebAPI.Controllers.GoodsController.GetGoods(ElectronicsStore.WebAPI.Models.Requests.GetGoodsRequestModel)">
             <summary>
-            Get goods from storage.
+                Get goods from the storage.
             </summary>
-            <returns>all goods</returns>
-            <response code="200">Returns all goods.</response>
+            <returns>all goods that match the search model</returns>
+            <response code="200">Returns all goods that match the search model.</response>
+            <response code="400">Request contains null object or invalid object type.</response>
             <response code="500">Unexpected error on the server side.</response>
         </member>
-        <member name="T:ElectronicsStore.WebAPI.Controllers.OrderSheetController">
+        <member name="T:ElectronicsStore.WebAPI.Controllers.GoodsCountController">
             <summary>
-            API controller for the order sheet resource.
+                Controller that provides API endpoints for the GoodsCount resource.
             </summary>
         </member>
-        <member name="M:ElectronicsStore.WebAPI.Controllers.OrderSheetController.CreateNewOrderList">
+        <member name="M:ElectronicsStore.WebAPI.Controllers.GoodsCountController.GetGoodsCount(ElectronicsStore.WebAPI.Models.Requests.GetGoodsCountRequestModel)">
             <summary>
-            Create new order list.
+                Get item count specified search model from storage.
+            </summary>
+            <param name="model"></param>
+            <returns>number of items matching search model.</returns>
+            <response code="200">Returns a number of items matching search model.</response>
+            <response code="400">Request contains null object or invalid object type.</response>
+            <response code="500">Unexpected error on the server side.</response>
+        </member>
+        <member name="T:ElectronicsStore.WebAPI.Controllers.MaxGoodsPriceController">
+            <summary>
+            Controller that provides API endpoints for the max price of goods in the storage.
+            </summary>
+        </member>
+        <member name="M:ElectronicsStore.WebAPI.Controllers.MaxGoodsPriceController.GetGoodsCount(ElectronicsStore.WebAPI.Models.Requests.GetMaxGoodsPriceRequestModel)">
+            <summary>
+                Get item count specified search model from storage.
+            </summary>
+            <param name="model"></param>
+            <returns>number of items matching search model.</returns>
+            <response code="200">Returns a number of items matching search model.</response>
+            <response code="400">Request contains null object or invalid object type.</response>
+            <response code="500">Unexpected error on the server side.</response>
+        </member>
+        <member name="T:ElectronicsStore.WebAPI.Controllers.OrdersController">
+            <summary>
+                API controller for the order sheet resource.
+            </summary>
+        </member>
+        <member name="M:ElectronicsStore.WebAPI.Controllers.OrdersController.GetOrderById(System.Guid)">
+            <summary>
+                Get an order with specified id from the storage.
+            </summary>
+            <param name="id">an order unique identifier as a <see cref="T:System.Guid" /></param>
+            <returns>An order with specified Id</returns>
+            <response code="200">Returns an order corresponding to the specified identifier.</response>
+            <response code="404">Failed to find record in the database that match the specified id.</response>
+            <response code="500">Unexpected error on the server side.</response>
+        </member>
+        <member name="M:ElectronicsStore.WebAPI.Controllers.OrdersController.GetOrders(ElectronicsStore.WebAPI.Models.Requests.GetOrdersRequestModel)">
+            <summary>
+                Get orders from the storage.
+            </summary>
+            <returns>all orders that match the search model</returns>
+            <response code="200">Returns all orders that match the search model.</response>
+            <response code="400">Request contains null object or invalid object type.</response>
+            <response code="500">Unexpected error on the server side.</response>
+        </member>
+        <member name="M:ElectronicsStore.WebAPI.Controllers.OrdersController.CreateNewOrder(ElectronicsStore.WebAPI.Models.Requests.AddOrderRequestModel)">
+            <summary>
+                Create new order list.
+            </summary>
+            <returns>A newly created order.</returns>
+            <response code="200">Returns a newly created order.</response>
+            <response code="401">Authorization failed, access token is invalid or expired</response>
+            <response code="500">Unexpected error on the server side.</response>
+        </member>
+        <member name="M:ElectronicsStore.WebAPI.Controllers.OrdersController.PatchBookNote(System.Guid,ElectronicsStore.WebAPI.Models.Requests.PatchOrderRequestModel)">
+            <summary>
+                Patch an order with specified Id in the storage.
+            </summary>
+            <param name="id">an order unique identifier as a <see cref="T:System.Guid" /></param>
+            <param name="model">an order used for patching</param>
+            <returns>An order with specified Id.</returns>
+            <response code="200">Returns the updated order</response>
+            <response code="400">Request contains null object or invalid object type</response>
+            <response code="409">
+                Fail to find a record with the specified Id in the storage
+                or the entry with the same property already exists in the storage.
+            </response>
+            <response code="500">Unexpected error on the server side.</response>
+        </member>
+        <member name="M:ElectronicsStore.WebAPI.Controllers.OrdersController.CheckOrderForEditAsync(System.Guid,System.Guid,System.DateTime)">
+            <summary>
+                Validate an order model for update.
+            </summary>
+            <param name="id">a unique identifier that defines the order to be updated </param>
+            <param name="userId">an user unique identifier</param>
+            <param name="creationDate">a date and time of the order creation</param>
+            <returns>A boolean</returns>
+            <exception cref="T:System.ArgumentNullException">If the id is empty.</exception>
+            <exception cref="T:System.ArgumentException">If the same entry already exists in the storage.</exception>
+        </member>
+        <member name="M:ElectronicsStore.WebAPI.Controllers.OrdersController.IsOrderTheSameAsync(System.Guid,System.Guid,System.DateTime)">
+            <summary>
+                Check if the existing order is the same.
             </summary>
             <remarks>
-            Warning. The endpoint sends a message instead of the created resource.
-            It is a requirement of the specification. The endpoint behavior
-            perhaps will change in the future.
+                This check is necessary to ensure idempotent behavior of the PUT method.
             </remarks>
-            <returns>An anonymous object contains the thanksgiving message</returns>
-            <response code="200">Returns a thanksgiving message</response>
+            <param name="id">order unique identifier</param>
+            <param name="userId">user unique identifier</param>
+            <param name="creationDate">a date and time of the order creation</param>
+            <returns>A boolean</returns>
+        </member>
+        <member name="T:ElectronicsStore.WebAPI.Controllers.PurchasesController">
+            <summary>
+                API controller for the purchases resource.
+            </summary>
+        </member>
+        <member name="M:ElectronicsStore.WebAPI.Controllers.PurchasesController.GetPurchaseById(System.Guid)">
+            <summary>
+                Get a purchase with specified id from the storage.
+            </summary>
+            <param name="id">a purchase unique identifier as a <see cref="T:System.Guid" /></param>
+            <returns>A purchase that matches the id</returns>
+            <response code="200">Returns  a purchase corresponding to the specified identifier.</response>
+            <response code="404">Failed to find record in the database that match the specified id.</response>
+            <response code="500">Unexpected error on the server side.</response>
+        </member>
+        <member name="M:ElectronicsStore.WebAPI.Controllers.PurchasesController.GetPurchases(ElectronicsStore.WebAPI.Models.Requests.GetPurchasesRequestModel)">
+            <summary>
+                Get purchases from the storage.
+            </summary>
+            <returns>all purchases that match the search model</returns>
+            <response code="200">Returns all purchases that match the search model.</response>
+            <response code="400">Request contains null object or invalid object type.</response>
+            <response code="500">Unexpected error on the server side.</response>
+        </member>
+        <member name="M:ElectronicsStore.WebAPI.Controllers.PurchasesController.CreateNewPurchase(ElectronicsStore.WebAPI.Models.Requests.AddPurchaseRequestModel)">
+            <summary>
+                Create new purchase.
+            </summary>
+            <returns>A newly created purchase.</returns>
+            <response code="200">Returns a newly created purchase.</response>
             <response code="401">Authorization failed, access token is invalid or expired</response>
             <response code="500">Unexpected error on the server side.</response>
         </member>
@@ -71,6 +308,35 @@
             <response code="400">Request contains null object or invalid object type</response>
             <response code="500">Unexpected error on the server side.</response>
         </member>
+        <member name="M:ElectronicsStore.WebAPI.Controllers.TokenController.ValidateToken">
+            <summary>
+            Validate access token.
+            </summary>
+            <returns>true if the token is valid</returns>
+            <response code="200">Returns true if the token is valid</response>
+            <response code="500">Unexpected error on the server side.</response>
+        </member>
+        <member name="T:ElectronicsStore.WebAPI.Controllers.UserController">
+            <summary>
+            Controller that provides API endpoints for the User resource.
+            </summary>
+        </member>
+        <member name="M:ElectronicsStore.WebAPI.Controllers.UserController.GetUserById(System.Guid)">
+            <summary>
+                Get user information with specified id from the storage.
+            </summary>
+            <param name="id">an user unique identifier as a <see cref="T:System.Guid" /></param>
+            <returns>An user with specified Id</returns>
+            <response code="200">Returns an user corresponding to the specified identifier.</response>
+            <response code="404">Failed to find record in the database that match the specified id.</response>
+            <response code="500">Unexpected error on the server side.</response>
+        </member>
+        <member name="M:ElectronicsStore.WebAPI.Controllers.UserController.Get">
+            <summary>
+            Get users
+            </summary>
+            <returns>all users</returns>
+        </member>
         <member name="M:ElectronicsStore.WebAPI.Controllers.UserController.Create(ElectronicsStore.WebAPI.Models.Requests.RegisterUserRequestModel)">
             <summary>
                 Register new user
@@ -81,6 +347,352 @@
             <response code="400">Request contains null object or invalid object type</response>
             <response code="409">The same entry already exists in the storage.</response>
             <response code="500">Unexpected error on the server side.</response>
+        </member>
+        <member name="M:ElectronicsStore.WebAPI.IdentityManagers.UserManager.GetUserId">
+            <inheritdoc />
+        </member>
+        <member name="M:ElectronicsStore.WebAPI.IdentityManagers.UserManager.IsAdmin">
+            <inheritdoc />
+        </member>
+        <member name="M:ElectronicsStore.WebAPI.IdentityManagers.UserManager.IsUser">
+            <inheritdoc />
+        </member>
+        <member name="M:ElectronicsStore.WebAPI.IdentityManagers.UserManager.GetRoleName">
+            <summary>
+                Gets the role for the current access token.
+            </summary>
+            <returns>the role as a string</returns>
+            <exception cref="T:System.Security.Authentication.AuthenticationException"></exception>
+        </member>
+        <member name="T:ElectronicsStore.WebAPI.MappingProfiles.BrandProfile">
+            <summary>
+            Mapper profile for Brand
+            </summary>
+        </member>
+        <member name="M:ElectronicsStore.WebAPI.MappingProfiles.BrandProfile.#ctor">
+            <summary>
+            Mapper profile constructor
+            </summary>
+        </member>
+        <member name="T:ElectronicsStore.WebAPI.MappingProfiles.BrandSearchModelProfile">
+            <summary>
+            Mapper profile for BrandSearchModel
+            </summary>
+        </member>
+        <member name="M:ElectronicsStore.WebAPI.MappingProfiles.BrandSearchModelProfile.#ctor">
+            <summary>
+            Mapper profile constructor
+            </summary>
+        </member>
+        <member name="T:ElectronicsStore.WebAPI.MappingProfiles.CategoryProfile">
+            <summary>
+            Mapper profile for Category
+            </summary>
+        </member>
+        <member name="M:ElectronicsStore.WebAPI.MappingProfiles.CategoryProfile.#ctor">
+            <summary>
+            Mapper profile constructor
+            </summary>
+        </member>
+        <member name="T:ElectronicsStore.WebAPI.MappingProfiles.GoodsCountSearchModelProfile">
+            <summary>
+                Mapper profile for GoodsCountSearchModel
+            </summary>
+        </member>
+        <member name="M:ElectronicsStore.WebAPI.MappingProfiles.GoodsCountSearchModelProfile.#ctor">
+            <summary>
+                Mapper profile constructor
+            </summary>
+        </member>
+        <member name="T:ElectronicsStore.WebAPI.MappingProfiles.GoodsMaxPriceSearchModelProfile">
+            <summary>
+                Mapper profile for GoodsMaxPriceSearchModel
+            </summary>
+        </member>
+        <member name="M:ElectronicsStore.WebAPI.MappingProfiles.GoodsMaxPriceSearchModelProfile.#ctor">
+            <summary>
+                Mapper profile constructor
+            </summary>
+        </member>
+        <member name="T:ElectronicsStore.WebAPI.MappingProfiles.GoodsSearchModelProfile">
+            <summary>
+                Mapper profile for GoodsSearchModel
+            </summary>
+        </member>
+        <member name="M:ElectronicsStore.WebAPI.MappingProfiles.GoodsSearchModelProfile.#ctor">
+            <summary>
+                Mapper profile constructor
+            </summary>
+        </member>
+        <member name="T:ElectronicsStore.WebAPI.MappingProfiles.ItemProfile">
+            <summary>
+            Mapper profile for Item
+            </summary>
+        </member>
+        <member name="M:ElectronicsStore.WebAPI.MappingProfiles.ItemProfile.#ctor">
+            <summary>
+            Mapper profile constructor
+            </summary>
+        </member>
+        <member name="T:ElectronicsStore.WebAPI.MappingProfiles.OrderProfile">
+            <summary>
+            Mapper profile for Order.
+            </summary>
+        </member>
+        <member name="M:ElectronicsStore.WebAPI.MappingProfiles.OrderProfile.#ctor">
+            <summary>
+            Mapper profile constructor.
+            </summary>
+        </member>
+        <member name="T:ElectronicsStore.WebAPI.MappingProfiles.OrdersSearchModelProfile">
+            <summary>
+                Mapper profile for OrdersSearchModel
+            </summary>
+        </member>
+        <member name="M:ElectronicsStore.WebAPI.MappingProfiles.OrdersSearchModelProfile.#ctor">
+            <summary>
+                Mapper profile constructor
+            </summary>
+        </member>
+        <member name="T:ElectronicsStore.WebAPI.MappingProfiles.ProductProfile">
+            <summary>
+            Mapper profile for Product
+            </summary>
+        </member>
+        <member name="M:ElectronicsStore.WebAPI.MappingProfiles.ProductProfile.#ctor">
+            <summary>
+            Mapper profile constructor
+            </summary>
+        </member>
+        <member name="T:ElectronicsStore.WebAPI.MappingProfiles.PurchaseProfile">
+            <summary>
+            Mapper profile for Purchase
+            </summary>
+        </member>
+        <member name="M:ElectronicsStore.WebAPI.MappingProfiles.PurchaseProfile.#ctor">
+            <summary>
+            Mapper profile constructor
+            </summary>
+        </member>
+        <member name="T:ElectronicsStore.WebAPI.MappingProfiles.PurchasesSearchModelProfile">
+            <summary>
+                Mapper profile for PurchasesSearchModel
+            </summary>
+        </member>
+        <member name="M:ElectronicsStore.WebAPI.MappingProfiles.PurchasesSearchModelProfile.#ctor">
+            <summary>
+                Mapper profile constructor
+            </summary>
+        </member>
+        <member name="T:ElectronicsStore.WebAPI.MappingProfiles.RefreshTokenProfile">
+            <summary>
+            Mapper profile for RefreshToken
+            </summary>
+        </member>
+        <member name="M:ElectronicsStore.WebAPI.MappingProfiles.RefreshTokenProfile.#ctor">
+            <summary>
+            Mapper profile constructor
+            </summary>
+        </member>
+        <member name="T:ElectronicsStore.WebAPI.MappingProfiles.RoleProfile">
+            <summary>
+            Mapper profile for Role
+            </summary>
+        </member>
+        <member name="M:ElectronicsStore.WebAPI.MappingProfiles.RoleProfile.#ctor">
+            <summary>
+            Mapper profile constructor
+            </summary>
+        </member>
+        <member name="T:ElectronicsStore.WebAPI.MappingProfiles.UserProfile">
+            <summary>
+            Mapper profile for User
+            </summary>
+        </member>
+        <member name="M:ElectronicsStore.WebAPI.MappingProfiles.UserProfile.#ctor">
+            <summary>
+            Mapper profile constructor
+            </summary>
+        </member>
+        <member name="T:ElectronicsStore.WebAPI.Models.Requests.AddOrderRequestModel">
+            <summary>
+            Request model to create new order.
+            </summary>
+        </member>
+        <member name="P:ElectronicsStore.WebAPI.Models.Requests.AddOrderRequestModel.DateTimeOfCreate">
+            <summary>
+            Creation date.
+            </summary>
+        </member>
+        <member name="P:ElectronicsStore.WebAPI.Models.Requests.AddOrderRequestModel.UserId">
+            <summary>
+            An unique identifier of the order creator.
+            </summary>
+        </member>
+        <member name="T:ElectronicsStore.WebAPI.Models.Requests.AddPurchaseRequestModel">
+            <summary>
+                Request model to create new purchase.
+            </summary>
+        </member>
+        <member name="P:ElectronicsStore.WebAPI.Models.Requests.AddPurchaseRequestModel.Count">
+            <summary>
+                The count of items.
+                Values between 1 and 999 are allowed.
+            </summary>
+        </member>
+        <member name="P:ElectronicsStore.WebAPI.Models.Requests.AddPurchaseRequestModel.Cost">
+            <summary>
+                Cost of goods at the time of purchase.
+            </summary>
+        </member>
+        <member name="P:ElectronicsStore.WebAPI.Models.Requests.AddPurchaseRequestModel.OrderId">
+            <summary>
+                An unique identifier of the order.
+            </summary>
+        </member>
+        <member name="P:ElectronicsStore.WebAPI.Models.Requests.AddPurchaseRequestModel.ItemId">
+            <summary>
+                An unique identifier of the item.
+            </summary>
+        </member>
+        <member name="T:ElectronicsStore.WebAPI.Models.Requests.GetBrandsRequestModel">
+            <summary>
+            Request model to get brands
+            </summary>
+        </member>
+        <member name="P:ElectronicsStore.WebAPI.Models.Requests.GetBrandsRequestModel.CategoryId">
+            <summary>
+            Search parameter that represents the goods category unique identifier.
+            To ignore the search parameter, the value must be empty.
+            </summary>
+        </member>
+        <member name="P:ElectronicsStore.WebAPI.Models.Requests.GetBrandsRequestModel.From">
+            <summary>
+            Search parameter that represents the "Price From" price filter value.
+            To ignore the search parameter, the value must be empty.
+            </summary>
+        </member>
+        <member name="P:ElectronicsStore.WebAPI.Models.Requests.GetBrandsRequestModel.To">
+            <summary>
+            Search parameter that represents the "Price To" price filter value.
+            To ignore the search parameter, the value must be empty.
+            </summary>
+        </member>
+        <member name="T:ElectronicsStore.WebAPI.Models.Requests.GetCategoriesRequestModel">
+            <summary>
+                Request model to get categories.
+            </summary>
+        </member>
+        <member name="P:ElectronicsStore.WebAPI.Models.Requests.GetCategoriesRequestModel.ParentCategoryId">
+            <summary>
+                The unique identifier of the parent category for the requested records.
+                (For the root category the value should be empty).
+            </summary>
+        </member>
+        <member name="T:ElectronicsStore.WebAPI.Models.Requests.GetGoodsCountRequestModel">
+            <summary>
+            Request model to get items count.
+            </summary>
+        </member>
+        <member name="P:ElectronicsStore.WebAPI.Models.Requests.GetGoodsCountRequestModel.CategoryId">
+            <summary>
+            Search parameter that represents the category of goods.
+            </summary>
+        </member>
+        <member name="P:ElectronicsStore.WebAPI.Models.Requests.GetGoodsCountRequestModel.From">
+            <summary>
+            Search parameter that represents the "Price From" price filter value.
+            To ignore the search parameter, the value must be empty.
+            </summary>
+        </member>
+        <member name="P:ElectronicsStore.WebAPI.Models.Requests.GetGoodsCountRequestModel.To">
+            <summary>
+            Search parameter that represents the "Price To" price filter value.
+            To ignore the search parameter, the value must be empty.
+            </summary>
+        </member>
+        <member name="P:ElectronicsStore.WebAPI.Models.Requests.GetGoodsCountRequestModel.Brands">
+            <summary>
+            Search parameter that represents the brand filter values.
+            To ignore the search parameter, the value must be empty.
+            </summary>
+        </member>
+        <member name="P:ElectronicsStore.WebAPI.Models.Requests.GetGoodsCountRequestModel.Finds">
+            <summary>
+            Search parameter that represents the user search filter as an array of custom search options.
+            </summary>
+        </member>
+        <member name="T:ElectronicsStore.WebAPI.Models.Requests.GetGoodsRequestModel">
+            <summary>
+            Request model to get goods
+            </summary>
+        </member>
+        <member name="P:ElectronicsStore.WebAPI.Models.Requests.GetGoodsRequestModel.PageNumber">
+            <summary>
+            Search parameter that represents the page number.
+            The default value is 1.
+            </summary>
+        </member>
+        <member name="P:ElectronicsStore.WebAPI.Models.Requests.GetGoodsRequestModel.PageSize">
+            <summary>
+            Search parameter that represents the number of goods on the page.
+            The default value is 10. The maximum value is 100. 
+            </summary>
+        </member>
+        <member name="P:ElectronicsStore.WebAPI.Models.Requests.GetGoodsRequestModel.CategoryId">
+            <summary>
+            Search parameter that represents the goods category unique identifier.
+            To ignore the search parameter, the value must be empty.
+            </summary>
+        </member>
+        <member name="P:ElectronicsStore.WebAPI.Models.Requests.GetGoodsRequestModel.From">
+            <summary>
+            Search parameter that represents the "Price From" price filter value.
+            To ignore the search parameter, the value must be empty.
+            </summary>
+        </member>
+        <member name="P:ElectronicsStore.WebAPI.Models.Requests.GetGoodsRequestModel.To">
+            <summary>
+            Search parameter that represents the "Price To" price filter value.
+            To ignore the search parameter, the value must be empty.
+            </summary>
+        </member>
+        <member name="P:ElectronicsStore.WebAPI.Models.Requests.GetGoodsRequestModel.Brands">
+            <summary>
+            Search parameter that represents the brand filter values as an array of brand names.
+            To ignore the search parameter, the value must be empty.
+            </summary>
+        </member>
+        <member name="P:ElectronicsStore.WebAPI.Models.Requests.GetGoodsRequestModel.Finds">
+            <summary>
+            Search parameter that represents the user search filter as an array of custom search options.
+            </summary>
+        </member>
+        <member name="T:ElectronicsStore.WebAPI.Models.Requests.GetMaxGoodsPriceRequestModel">
+            <summary>
+            Request model to get max price of goods.
+            </summary>
+        </member>
+        <member name="P:ElectronicsStore.WebAPI.Models.Requests.GetMaxGoodsPriceRequestModel.CategoryId">
+            <summary>
+            Search parameter that represents the category of goods.
+            </summary>
+        </member>
+        <member name="T:ElectronicsStore.WebAPI.Models.Requests.GetOrdersRequestModel">
+            <summary>
+            Request model to get orders
+            </summary>
+        </member>
+        <member name="T:ElectronicsStore.WebAPI.Models.Requests.GetPurchasesRequestModel">
+            <summary>
+            Request model to get purchases
+            </summary>
+        </member>
+        <member name="P:ElectronicsStore.WebAPI.Models.Requests.GetPurchasesRequestModel.OrderId">
+            <summary>
+            Search parameter that represents the order id.
+            To ignore the search parameter, the value must be empty.
+            </summary>
         </member>
         <member name="T:ElectronicsStore.WebAPI.Models.Requests.LoginUserRequestModel">
             <summary>
@@ -95,6 +707,26 @@
         <member name="P:ElectronicsStore.WebAPI.Models.Requests.LoginUserRequestModel.Password">
             <summary>
             User password
+            </summary>
+        </member>
+        <member name="T:ElectronicsStore.WebAPI.Models.Requests.PatchOrderRequestModel">
+            <summary>
+            Request model to patch order.
+            </summary>
+        </member>
+        <member name="P:ElectronicsStore.WebAPI.Models.Requests.PatchOrderRequestModel.UserId">
+            <summary>
+            An unique identifier of order creator.
+            </summary>
+        </member>
+        <member name="P:ElectronicsStore.WebAPI.Models.Requests.PatchOrderRequestModel.Status">
+            <summary>
+            Status of the order.
+            </summary>
+        </member>
+        <member name="P:ElectronicsStore.WebAPI.Models.Requests.PatchOrderRequestModel.DateTimeOfCreate">
+            <summary>
+            Creation date.
             </summary>
         </member>
         <member name="T:ElectronicsStore.WebAPI.Models.Requests.RefreshTokenRequestModel">
@@ -127,6 +759,29 @@
             Confirmation of the user password
             </summary>
         </member>
+        <member name="T:ElectronicsStore.WebAPI.Models.Responses.CategoryResponseModel">
+            <summary>
+            Response model for the goods category
+            </summary>
+        </member>
+        <member name="P:ElectronicsStore.WebAPI.Models.Responses.CategoryResponseModel.Id">
+            <summary>
+                An unique identifier
+            </summary>
+        </member>
+        <member name="P:ElectronicsStore.WebAPI.Models.Responses.CategoryResponseModel.Name">
+            <summary>
+                Goods category name
+            </summary>
+        </member>
+        <member name="P:ElectronicsStore.WebAPI.Models.Responses.CategoryResponseModel.ParentCategoryId">
+            <summary>
+                The unique identifier of the parent category for the current entry.
+            </summary>
+            <remarks>
+                For the root category the value is null
+            </remarks>
+        </member>
         <member name="T:ElectronicsStore.WebAPI.Models.Responses.ErrorModel">
             <summary>
             Model for returning errors from api
@@ -135,6 +790,21 @@
         <member name="P:ElectronicsStore.WebAPI.Models.Responses.ErrorModel.Message">
             <summary>
             Error message
+            </summary>
+        </member>
+        <member name="T:ElectronicsStore.WebAPI.Models.Responses.GetBrandResponseModel">
+            <summary>
+            Response model for one of brands
+            </summary>
+        </member>
+        <member name="P:ElectronicsStore.WebAPI.Models.Responses.GetBrandResponseModel.Id">
+            <summary>
+            An unique identifier
+            </summary>
+        </member>
+        <member name="P:ElectronicsStore.WebAPI.Models.Responses.GetBrandResponseModel.Name">
+            <summary>
+            Brand name
             </summary>
         </member>
         <member name="T:ElectronicsStore.WebAPI.Models.Responses.GetItemResponseModel">
@@ -172,6 +842,76 @@
             Brand name
             </summary>
         </member>
+        <member name="T:ElectronicsStore.WebAPI.Models.Responses.GetOrderResponseModel">
+            <summary>
+            Order response model
+            </summary>
+        </member>
+        <member name="P:ElectronicsStore.WebAPI.Models.Responses.GetOrderResponseModel.Id">
+            <summary>
+            An unique identifier.
+            </summary>
+        </member>
+        <member name="P:ElectronicsStore.WebAPI.Models.Responses.GetOrderResponseModel.UserId">
+            <summary>
+            An unique identifier of order creator.
+            </summary>
+        </member>
+        <member name="P:ElectronicsStore.WebAPI.Models.Responses.GetOrderResponseModel.Status">
+            <summary>
+            Status of the order.
+            </summary>
+        </member>
+        <member name="P:ElectronicsStore.WebAPI.Models.Responses.GetOrderResponseModel.DateTimeOfCreate">
+            <summary>
+            Creation date.
+            </summary>
+        </member>
+        <member name="T:ElectronicsStore.WebAPI.Models.Responses.GetPurchaseResponseModel">
+            <summary>
+            A purchase response model.
+            </summary>
+        </member>
+        <member name="P:ElectronicsStore.WebAPI.Models.Responses.GetPurchaseResponseModel.Id">
+            <summary>
+                An unique identifier.
+            </summary>
+        </member>
+        <member name="P:ElectronicsStore.WebAPI.Models.Responses.GetPurchaseResponseModel.Count">
+            <summary>
+                The count of the item.
+            </summary>
+        </member>
+        <member name="P:ElectronicsStore.WebAPI.Models.Responses.GetPurchaseResponseModel.Cost">
+            <summary>
+                Cost of goods at the time of purchase.
+            </summary>
+        </member>
+        <member name="P:ElectronicsStore.WebAPI.Models.Responses.GetPurchaseResponseModel.OrderId">
+            <summary>
+                An unique identifier of the order.
+            </summary>
+        </member>
+        <member name="P:ElectronicsStore.WebAPI.Models.Responses.GetPurchaseResponseModel.ItemId">
+            <summary>
+                An unique identifier of the item.
+            </summary>
+        </member>
+        <member name="T:ElectronicsStore.WebAPI.Models.Responses.GetUserResponseModel">
+            <summary>
+            Response model for user
+            </summary>
+        </member>
+        <member name="P:ElectronicsStore.WebAPI.Models.Responses.GetUserResponseModel.Email">
+            <summary>
+            User email
+            </summary>
+        </member>
+        <member name="P:ElectronicsStore.WebAPI.Models.Responses.GetUserResponseModel.RoleId">
+            <summary>
+            AN unique identifier of user role
+            </summary>
+        </member>
         <member name="T:ElectronicsStore.WebAPI.Models.Responses.TokenResponse">
             <summary>
             Model for returning access token from API
@@ -207,6 +947,24 @@
                 Returns the path for log file recording.
             </summary>
             <returns>A string whose value contains a path to the log file</returns>
+        </member>
+        <member name="T:ReadingList.WebAPI.Models.Requests.AddOrUpdateCategoryRequestModel">
+            <summary>
+            Request model to create or update category
+            </summary>
+        </member>
+        <member name="P:ReadingList.WebAPI.Models.Requests.AddOrUpdateCategoryRequestModel.Name">
+            <summary>
+            Category name
+            </summary>
+        </member>
+        <member name="P:ReadingList.WebAPI.Models.Requests.AddOrUpdateCategoryRequestModel.ParentCategoryId">
+            <summary>
+                The unique identifier of the parent category for the current entry.
+            </summary>
+            <remarks>
+                For the root category the value is null
+            </remarks>
         </member>
     </members>
 </doc>

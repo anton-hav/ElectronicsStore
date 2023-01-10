@@ -1,0 +1,13 @@
+.categories-box {   
+    /* flex-grow: 1; */
+    /* max-width: 400px; */
+    display: flex;
+    max-width: 90%;
+    /* overflow-y: hidden; */
+    text-align: left;
+}
+
+.categories-item {
+    /* max-width: 350px; */
+}
+

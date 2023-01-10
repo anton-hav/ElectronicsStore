@@ -1,0 +1,23 @@
+.search-wrapper {
+    margin: 10px;
+    min-width: 350px;
+}
+
+.search-wrapper .search-paper {
+    display: flex;
+    align-items:center;
+    justify-content: space-between;
+    /* width: 400px; */
+    padding-top: 2px;
+    padding-right: 4px;
+}
+
+.search-wrapper .input {
+    display: flex;
+    flex-grow: 1;
+}
+
+.search-wrapper .actions {
+    display: flex;
+    flex-direction: row;
+}

@@ -1,14 +1,18 @@
 // Import services
 import ApiService from "./api.service";
-// Import data transfer objects and utils
+// Import custom types and utils
 import TokenDto from "../types/dto/token.dto";
+import UserDto from "../types/dto/user.dto";
 import { environment } from "../environment/environment";
+import UnauthorizedError from "../types/errors/unauthorized.error";
+import Logger from "../utils/logger";
 
 export default class UserService {
   constructor() {
     this._userEndpoint = environment.userEndpoint;
     this._tokenEndpoints = environment.tokenEndpoints;
     this._apiService = new ApiService();
+    this._logger = new Logger();
   }
 
   /**
@@ -70,5 +74,47 @@ export default class UserService {
     await this._apiService.post(this._tokenEndpoints.revokeToken, {
       refreshToken: refreshToken,
     });
+  }
+
+  async validateToken(accessToken) {
+    try {
+      let response = await this._apiService.post(
+        this._tokenEndpoints.validateToken,
+        {},
+        accessToken
+      );
+      if (response) return true;
+    } catch (error) {
+      if (error instanceof UnauthorizedError) {
+        this._logger.warn(error);
+        throw error;
+      }
+      this._logger.error(error);
+    }
+  }
+
+  /**
+   * Get user information by user id.
+   * @param {string} accessToken - access token
+   * @param {string} userId - user id.
+   * @returns an user information as an UserDto object
+   */
+  async getUserInformationById(accessToken, userId) {
+    try {
+      let response = await this._apiService.getById(
+        this._userEndpoint,
+        userId,
+        accessToken
+      );
+      let user = UserDto.fromResponse(response);
+      user.id = userId;
+      return user;
+    } catch (error) {
+      if (error instanceof UnauthorizedError) {
+        this._logger.warn(error);
+        throw error;
+      }
+      this._logger.error(error);
+    }
   }
 }

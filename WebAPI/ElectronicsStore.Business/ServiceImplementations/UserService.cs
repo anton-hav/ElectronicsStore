@@ -1,7 +1,7 @@
 ﻿using System.Security.Cryptography;
 using System.Text;
 using AutoMapper;
-using ElectronicsStore.Core.Abstractions;
+using ElectronicsStore.Core.Abstractions.Services;
 using ElectronicsStore.Core.DataTransferObjects;
 using ElectronicsStore.Data.Abstractions;
 using ElectronicsStore.DataBase.Entities;
@@ -28,6 +28,19 @@ public class UserService : IUserService
         _roleService = roleService;
     }
 
+    /// <inheritdoc />
+    /// <exception cref="ArgumentException"></exception>
+    public async Task<UserDto> GetUserByIdAsync(Guid id)
+    {
+        var entity = await _unitOfWork.Users.GetByIdAsync(id);
+
+        if (entity == null)
+            throw new ArgumentException("Failed to find record in the database that match the specified id. ",
+                nameof(id));
+
+        var dto = _mapper.Map<UserDto>(entity);
+        return dto;
+    }
 
     public async Task<IEnumerable<UserDto>> GetAllUsersAsync()
     {
@@ -63,7 +76,7 @@ public class UserService : IUserService
 
         if (token != null) return _mapper.Map<UserDto>(token.User);
 
-        throw new ArgumentException("Could not find a token with the specified parameters . ", nameof(refreshToken));
+        throw new ArgumentException("Could not find a token with the specified model . ", nameof(refreshToken));
     }
 
     /// <inheritdoc />

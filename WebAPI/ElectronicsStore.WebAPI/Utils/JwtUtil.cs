@@ -1,7 +1,7 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using ElectronicsStore.Core.Abstractions;
+using ElectronicsStore.Core.Abstractions.Services;
 using ElectronicsStore.Core.DataTransferObjects;
 using ElectronicsStore.WebAPI.Models.Responses;
 using Microsoft.IdentityModel.Tokens;

@@ -12,9 +12,14 @@ import About from "./pages/about.page";
 import Details, { loader as detailsLoader } from "./pages/details.page";
 import Cart from "./pages/cart.page";
 import Login from "./pages/login.page";
+import DashboardPage from "./pages/dashboard.page";
+import OrdersPage from "./pages/orders.page";
 // Import utils
 import store from "./storage/store";
 import Register from "./pages/register.page";
+// Import guards
+import AuthGuard from "./guards/auth.guard";
+import RootGuard from "./guards/root.guard";
 
 const router = createBrowserRouter([
   {
@@ -56,6 +61,21 @@ const router = createBrowserRouter([
             path: "/register",
             element: <Register />,
           },
+          {
+            path: "/dashboard",
+            element: (
+              <RootGuard component=<DashboardPage /> authorised={["Admin"]} />
+            ),
+          },
+          {
+            path: "/orders",
+            element: (
+              <RootGuard
+                component=<OrdersPage />
+                authorised={["User", "Admin"]}
+              />
+            ),
+          },
         ],
       },
     ],
@@ -64,9 +84,9 @@ const router = createBrowserRouter([
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
-  <React.StrictMode>
-    <Provider store={store}>
-      <RouterProvider router={router} />
-    </Provider>
-  </React.StrictMode>
+  //<React.StrictMode>
+  <Provider store={store}>
+    <RouterProvider router={router} />
+  </Provider>
+  //</React.StrictMode>
 );

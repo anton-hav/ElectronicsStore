@@ -7,7 +7,7 @@ using ElectronicsStore.DataBase;
 using ElectronicsStore.Data.Abstractions;
 using ElectronicsStore.Data.Repositories;
 using ElectronicsStore.Business.ServiceImplementations;
-using ElectronicsStore.Core.Abstractions;
+using ElectronicsStore.Core.Abstractions.IdentityManagers;
 using ElectronicsStore.Data.Abstractions.Repositories;
 using ElectronicsStore.Data.Repositories.Repositories;
 using ElectronicsStore.DataBase.Entities;
@@ -15,6 +15,8 @@ using ElectronicsStore.WebAPI.Utils;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using ElectronicsStore.Core.Abstractions.Services;
+using ElectronicsStore.WebAPI.IdentityManagers;
 
 namespace ElectronicsStore.WebAPI
 {
@@ -74,7 +76,7 @@ namespace ElectronicsStore.WebAPI
                                 Id="Bearer"
                             }
                         },
-                        new string[]{"User",}
+                        new string[]{}
                     }
                 });
             });
@@ -102,12 +104,21 @@ namespace ElectronicsStore.WebAPI
                     }
                 );
 
+            builder.Services.AddHttpContextAccessor();
+
             // Add business services
             builder.Services.AddScoped<IUserService, UserService>();
             builder.Services.AddScoped<IRoleService, RoleService>();
             builder.Services.AddScoped<IItemService, ItemService>();
             builder.Services.AddScoped<IRefreshTokenService, RefreshTokenService>();
             builder.Services.AddScoped<IJwtUtil, JwtUtilSha256>();
+            builder.Services.AddScoped<ICategoryService, CategoryService>();
+            builder.Services.AddScoped<IBrandService, BrandService>();
+            builder.Services.AddScoped<IOrderService, OrderService>();
+            builder.Services.AddScoped<IPurchaseService, PurchaseService>();
+
+            // Add identity managers
+            builder.Services.AddScoped<IUserManager, UserManager>();
 
             // Add repositories
             builder.Services.AddScoped<IRepository<User>, Repository<User>>();
@@ -116,6 +127,9 @@ namespace ElectronicsStore.WebAPI
             builder.Services.AddScoped<IRepository<Product>, Repository<Product>>();
             builder.Services.AddScoped<IRepository<Item>, Repository<Item>>();
             builder.Services.AddScoped<IRepository<RefreshToken>, Repository<RefreshToken>>();
+            builder.Services.AddScoped<IRepository<Category>, Repository<Category>>();
+            builder.Services.AddScoped<IRepository<Order>, Repository<Order>>();
+            builder.Services.AddScoped<IRepository<Purchase>, Repository<Purchase>>();
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             var app = builder.Build();

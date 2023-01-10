@@ -1,0 +1,34 @@
+.widget {
+    display: flex;
+    width: 100%;
+    /* min-height: 100px;
+    min-width: 200px; */
+}
+
+.widget .paper {
+    width: 100%;
+    height: 100%;
+    margin: 5px;
+}
+
+.widget .header {
+    display: flex;
+    justify-content: center;
+    color: white;
+    background-color: rgba(25, 25, 112, 0.932);
+    padding: 5px;
+}
+
+.widget .body {
+    display: flex;
+    justify-content: center;
+    flex-grow: 1;
+    padding-top: 10px;
+}
+
+.widget .footer {
+    display: flex;
+    min-height: 36px;
+    justify-content: left;
+    color: white;    
+}

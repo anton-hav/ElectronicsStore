@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using ElectronicsStore.Core.Abstractions;
+using ElectronicsStore.Core.Abstractions.Services;
 using ElectronicsStore.Data.Abstractions;
 using ElectronicsStore.DataBase.Entities;
 using Microsoft.EntityFrameworkCore;

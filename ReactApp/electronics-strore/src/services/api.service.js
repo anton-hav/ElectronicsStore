@@ -4,6 +4,7 @@ import Logger from "../utils/logger";
 import UnauthorizedError from "../types/errors/unauthorized.error";
 import BadRequestError from "../types/errors/bad-request.error";
 import ConflictError from "../types/errors/conflict.error";
+import UrlSearchParameters from "../types/url-parameters/url-parameters.parameters";
 
 export default class ApiService {
   constructor() {
@@ -14,20 +15,40 @@ export default class ApiService {
     return environment.apiUrl + url;
   }
 
-  async get(url, data = {}) {
+  async get(url, parameters = {}, token) {
     let fullUrl = new URL(`${this._getFullUrl(url)}`);
-    if (Object.keys(data).length > 0) {
-      fullUrl.search = new URLSearchParams(Object.entries(data)).toString();
+    if (parameters instanceof UrlSearchParameters) {
+      let searchParams = parameters.toURLSearchParams();
+      fullUrl.search = searchParams.toString();
     }
 
-    let response = await fetch(fullUrl);
+    const requestHeaders = new Headers();
+    if (token) {
+      requestHeaders.append("Authorization", `Bearer ${token}`);
+    }
+
+    let response = await fetch(fullUrl, {
+      method: "GET",
+      headers: requestHeaders,
+    });
+    if (response.status === 400) {
+      throw new BadRequestError();
+    }
     return response.json();
   }
 
-  async getById(url, id) {
+  async getById(url, id, token) {
     let fullUrl = new URL(`${this._getFullUrl(url)}/${id}`);
 
-    let response = await fetch(fullUrl);
+    const requestHeaders = new Headers();
+    if (token) {
+      requestHeaders.append("Authorization", `Bearer ${token}`);
+    }
+
+    let response = await fetch(fullUrl, {
+      method: "GET",
+      headers: requestHeaders,
+    });
     return response.json();
   }
 
@@ -62,17 +83,31 @@ export default class ApiService {
     throw new Error("Not implemented");
   }
 
-  async patch(url, data, id) {
+  async patch(url, data, id, token) {
     let fullUrl = new URL(`${this._getFullUrl(url)}/${id}`);
+
+    const requestHeaders = new Headers();
+    requestHeaders.append("Content-Type", "application/json");
+
+    if (token) {
+      requestHeaders.append("Authorization", `Bearer ${token}`);
+    }
 
     let response = await fetch(fullUrl, {
       method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-      },
+      headers: requestHeaders,
       body: JSON.stringify(data),
     });
-    return response.json();
+    if (response.status === 400) {
+      throw new BadRequestError();
+    } else if (response.status === 401) {
+      throw new UnauthorizedError();
+    } else if (response.status === 409) {
+      throw new ConflictError();
+    }
+    if (response.status === 200 || response.status === 201) {
+      return response.json();
+    }
   }
 
   async delete(url, id) {

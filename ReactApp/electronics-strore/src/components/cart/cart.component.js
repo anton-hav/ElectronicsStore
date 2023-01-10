@@ -13,6 +13,7 @@ export default function CartView(props) {
     message,
     handlePurchaseClick,
     handleRemoveItemClick,
+    onChangeCount,
   } = props;
 
   return (
@@ -36,9 +37,10 @@ export default function CartView(props) {
                 {items.map((item) => {
                   return (
                     <ItemInCartCard
-                      key={item.id}
+                      key={item.goods.id}
                       item={item}
                       handleRemoveItem={handleRemoveItemClick}
+                      onChangeCount={onChangeCount}
                     />
                   );
                 })}
@@ -49,7 +51,10 @@ export default function CartView(props) {
               <Box>
                 <Typography variant="body1" color="text.secondary">
                   {`The cost of the goods in your cart ${formatter.format(
-                    items.reduce((sum, item) => sum + item.cost, 0)
+                    items.reduce(
+                      (sum, item) => sum + item.goods.cost * item.count,
+                      0
+                    )
                   )}`}
                 </Typography>
               </Box>

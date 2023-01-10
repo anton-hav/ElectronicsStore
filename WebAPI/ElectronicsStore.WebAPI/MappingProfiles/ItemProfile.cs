@@ -5,8 +5,14 @@ using ElectronicsStore.WebAPI.Models.Responses;
 
 namespace ElectronicsStore.WebAPI.MappingProfiles;
 
+/// <summary>
+/// Mapper profile for Item
+/// </summary>
 public class ItemProfile : Profile
 {
+    /// <summary>
+    /// Mapper profile constructor
+    /// </summary>
     public ItemProfile()
     {
         CreateMap<Item, ItemDto>();

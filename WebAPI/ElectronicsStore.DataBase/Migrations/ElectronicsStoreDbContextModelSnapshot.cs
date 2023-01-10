@@ -40,10 +40,37 @@ namespace ElectronicsStore.DataBase.Migrations
                     b.ToTable("Brands");
                 });
 
+            modelBuilder.Entity("ElectronicsStore.DataBase.Entities.Category", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<Guid?>("ParentCategoryId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ParentCategoryId");
+
+                    b.HasIndex("Name", "ParentCategoryId")
+                        .IsUnique()
+                        .HasFilter("[ParentCategoryId] IS NOT NULL");
+
+                    b.ToTable("Categories");
+                });
+
             modelBuilder.Entity("ElectronicsStore.DataBase.Entities.Item", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("CategoryId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<double>("Cost")
@@ -62,9 +89,34 @@ namespace ElectronicsStore.DataBase.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CategoryId");
+
                     b.HasIndex("ProductId");
 
                     b.ToTable("Items");
+                });
+
+            modelBuilder.Entity("ElectronicsStore.DataBase.Entities.Order", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("DateTimeOfCreate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId", "DateTimeOfCreate")
+                        .IsUnique();
+
+                    b.ToTable("Orders");
                 });
 
             modelBuilder.Entity("ElectronicsStore.DataBase.Entities.Product", b =>
@@ -86,6 +138,34 @@ namespace ElectronicsStore.DataBase.Migrations
                         .IsUnique();
 
                     b.ToTable("Products");
+                });
+
+            modelBuilder.Entity("ElectronicsStore.DataBase.Entities.Purchase", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<double>("Cost")
+                        .HasColumnType("float");
+
+                    b.Property<int>("Count")
+                        .HasColumnType("int");
+
+                    b.Property<Guid>("ItemId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("OrderId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("OrderId");
+
+                    b.HasIndex("ItemId", "OrderId")
+                        .IsUnique();
+
+                    b.ToTable("Purchases");
                 });
 
             modelBuilder.Entity("ElectronicsStore.DataBase.Entities.RefreshToken", b =>
@@ -152,13 +232,30 @@ namespace ElectronicsStore.DataBase.Migrations
                     b.ToTable("Users");
                 });
 
+            modelBuilder.Entity("ElectronicsStore.DataBase.Entities.Category", b =>
+                {
+                    b.HasOne("ElectronicsStore.DataBase.Entities.Category", "ParentCategory")
+                        .WithMany("Children")
+                        .HasForeignKey("ParentCategoryId");
+
+                    b.Navigation("ParentCategory");
+                });
+
             modelBuilder.Entity("ElectronicsStore.DataBase.Entities.Item", b =>
                 {
+                    b.HasOne("ElectronicsStore.DataBase.Entities.Category", "Category")
+                        .WithMany("Items")
+                        .HasForeignKey("CategoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("ElectronicsStore.DataBase.Entities.Product", "Product")
                         .WithMany()
                         .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Category");
 
                     b.Navigation("Product");
                 });
@@ -172,6 +269,25 @@ namespace ElectronicsStore.DataBase.Migrations
                         .IsRequired();
 
                     b.Navigation("Brand");
+                });
+
+            modelBuilder.Entity("ElectronicsStore.DataBase.Entities.Purchase", b =>
+                {
+                    b.HasOne("ElectronicsStore.DataBase.Entities.Item", "Item")
+                        .WithMany()
+                        .HasForeignKey("ItemId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ElectronicsStore.DataBase.Entities.Order", "Order")
+                        .WithMany("Purchases")
+                        .HasForeignKey("OrderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Item");
+
+                    b.Navigation("Order");
                 });
 
             modelBuilder.Entity("ElectronicsStore.DataBase.Entities.RefreshToken", b =>
@@ -199,6 +315,18 @@ namespace ElectronicsStore.DataBase.Migrations
             modelBuilder.Entity("ElectronicsStore.DataBase.Entities.Brand", b =>
                 {
                     b.Navigation("Products");
+                });
+
+            modelBuilder.Entity("ElectronicsStore.DataBase.Entities.Category", b =>
+                {
+                    b.Navigation("Children");
+
+                    b.Navigation("Items");
+                });
+
+            modelBuilder.Entity("ElectronicsStore.DataBase.Entities.Order", b =>
+                {
+                    b.Navigation("Purchases");
                 });
 
             modelBuilder.Entity("ElectronicsStore.DataBase.Entities.Role", b =>

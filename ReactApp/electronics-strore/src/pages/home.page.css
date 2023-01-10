@@ -1,0 +1,23 @@
+.page-wrapper {
+    display: flex;
+    /* flex-direction: row; */
+    align-items: flex-start;
+}
+
+.aside-menu {
+    display: flex;
+    width: 300px;
+    border: 1px;
+    border-color: black;
+    border-style: solid;
+    
+}
+
+.product-list {
+    /* flex-grow: 1; */
+    /* align-self: flex-end; */
+}
+
+.items-list-wrapper {
+    margin-right: 10px;
+}

@@ -1,8 +1,9 @@
 ﻿using AutoMapper;
-using ElectronicsStore.Core.Abstractions;
+using ElectronicsStore.Core.Abstractions.Services;
 using ElectronicsStore.WebAPI.Models.Requests;
 using ElectronicsStore.WebAPI.Models.Responses;
 using ElectronicsStore.WebAPI.Utils;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Serilog;
@@ -133,6 +134,31 @@ namespace ElectronicsStore.WebAPI.Controllers
             {
                 Log.Warning($"{ex.Message}. {Environment.NewLine} {ex.StackTrace}");
                 return BadRequest(new ErrorModel { Message = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.Message);
+                return StatusCode(500);
+            }
+        }
+
+        /// <summary>
+        /// Validate access token.
+        /// </summary>
+        /// <returns>true if the token is valid</returns>
+        /// <response code="200">Returns true if the token is valid</response>
+        /// <response code="500">Unexpected error on the server side.</response>
+        [Route("Validate")]
+        [HttpPost]
+        [Authorize]
+        [ProducesResponseType(typeof(TokenResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status500InternalServerError)]
+        public IActionResult ValidateToken()
+        {
+            try
+            {
+                return Ok(true);
+
             }
             catch (Exception ex)
             {
